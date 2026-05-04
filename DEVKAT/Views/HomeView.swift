@@ -106,7 +106,9 @@ struct HomeView: View {
                     .foregroundStyle(Theme.textMuted)
                 Text("curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh")
                     .font(.system(size: 11, design: .monospaced))
-                    .foregroundStyle(Theme.logoGreen)
+                    .foregroundStyle(Theme.textMuted)
+                    .tint(Theme.textMuted)
+                    .environment(\.openURL, OpenURLAction { _ in return .discarded })
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -123,9 +125,9 @@ struct HomeView: View {
                         .foregroundStyle(Theme.logoGreen)
                         .tracking(1.5)
                 } else {
-                    Text("TAP TO COPY")
+                    Text("TAP HERE TO COPY")
                         .font(.system(size: 10, design: .monospaced).weight(.bold))
-                        .foregroundStyle(Theme.textMuted)
+                        .foregroundStyle(Theme.logoGreen)
                         .tracking(1.5)
                 }
             }
