@@ -6,6 +6,7 @@ struct HomeView: View {
 
     @Environment(AppModel.self) private var app
     @State private var showSettings = false
+    @State private var copiedCommand = false
 
     private var grouped: [(label: String, items: [Session])] {
         let cal = Calendar.current
@@ -91,27 +92,49 @@ struct HomeView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 20) {
             Spacer()
             Image(systemName: "terminal")
                 .font(.system(size: 44, weight: .thin))
                 .foregroundStyle(Theme.textDim)
-            Text("NO SESSIONS YET")
+            Text("SETUP")
                 .font(.system(.footnote, design: .monospaced).weight(.bold))
                 .foregroundStyle(Theme.textDim)
                 .tracking(2)
-            VStack(spacing: 6) {
-                Text("After a Claude Code session, run:")
+            VStack(spacing: 10) {
+                Text("Paste this in your terminal:")
                     .font(.system(.caption, design: .monospaced))
                     .foregroundStyle(Theme.textMuted)
-                Text("devkat-push")
-                    .font(.system(.caption, design: .monospaced).weight(.bold))
+                Text("curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh")
+                    .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(Theme.logoGreen)
                     .padding(.horizontal, 12)
-                    .padding(.vertical, 4)
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Theme.surface)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .onTapGesture {
+                        UIPasteboard.general.string = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh"
+                        copiedCommand = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { copiedCommand = false }
+                    }
+                if copiedCommand {
+                    Text("COPIED")
+                        .font(.system(size: 10, design: .monospaced).weight(.bold))
+                        .foregroundStyle(Theme.logoGreen)
+                        .tracking(1.5)
+                } else {
+                    Text("TAP TO COPY")
+                        .font(.system(size: 10, design: .monospaced).weight(.bold))
+                        .foregroundStyle(Theme.textMuted)
+                        .tracking(1.5)
+                }
             }
+            .padding(.horizontal, 20)
+            Text("Sessions from Claude, Codex, and Cursor\nwill sync automatically.")
+                .font(.system(.caption, design: .monospaced))
+                .foregroundStyle(Theme.textMuted)
+                .multilineTextAlignment(.center)
             Spacer()
         }
     }
