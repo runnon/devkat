@@ -25,7 +25,7 @@ extension StatSlot {
                      value: "\(session.filesTouched)", unit: "files"),
             StatSlot(id: "volume", label: "Volume",
                      value: "\(session.linesAdded + session.linesRemoved)", unit: "lines"),
-            StatSlot(id: "burn", label: "Burn",
+            StatSlot(id: "burn", label: "Token Burn",
                      value: SessionFormatting.tokens(session.tokens), unit: "tokens"),
         ]
     }
