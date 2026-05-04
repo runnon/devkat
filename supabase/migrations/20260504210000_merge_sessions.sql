@@ -106,18 +106,20 @@ do $$
 declare
     v_user uuid;
     v_rec  record;
-    v_prev record;
+    v_prev_id text := null;
+    v_prev_end timestamptz := null;
     v_gap  interval := interval '30 minutes';
 begin
     for v_user in select distinct user_id from sessions loop
-        v_prev := null;
+        v_prev_id := null;
+        v_prev_end := null;
         for v_rec in
             select * from sessions
             where user_id = v_user
             order by started_at asc
         loop
-            if v_prev is not null
-               and v_rec.started_at <= v_prev.ended_at + v_gap
+            if v_prev_id is not null
+               and v_rec.started_at <= v_prev_end + v_gap
             then
                 -- Merge v_rec into v_prev
                 update sessions set
@@ -132,15 +134,16 @@ begin
                     models          = array(select distinct unnest from unnest(sessions.models  || v_rec.models)  order by 1),
                     repo_alias      = coalesce(sessions.repo_alias, v_rec.repo_alias),
                     git_branch      = coalesce(v_rec.git_branch, sessions.git_branch)
-                where id = v_prev.id;
+                where id = v_prev_id;
 
                 -- Delete the now-merged row
                 delete from sessions where id = v_rec.id;
 
-                -- Update v_prev with the new merged end time for chaining
-                v_prev.ended_at := greatest(v_prev.ended_at, v_rec.ended_at);
+                -- Update prev end time for chaining
+                v_prev_end := greatest(v_prev_end, v_rec.ended_at);
             else
-                v_prev := v_rec;
+                v_prev_id := v_rec.id;
+                v_prev_end := v_rec.ended_at;
             end if;
         end loop;
     end loop;
