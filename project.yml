@@ -1,0 +1,93 @@
+name: DEVKAT
+options:
+  bundleIdPrefix: app.xavierkahn
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_PREVIEWS: YES
+targets:
+  DEVKAT:
+    type: application
+    platform: iOS
+    sources:
+      - path: DEVKAT
+    info:
+      path: DEVKAT/Info.plist
+      properties:
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        NSPhotoLibraryAddUsageDescription: "DEVKAT saves your overlay images to Photos."
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        CFBundleDisplayName: DEVKAT
+        UIAppFonts:
+          # New York
+          - NewYork.ttf
+          - NewYorkItalic.ttf
+          - NewYorkSmall-Regular.otf
+          - NewYorkSmall-Medium.otf
+          - NewYorkSmall-Semibold.otf
+          - NewYorkSmall-Bold.otf
+          - NewYorkMedium-Regular.otf
+          - NewYorkMedium-Medium.otf
+          - NewYorkMedium-Semibold.otf
+          - NewYorkMedium-Bold.otf
+          - NewYorkLarge-Regular.otf
+          - NewYorkLarge-Medium.otf
+          - NewYorkLarge-Semibold.otf
+          - NewYorkLarge-Bold.otf
+          - NewYorkLarge-Heavy.otf
+          - NewYorkExtraLarge-Regular.otf
+          - NewYorkExtraLarge-Medium.otf
+          - NewYorkExtraLarge-Semibold.otf
+          - NewYorkExtraLarge-Bold.otf
+          - NewYorkExtraLarge-Heavy.otf
+          # SF Compact Display
+          - SF-Compact-Display-Regular.otf
+          - SF-Compact-Display-Medium.otf
+          - SF-Compact-Display-Semibold.otf
+          - SF-Compact-Display-Bold.otf
+          - SF-Compact-Display-Heavy.otf
+          - SF-Compact-Display-Black.otf
+          # SF Compact Rounded
+          - SF-Compact-Rounded-Regular.otf
+          - SF-Compact-Rounded-Medium.otf
+          - SF-Compact-Rounded-Semibold.otf
+          - SF-Compact-Rounded-Bold.otf
+          - SF-Compact-Rounded-Heavy.otf
+          - SF-Compact-Rounded-Black.otf
+          # SF Mono
+          - SF-Mono-Regular.otf
+          - SF-Mono-Medium.otf
+          - SF-Mono-Semibold.otf
+          - SF-Mono-Bold.otf
+          - SF-Mono-Heavy.otf
+          # SF Pro Display
+          - SF-Pro-Display-Regular.otf
+          - SF-Pro-Display-Medium.otf
+          - SF-Pro-Display-Semibold.otf
+          - SF-Pro-Display-Bold.otf
+          - SF-Pro-Display-Heavy.otf
+          - SF-Pro-Display-Black.otf
+          # SF Pro Rounded
+          - SF-Pro-Rounded-Regular.otf
+          - SF-Pro-Rounded-Medium.otf
+          - SF-Pro-Rounded-Semibold.otf
+          - SF-Pro-Rounded-Bold.otf
+          - SF-Pro-Rounded-Heavy.otf
+          - SF-Pro-Rounded-Black.otf
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.xavierkahn.devkat
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

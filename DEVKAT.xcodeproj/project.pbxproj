@@ -1,0 +1,623 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00B3A18BC39D3D1E921A20C1 /* NewYorkSmall-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 43D131E1E065C46A69B02AE1 /* NewYorkSmall-Regular.otf */; };
+		042DD278B40E857889D94BCA /* SF-Pro-Rounded-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 311F97EB69B9A76192FF7B8F /* SF-Pro-Rounded-Heavy.otf */; };
+		062F7D7A1632D76BBB4D688A /* SF-Compact-Rounded-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = EE32E5934CB73990F753A5C3 /* SF-Compact-Rounded-Regular.otf */; };
+		07435DBB61C9AF4964F97295 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B419D746BD547C7B031AC711 /* LaunchScreenView.swift */; };
+		0ADC6C8B6D07FA5C97F6CD6E /* NewYorkSmall-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0ED79CB7C26FE67D6966422 /* NewYorkSmall-Medium.otf */; };
+		0B446C61AA64A3B16114ED2F /* SF-Compact-Rounded-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 42093FDD0C086E1E3392D529 /* SF-Compact-Rounded-Black.otf */; };
+		0B573E5EDA2F0027888C43EE /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9C98F893DEA8B989FB41DF /* SupabaseService.swift */; };
+		0F84FBE1427E2FD5376D4AA3 /* LegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6381D826E4D878180E4224 /* LegalView.swift */; };
+		0FB3DBD26D7324493A0A59C6 /* NewYorkMedium-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DDC301F415DEB75935AFE1F9 /* NewYorkMedium-Semibold.otf */; };
+		0FFF998303AA0DAB4F4C82E8 /* AuraOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8909ACEC8A2DAC0C833D114 /* AuraOverlay.swift */; };
+		1381EBC4DDEE205F362419ED /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6FD30B41FF737350BAFC4F /* Theme.swift */; };
+		1B6A36CA804CE03539640960 /* SF-Compact-Rounded-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1D349C933992F2C0FD0BF27D /* SF-Compact-Rounded-Bold.otf */; };
+		2A87CC0CD8B12BA64B5D0167 /* NewYorkLarge-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CF641AC85BCC9CCFC0E8DE32 /* NewYorkLarge-Bold.otf */; };
+		2B2716FC309281DC41C19FEE /* NewYorkExtraLarge-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 83307ECD3FAF8BD62CD38EF2 /* NewYorkExtraLarge-Semibold.otf */; };
+		2E059A2A9215A801A18595DF /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734C094DC090D8E5C6988DE /* AppModel.swift */; };
+		2EE66C728E0F4A41B957FD3A /* SF-Pro-Display-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 23F62578DC45BDE223590538 /* SF-Pro-Display-Black.otf */; };
+		30DC68D147B5BE25EDEA432F /* SF-Mono-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C81EBE43C6EEC11A0939786B /* SF-Mono-Semibold.otf */; };
+		373FBB188F570887CD74D9E3 /* SF-Mono-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3DEEC7109A3A7EC9319ED286 /* SF-Mono-Medium.otf */; };
+		3DC6D9F56B44D222F9A9B846 /* SF-Compact-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2025929B6416241943670941 /* SF-Compact-Display-Medium.otf */; };
+		4A52F710574213AA54B86B53 /* SF-Mono-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */; };
+		4AF9E96D290B588D1BC048FA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476660E9A89DDED9018120A9 /* Session.swift */; };
+		51CA498C684A34A262F4C612 /* NewYorkExtraLarge-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 84BA053E9B5DE2271C63B776 /* NewYorkExtraLarge-Regular.otf */; };
+		54E1EAFA1481C4C7A3CF27EB /* NewYorkLarge-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 59BF6AE4DD745E65A6A7AADD /* NewYorkLarge-Semibold.otf */; };
+		5B9516D365EA356DDCFDF029 /* NewYorkExtraLarge-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3336B65FA94233BA0EDBEEC0 /* NewYorkExtraLarge-Bold.otf */; };
+		5EF63DE1F125E8E75EE2D163 /* NewYorkLarge-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BEE0F40EDA4A79ED3B3CA3DE /* NewYorkLarge-Regular.otf */; };
+		642272699668D2F970C925FA /* NewYorkExtraLarge-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0CD6DC6D3C18BEC7E83DCF3D /* NewYorkExtraLarge-Medium.otf */; };
+		671375E503A4B1C7E50ED130 /* PixelKat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C631EB5A4F344118FBCAA6F3 /* PixelKat.swift */; };
+		6B5F67C19E95240F6D96F565 /* NewYorkExtraLarge-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5E48AE6FB020C385EF1B1A0D /* NewYorkExtraLarge-Heavy.otf */; };
+		6E31DCD7F8188804C51A50B4 /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 59F6EC3F346ECFA86C26F281 /* SF-Pro-Display-Medium.otf */; };
+		7546EDDD9BE65539A0541BC2 /* OverlayPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3953DF82B4F5EFE9DE0B36B3 /* OverlayPreset.swift */; };
+		75E999556FD01A8359AABA8D /* NewYorkSmall-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EB3C77094A8CE30DADFC60FE /* NewYorkSmall-Semibold.otf */; };
+		7C0FC4ABDC18456D04596B42 /* SF-Compact-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B71F57DF6201D94BB2405BCE /* SF-Compact-Display-Semibold.otf */; };
+		7C13830E585958C17A55EDD9 /* SF-Compact-Rounded-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 669431B4D6F5B5D92D5D3DDF /* SF-Compact-Rounded-Heavy.otf */; };
+		7C8BA5C2DE2AF3FBD6F4621E /* NewYorkSmall-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F65FC6AA98476F1FBE0BDA7 /* NewYorkSmall-Bold.otf */; };
+		857EED3570CF06E0AAC8D510 /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B4F997FF8BB93660A3970237 /* SF-Pro-Display-Regular.otf */; };
+		8A60E954EF8B0ED20ADE4707 /* SF-Compact-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7A20FCEA5752555538FEA3DB /* SF-Compact-Display-Regular.otf */; };
+		8ABFB797FBC387A3F2CF1AC9 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F061E5A2135512A655DC5E24 /* SF-Pro-Display-Bold.otf */; };
+		8BFF51C5A1CC45E21AEFB9F7 /* DEVKATApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6966B026F0FFC38FAB170C6F /* DEVKATApp.swift */; };
+		8E13FEB03F0BBD9B6477B639 /* SF-Mono-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 626CA09150AA8879D949C923 /* SF-Mono-Heavy.otf */; };
+		916CCE04A7A535B60B76D2E3 /* SF-Compact-Rounded-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13C6778CCEBE4EF8628A92B1 /* SF-Compact-Rounded-Semibold.otf */; };
+		93BEAB7A32C48DAE7FBDAD55 /* SF-Pro-Rounded-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 06105429A2B33D646118AA6D /* SF-Pro-Rounded-Semibold.otf */; };
+		94520BA439C20EE64BA3F664 /* NewYorkMedium-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B38850B427880DD380F11976 /* NewYorkMedium-Regular.otf */; };
+		95D514DFF64FB8915365CD80 /* NewYorkLarge-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = A3555A7102B8E8B9751E9104 /* NewYorkLarge-Heavy.otf */; };
+		9A5A692E532F2D5956555FFD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0E564B4591B03041714555D /* Assets.xcassets */; };
+		9AB4A56536E64F628623EBAD /* SF-Pro-Rounded-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = AED8A60A107578D1F93E28D1 /* SF-Pro-Rounded-Black.otf */; };
+		A0938D5E945E7FBB897E48D4 /* SessionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA932260637A396E335EFB96 /* SessionCard.swift */; };
+		A0D7710A19B2483D12B6DBF7 /* CopyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA78A71BC7F5E06A47A39D9 /* CopyView.swift */; };
+		A314BFFABC2420A2C50A13E7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7C504C6B76264C7402709 /* RootView.swift */; };
+		A4CE3693A02582BFD65C9816 /* SF-Compact-Rounded-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = A785E7F72E85FDFAF6A20868 /* SF-Compact-Rounded-Medium.otf */; };
+		A505610E47EF95E1B3F8EF99 /* NewYorkLarge-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E6EB2FDF604BCFB6A2C96AD8 /* NewYorkLarge-Medium.otf */; };
+		A701CFC8581A26169B50B73D /* NewYork.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 295B0DE2B56914A32BE059CF /* NewYork.ttf */; };
+		B15BEA63759D8C1A134F605D /* SF-Compact-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93CAB2874D70ED093D4F4D0F /* SF-Compact-Display-Bold.otf */; };
+		B7339C0707EA43A7F3CB3210 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EAF812C25650E099453EF458 /* SF-Pro-Display-Semibold.otf */; };
+		BB6F0B20B727C4EB3A5742F8 /* SF-Pro-Rounded-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0DF62C9F85F042E7E4F7743 /* SF-Pro-Rounded-Medium.otf */; };
+		BBE9E523D339AABD8631CCCF /* NewYorkMedium-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 41846524315EA6B129155885 /* NewYorkMedium-Medium.otf */; };
+		C061832AED182369AB0F0F3D /* SF-Mono-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C7D6CC7E8CEBD1F1B0160 /* SF-Mono-Bold.otf */; };
+		C54A99607FF1B2F6C853DC17 /* NewYorkItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FEEE5C336ABFBC377CA4EAA8 /* NewYorkItalic.ttf */; };
+		C9228B514A830F079FFF3AF5 /* SF-Pro-Rounded-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE40AE209C3BAFF04AF342F1 /* SF-Pro-Rounded-Bold.otf */; };
+		CD8A11715F3732FA42F171AA /* PixelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86FB98566A9C96C4FCF1753 /* PixelText.swift */; };
+		D33B43EBA18EB1E4E9C2B7D0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BECB8E96F5FC3F424C10DDE /* HomeView.swift */; };
+		D8B37B80D1BD0368DE3C0007 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B61184CE3C4F0445E94544D /* Config.swift */; };
+		D9BEF19D2741142FE6A02E91 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0699F2093CD1BF456ECEFB62 /* SettingsView.swift */; };
+		E987E32ABD611ACE0961E54C /* NewYorkMedium-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1542D4197615B82C214F98E7 /* NewYorkMedium-Bold.otf */; };
+		EBAC08C13260458248BC9491 /* SF-Compact-Display-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = D42304498AEEC608053BC75E /* SF-Compact-Display-Heavy.otf */; };
+		EEF9780177746BE276A35F34 /* SF-Compact-Display-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = BF340699BC32C0FFD12BE3F0 /* SF-Compact-Display-Black.otf */; };
+		F3D38BACEB3D9EC9C66115B6 /* SF-Pro-Display-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6F939337B0EDE382EC55BB6D /* SF-Pro-Display-Heavy.otf */; };
+		F3DAC488F82F94F9F1952DA7 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A2AE7B3925F8C529A8CD8FB /* Keychain.swift */; };
+		FA2FF90739159BBC95C0BF34 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5FF9E99BC9AA4BEC9325F8 /* AuthView.swift */; };
+		FDF0AE8958099E22AC84F2CA /* SF-Pro-Rounded-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6467EEF20912738EB19BF965 /* SF-Pro-Rounded-Regular.otf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		06105429A2B33D646118AA6D /* SF-Pro-Rounded-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Semibold.otf"; sourceTree = "<group>"; };
+		0699F2093CD1BF456ECEFB62 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		06F7C504C6B76264C7402709 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		0716F0262F6E08F9A647E7BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0CD6DC6D3C18BEC7E83DCF3D /* NewYorkExtraLarge-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkExtraLarge-Medium.otf"; sourceTree = "<group>"; };
+		0F65FC6AA98476F1FBE0BDA7 /* NewYorkSmall-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkSmall-Bold.otf"; sourceTree = "<group>"; };
+		1165C9B851BB6A94125E3FA5 /* DEVKAT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DEVKAT.entitlements; sourceTree = "<group>"; };
+		13C6778CCEBE4EF8628A92B1 /* SF-Compact-Rounded-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Semibold.otf"; sourceTree = "<group>"; };
+		1542D4197615B82C214F98E7 /* NewYorkMedium-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkMedium-Bold.otf"; sourceTree = "<group>"; };
+		18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Regular.otf"; sourceTree = "<group>"; };
+		1D349C933992F2C0FD0BF27D /* SF-Compact-Rounded-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Bold.otf"; sourceTree = "<group>"; };
+		2025929B6416241943670941 /* SF-Compact-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Medium.otf"; sourceTree = "<group>"; };
+		23F62578DC45BDE223590538 /* SF-Pro-Display-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Black.otf"; sourceTree = "<group>"; };
+		295B0DE2B56914A32BE059CF /* NewYork.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewYork.ttf; sourceTree = "<group>"; };
+		2A9C98F893DEA8B989FB41DF /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
+		311F97EB69B9A76192FF7B8F /* SF-Pro-Rounded-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Heavy.otf"; sourceTree = "<group>"; };
+		3336B65FA94233BA0EDBEEC0 /* NewYorkExtraLarge-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkExtraLarge-Bold.otf"; sourceTree = "<group>"; };
+		3734C094DC090D8E5C6988DE /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		3953DF82B4F5EFE9DE0B36B3 /* OverlayPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPreset.swift; sourceTree = "<group>"; };
+		3DEEC7109A3A7EC9319ED286 /* SF-Mono-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Medium.otf"; sourceTree = "<group>"; };
+		41846524315EA6B129155885 /* NewYorkMedium-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkMedium-Medium.otf"; sourceTree = "<group>"; };
+		42093FDD0C086E1E3392D529 /* SF-Compact-Rounded-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Black.otf"; sourceTree = "<group>"; };
+		43D131E1E065C46A69B02AE1 /* NewYorkSmall-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkSmall-Regular.otf"; sourceTree = "<group>"; };
+		476660E9A89DDED9018120A9 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		4A2AE7B3925F8C529A8CD8FB /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		59BF6AE4DD745E65A6A7AADD /* NewYorkLarge-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Semibold.otf"; sourceTree = "<group>"; };
+		59F6EC3F346ECFA86C26F281 /* SF-Pro-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Medium.otf"; sourceTree = "<group>"; };
+		5B61184CE3C4F0445E94544D /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		5B7C7D6CC7E8CEBD1F1B0160 /* SF-Mono-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Bold.otf"; sourceTree = "<group>"; };
+		5E48AE6FB020C385EF1B1A0D /* NewYorkExtraLarge-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkExtraLarge-Heavy.otf"; sourceTree = "<group>"; };
+		626CA09150AA8879D949C923 /* SF-Mono-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Heavy.otf"; sourceTree = "<group>"; };
+		6467EEF20912738EB19BF965 /* SF-Pro-Rounded-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Regular.otf"; sourceTree = "<group>"; };
+		669431B4D6F5B5D92D5D3DDF /* SF-Compact-Rounded-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Heavy.otf"; sourceTree = "<group>"; };
+		6966B026F0FFC38FAB170C6F /* DEVKATApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DEVKATApp.swift; sourceTree = "<group>"; };
+		6F939337B0EDE382EC55BB6D /* SF-Pro-Display-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Heavy.otf"; sourceTree = "<group>"; };
+		7A20FCEA5752555538FEA3DB /* SF-Compact-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Regular.otf"; sourceTree = "<group>"; };
+		83307ECD3FAF8BD62CD38EF2 /* NewYorkExtraLarge-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkExtraLarge-Semibold.otf"; sourceTree = "<group>"; };
+		84BA053E9B5DE2271C63B776 /* NewYorkExtraLarge-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkExtraLarge-Regular.otf"; sourceTree = "<group>"; };
+		8D8C5F431D8D3BF2F890A923 /* DEVKAT.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DEVKAT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93CAB2874D70ED093D4F4D0F /* SF-Compact-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Bold.otf"; sourceTree = "<group>"; };
+		9BECB8E96F5FC3F424C10DDE /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A3555A7102B8E8B9751E9104 /* NewYorkLarge-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Heavy.otf"; sourceTree = "<group>"; };
+		A785E7F72E85FDFAF6A20868 /* SF-Compact-Rounded-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Medium.otf"; sourceTree = "<group>"; };
+		A8909ACEC8A2DAC0C833D114 /* AuraOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuraOverlay.swift; sourceTree = "<group>"; };
+		AD6381D826E4D878180E4224 /* LegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalView.swift; sourceTree = "<group>"; };
+		AE40AE209C3BAFF04AF342F1 /* SF-Pro-Rounded-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Bold.otf"; sourceTree = "<group>"; };
+		AED8A60A107578D1F93E28D1 /* SF-Pro-Rounded-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Black.otf"; sourceTree = "<group>"; };
+		B0DF62C9F85F042E7E4F7743 /* SF-Pro-Rounded-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Medium.otf"; sourceTree = "<group>"; };
+		B38850B427880DD380F11976 /* NewYorkMedium-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkMedium-Regular.otf"; sourceTree = "<group>"; };
+		B419D746BD547C7B031AC711 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
+		B4F997FF8BB93660A3970237 /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
+		B71F57DF6201D94BB2405BCE /* SF-Compact-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Semibold.otf"; sourceTree = "<group>"; };
+		BEE0F40EDA4A79ED3B3CA3DE /* NewYorkLarge-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Regular.otf"; sourceTree = "<group>"; };
+		BF340699BC32C0FFD12BE3F0 /* SF-Compact-Display-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Black.otf"; sourceTree = "<group>"; };
+		C631EB5A4F344118FBCAA6F3 /* PixelKat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelKat.swift; sourceTree = "<group>"; };
+		C81EBE43C6EEC11A0939786B /* SF-Mono-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Semibold.otf"; sourceTree = "<group>"; };
+		C86FB98566A9C96C4FCF1753 /* PixelText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelText.swift; sourceTree = "<group>"; };
+		CEA78A71BC7F5E06A47A39D9 /* CopyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyView.swift; sourceTree = "<group>"; };
+		CF641AC85BCC9CCFC0E8DE32 /* NewYorkLarge-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Bold.otf"; sourceTree = "<group>"; };
+		D42304498AEEC608053BC75E /* SF-Compact-Display-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Heavy.otf"; sourceTree = "<group>"; };
+		DDC301F415DEB75935AFE1F9 /* NewYorkMedium-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkMedium-Semibold.otf"; sourceTree = "<group>"; };
+		E0ED79CB7C26FE67D6966422 /* NewYorkSmall-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkSmall-Medium.otf"; sourceTree = "<group>"; };
+		E6EB2FDF604BCFB6A2C96AD8 /* NewYorkLarge-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Medium.otf"; sourceTree = "<group>"; };
+		EA5FF9E99BC9AA4BEC9325F8 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		EAF812C25650E099453EF458 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
+		EB3C77094A8CE30DADFC60FE /* NewYorkSmall-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkSmall-Semibold.otf"; sourceTree = "<group>"; };
+		EE32E5934CB73990F753A5C3 /* SF-Compact-Rounded-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Regular.otf"; sourceTree = "<group>"; };
+		F061E5A2135512A655DC5E24 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
+		F0E564B4591B03041714555D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FA932260637A396E335EFB96 /* SessionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCard.swift; sourceTree = "<group>"; };
+		FC6FD30B41FF737350BAFC4F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		FEEE5C336ABFBC377CA4EAA8 /* NewYorkItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewYorkItalic.ttf; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		1006EEE918FB139B25F3AAED /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				295B0DE2B56914A32BE059CF /* NewYork.ttf */,
+				3336B65FA94233BA0EDBEEC0 /* NewYorkExtraLarge-Bold.otf */,
+				5E48AE6FB020C385EF1B1A0D /* NewYorkExtraLarge-Heavy.otf */,
+				0CD6DC6D3C18BEC7E83DCF3D /* NewYorkExtraLarge-Medium.otf */,
+				84BA053E9B5DE2271C63B776 /* NewYorkExtraLarge-Regular.otf */,
+				83307ECD3FAF8BD62CD38EF2 /* NewYorkExtraLarge-Semibold.otf */,
+				FEEE5C336ABFBC377CA4EAA8 /* NewYorkItalic.ttf */,
+				CF641AC85BCC9CCFC0E8DE32 /* NewYorkLarge-Bold.otf */,
+				A3555A7102B8E8B9751E9104 /* NewYorkLarge-Heavy.otf */,
+				E6EB2FDF604BCFB6A2C96AD8 /* NewYorkLarge-Medium.otf */,
+				BEE0F40EDA4A79ED3B3CA3DE /* NewYorkLarge-Regular.otf */,
+				59BF6AE4DD745E65A6A7AADD /* NewYorkLarge-Semibold.otf */,
+				1542D4197615B82C214F98E7 /* NewYorkMedium-Bold.otf */,
+				41846524315EA6B129155885 /* NewYorkMedium-Medium.otf */,
+				B38850B427880DD380F11976 /* NewYorkMedium-Regular.otf */,
+				DDC301F415DEB75935AFE1F9 /* NewYorkMedium-Semibold.otf */,
+				0F65FC6AA98476F1FBE0BDA7 /* NewYorkSmall-Bold.otf */,
+				E0ED79CB7C26FE67D6966422 /* NewYorkSmall-Medium.otf */,
+				43D131E1E065C46A69B02AE1 /* NewYorkSmall-Regular.otf */,
+				EB3C77094A8CE30DADFC60FE /* NewYorkSmall-Semibold.otf */,
+				BF340699BC32C0FFD12BE3F0 /* SF-Compact-Display-Black.otf */,
+				93CAB2874D70ED093D4F4D0F /* SF-Compact-Display-Bold.otf */,
+				D42304498AEEC608053BC75E /* SF-Compact-Display-Heavy.otf */,
+				2025929B6416241943670941 /* SF-Compact-Display-Medium.otf */,
+				7A20FCEA5752555538FEA3DB /* SF-Compact-Display-Regular.otf */,
+				B71F57DF6201D94BB2405BCE /* SF-Compact-Display-Semibold.otf */,
+				42093FDD0C086E1E3392D529 /* SF-Compact-Rounded-Black.otf */,
+				1D349C933992F2C0FD0BF27D /* SF-Compact-Rounded-Bold.otf */,
+				669431B4D6F5B5D92D5D3DDF /* SF-Compact-Rounded-Heavy.otf */,
+				A785E7F72E85FDFAF6A20868 /* SF-Compact-Rounded-Medium.otf */,
+				EE32E5934CB73990F753A5C3 /* SF-Compact-Rounded-Regular.otf */,
+				13C6778CCEBE4EF8628A92B1 /* SF-Compact-Rounded-Semibold.otf */,
+				5B7C7D6CC7E8CEBD1F1B0160 /* SF-Mono-Bold.otf */,
+				626CA09150AA8879D949C923 /* SF-Mono-Heavy.otf */,
+				3DEEC7109A3A7EC9319ED286 /* SF-Mono-Medium.otf */,
+				18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */,
+				C81EBE43C6EEC11A0939786B /* SF-Mono-Semibold.otf */,
+				23F62578DC45BDE223590538 /* SF-Pro-Display-Black.otf */,
+				F061E5A2135512A655DC5E24 /* SF-Pro-Display-Bold.otf */,
+				6F939337B0EDE382EC55BB6D /* SF-Pro-Display-Heavy.otf */,
+				59F6EC3F346ECFA86C26F281 /* SF-Pro-Display-Medium.otf */,
+				B4F997FF8BB93660A3970237 /* SF-Pro-Display-Regular.otf */,
+				EAF812C25650E099453EF458 /* SF-Pro-Display-Semibold.otf */,
+				AED8A60A107578D1F93E28D1 /* SF-Pro-Rounded-Black.otf */,
+				AE40AE209C3BAFF04AF342F1 /* SF-Pro-Rounded-Bold.otf */,
+				311F97EB69B9A76192FF7B8F /* SF-Pro-Rounded-Heavy.otf */,
+				B0DF62C9F85F042E7E4F7743 /* SF-Pro-Rounded-Medium.otf */,
+				6467EEF20912738EB19BF965 /* SF-Pro-Rounded-Regular.otf */,
+				06105429A2B33D646118AA6D /* SF-Pro-Rounded-Semibold.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		259F271ED9D89AFC8B846881 /* Overlays */ = {
+			isa = PBXGroup;
+			children = (
+				A8909ACEC8A2DAC0C833D114 /* AuraOverlay.swift */,
+				3953DF82B4F5EFE9DE0B36B3 /* OverlayPreset.swift */,
+			);
+			path = Overlays;
+			sourceTree = "<group>";
+		};
+		4FCD92B43962FDE4B4AD0A69 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EA5FF9E99BC9AA4BEC9325F8 /* AuthView.swift */,
+				CEA78A71BC7F5E06A47A39D9 /* CopyView.swift */,
+				9BECB8E96F5FC3F424C10DDE /* HomeView.swift */,
+				B419D746BD547C7B031AC711 /* LaunchScreenView.swift */,
+				AD6381D826E4D878180E4224 /* LegalView.swift */,
+				C631EB5A4F344118FBCAA6F3 /* PixelKat.swift */,
+				C86FB98566A9C96C4FCF1753 /* PixelText.swift */,
+				06F7C504C6B76264C7402709 /* RootView.swift */,
+				FA932260637A396E335EFB96 /* SessionCard.swift */,
+				0699F2093CD1BF456ECEFB62 /* SettingsView.swift */,
+				259F271ED9D89AFC8B846881 /* Overlays */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		72AEC06D7CC63A0CD080220F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3734C094DC090D8E5C6988DE /* AppModel.swift */,
+				476660E9A89DDED9018120A9 /* Session.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AC3CAAE8DB99ACCCD8E7DA61 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5B61184CE3C4F0445E94544D /* Config.swift */,
+				4A2AE7B3925F8C529A8CD8FB /* Keychain.swift */,
+				2A9C98F893DEA8B989FB41DF /* SupabaseService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		B415DA7B0B25ABA6967EAB5A /* DEVKAT */ = {
+			isa = PBXGroup;
+			children = (
+				F0E564B4591B03041714555D /* Assets.xcassets */,
+				1165C9B851BB6A94125E3FA5 /* DEVKAT.entitlements */,
+				6966B026F0FFC38FAB170C6F /* DEVKATApp.swift */,
+				0716F0262F6E08F9A647E7BA /* Info.plist */,
+				FC6FD30B41FF737350BAFC4F /* Theme.swift */,
+				1006EEE918FB139B25F3AAED /* Fonts */,
+				72AEC06D7CC63A0CD080220F /* Models */,
+				AC3CAAE8DB99ACCCD8E7DA61 /* Services */,
+				4FCD92B43962FDE4B4AD0A69 /* Views */,
+			);
+			path = DEVKAT;
+			sourceTree = "<group>";
+		};
+		CD06A470E8EC645DC4B5C659 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D8C5F431D8D3BF2F890A923 /* DEVKAT.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D759DBBBB529C4D77F776336 = {
+			isa = PBXGroup;
+			children = (
+				B415DA7B0B25ABA6967EAB5A /* DEVKAT */,
+				CD06A470E8EC645DC4B5C659 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A0003F355A317664F8535B44 /* DEVKAT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ACE206D5B02B089BDA4DBC71 /* Build configuration list for PBXNativeTarget "DEVKAT" */;
+			buildPhases = (
+				3FD5740860B7ADE5C62E9501 /* Sources */,
+				0F519C89667BBCDCEC71F210 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DEVKAT;
+			packageProductDependencies = (
+			);
+			productName = DEVKAT;
+			productReference = 8D8C5F431D8D3BF2F890A923 /* DEVKAT.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		14751ADE1B6C739F076CAD99 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					A0003F355A317664F8535B44 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 31E0DE90CB948A72C215A75E /* Build configuration list for PBXProject "DEVKAT" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D759DBBBB529C4D77F776336;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = CD06A470E8EC645DC4B5C659 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A0003F355A317664F8535B44 /* DEVKAT */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0F519C89667BBCDCEC71F210 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A5A692E532F2D5956555FFD /* Assets.xcassets in Resources */,
+				A701CFC8581A26169B50B73D /* NewYork.ttf in Resources */,
+				5B9516D365EA356DDCFDF029 /* NewYorkExtraLarge-Bold.otf in Resources */,
+				6B5F67C19E95240F6D96F565 /* NewYorkExtraLarge-Heavy.otf in Resources */,
+				642272699668D2F970C925FA /* NewYorkExtraLarge-Medium.otf in Resources */,
+				51CA498C684A34A262F4C612 /* NewYorkExtraLarge-Regular.otf in Resources */,
+				2B2716FC309281DC41C19FEE /* NewYorkExtraLarge-Semibold.otf in Resources */,
+				C54A99607FF1B2F6C853DC17 /* NewYorkItalic.ttf in Resources */,
+				2A87CC0CD8B12BA64B5D0167 /* NewYorkLarge-Bold.otf in Resources */,
+				95D514DFF64FB8915365CD80 /* NewYorkLarge-Heavy.otf in Resources */,
+				A505610E47EF95E1B3F8EF99 /* NewYorkLarge-Medium.otf in Resources */,
+				5EF63DE1F125E8E75EE2D163 /* NewYorkLarge-Regular.otf in Resources */,
+				54E1EAFA1481C4C7A3CF27EB /* NewYorkLarge-Semibold.otf in Resources */,
+				E987E32ABD611ACE0961E54C /* NewYorkMedium-Bold.otf in Resources */,
+				BBE9E523D339AABD8631CCCF /* NewYorkMedium-Medium.otf in Resources */,
+				94520BA439C20EE64BA3F664 /* NewYorkMedium-Regular.otf in Resources */,
+				0FB3DBD26D7324493A0A59C6 /* NewYorkMedium-Semibold.otf in Resources */,
+				7C8BA5C2DE2AF3FBD6F4621E /* NewYorkSmall-Bold.otf in Resources */,
+				0ADC6C8B6D07FA5C97F6CD6E /* NewYorkSmall-Medium.otf in Resources */,
+				00B3A18BC39D3D1E921A20C1 /* NewYorkSmall-Regular.otf in Resources */,
+				75E999556FD01A8359AABA8D /* NewYorkSmall-Semibold.otf in Resources */,
+				EEF9780177746BE276A35F34 /* SF-Compact-Display-Black.otf in Resources */,
+				B15BEA63759D8C1A134F605D /* SF-Compact-Display-Bold.otf in Resources */,
+				EBAC08C13260458248BC9491 /* SF-Compact-Display-Heavy.otf in Resources */,
+				3DC6D9F56B44D222F9A9B846 /* SF-Compact-Display-Medium.otf in Resources */,
+				8A60E954EF8B0ED20ADE4707 /* SF-Compact-Display-Regular.otf in Resources */,
+				7C0FC4ABDC18456D04596B42 /* SF-Compact-Display-Semibold.otf in Resources */,
+				0B446C61AA64A3B16114ED2F /* SF-Compact-Rounded-Black.otf in Resources */,
+				1B6A36CA804CE03539640960 /* SF-Compact-Rounded-Bold.otf in Resources */,
+				7C13830E585958C17A55EDD9 /* SF-Compact-Rounded-Heavy.otf in Resources */,
+				A4CE3693A02582BFD65C9816 /* SF-Compact-Rounded-Medium.otf in Resources */,
+				062F7D7A1632D76BBB4D688A /* SF-Compact-Rounded-Regular.otf in Resources */,
+				916CCE04A7A535B60B76D2E3 /* SF-Compact-Rounded-Semibold.otf in Resources */,
+				C061832AED182369AB0F0F3D /* SF-Mono-Bold.otf in Resources */,
+				8E13FEB03F0BBD9B6477B639 /* SF-Mono-Heavy.otf in Resources */,
+				373FBB188F570887CD74D9E3 /* SF-Mono-Medium.otf in Resources */,
+				4A52F710574213AA54B86B53 /* SF-Mono-Regular.otf in Resources */,
+				30DC68D147B5BE25EDEA432F /* SF-Mono-Semibold.otf in Resources */,
+				2EE66C728E0F4A41B957FD3A /* SF-Pro-Display-Black.otf in Resources */,
+				8ABFB797FBC387A3F2CF1AC9 /* SF-Pro-Display-Bold.otf in Resources */,
+				F3D38BACEB3D9EC9C66115B6 /* SF-Pro-Display-Heavy.otf in Resources */,
+				6E31DCD7F8188804C51A50B4 /* SF-Pro-Display-Medium.otf in Resources */,
+				857EED3570CF06E0AAC8D510 /* SF-Pro-Display-Regular.otf in Resources */,
+				B7339C0707EA43A7F3CB3210 /* SF-Pro-Display-Semibold.otf in Resources */,
+				9AB4A56536E64F628623EBAD /* SF-Pro-Rounded-Black.otf in Resources */,
+				C9228B514A830F079FFF3AF5 /* SF-Pro-Rounded-Bold.otf in Resources */,
+				042DD278B40E857889D94BCA /* SF-Pro-Rounded-Heavy.otf in Resources */,
+				BB6F0B20B727C4EB3A5742F8 /* SF-Pro-Rounded-Medium.otf in Resources */,
+				FDF0AE8958099E22AC84F2CA /* SF-Pro-Rounded-Regular.otf in Resources */,
+				93BEAB7A32C48DAE7FBDAD55 /* SF-Pro-Rounded-Semibold.otf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3FD5740860B7ADE5C62E9501 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E059A2A9215A801A18595DF /* AppModel.swift in Sources */,
+				0FFF998303AA0DAB4F4C82E8 /* AuraOverlay.swift in Sources */,
+				FA2FF90739159BBC95C0BF34 /* AuthView.swift in Sources */,
+				D8B37B80D1BD0368DE3C0007 /* Config.swift in Sources */,
+				A0D7710A19B2483D12B6DBF7 /* CopyView.swift in Sources */,
+				8BFF51C5A1CC45E21AEFB9F7 /* DEVKATApp.swift in Sources */,
+				D33B43EBA18EB1E4E9C2B7D0 /* HomeView.swift in Sources */,
+				F3DAC488F82F94F9F1952DA7 /* Keychain.swift in Sources */,
+				07435DBB61C9AF4964F97295 /* LaunchScreenView.swift in Sources */,
+				0F84FBE1427E2FD5376D4AA3 /* LegalView.swift in Sources */,
+				7546EDDD9BE65539A0541BC2 /* OverlayPreset.swift in Sources */,
+				671375E503A4B1C7E50ED130 /* PixelKat.swift in Sources */,
+				CD8A11715F3732FA42F171AA /* PixelText.swift in Sources */,
+				A314BFFABC2420A2C50A13E7 /* RootView.swift in Sources */,
+				4AF9E96D290B588D1BC048FA /* Session.swift in Sources */,
+				A0938D5E945E7FBB897E48D4 /* SessionCard.swift in Sources */,
+				D9BEF19D2741142FE6A02E91 /* SettingsView.swift in Sources */,
+				0B573E5EDA2F0027888C43EE /* SupabaseService.swift in Sources */,
+				1381EBC4DDEE205F362419ED /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		466A63E423DBB2CF16F009B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		468C4351AB0371B5FC960084 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = DEVKAT/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.xavierkahn.devkat;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		760A83710CEE00FF7446887A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+		DF74C09B6CC7E581637721FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = DEVKAT/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.xavierkahn.devkat;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		31E0DE90CB948A72C215A75E /* Build configuration list for PBXProject "DEVKAT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				466A63E423DBB2CF16F009B8 /* Debug */,
+				760A83710CEE00FF7446887A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ACE206D5B02B089BDA4DBC71 /* Build configuration list for PBXNativeTarget "DEVKAT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DF74C09B6CC7E581637721FB /* Debug */,
+				468C4351AB0371B5FC960084 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 14751ADE1B6C739F076CAD99 /* Project object */;
+}
