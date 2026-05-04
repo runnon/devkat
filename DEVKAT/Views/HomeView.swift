@@ -108,6 +108,7 @@ struct HomeView: View {
                     Text("curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh")
                         .font(.system(size: 11, design: .monospaced))
                         .foregroundStyle(Theme.textMuted)
+                        .tint(Theme.textMuted)
                         .allowsHitTesting(false)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
