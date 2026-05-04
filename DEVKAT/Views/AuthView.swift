@@ -20,7 +20,7 @@ struct AuthView: View {
                 VStack(spacing: 10) {
                     HStack(alignment: .center, spacing: 8) {
                         Text("DEVKAT")
-                            .font(.custom("LEDLIGHT", size: 26).weight(.semibold))
+                            .font(.custom("LEDLIGHT", size: 34).weight(.semibold))
                             .foregroundStyle(.white)
                     }
                     Text("hello, sharing")
