@@ -148,7 +148,6 @@ func installDaemon() {
     let home = FileManager.default.homeDirectoryForCurrentUser.path
     let logPath = "\(home)/.devkat/daemon.log"
 
-    // Run every 5 minutes; also trigger on Codex sqlite changes
     let plist = """
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -160,11 +159,13 @@ func installDaemon() {
         <array>
             <string>\(resolved)</string>
             <string>--sync-all</string>
+            <string>--quiet</string>
         </array>
         <key>StartInterval</key>
         <integer>300</integer>
         <key>WatchPaths</key>
         <array>
+            <string>\(home)/.claude/projects</string>
             <string>\(home)/.codex/state_5.sqlite</string>
             <string>\(home)/Library/Application Support/Cursor/User/globalStorage/state.vscdb</string>
         </array>
@@ -183,18 +184,24 @@ func installDaemon() {
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         try plist.write(to: plistURL, atomically: true, encoding: .utf8)
 
-        // Load the agent
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/bin/launchctl")
-        task.arguments = ["load", plistURL.path]
-        try task.run()
-        task.waitUntilExit()
+        // Unload existing agent if running, then load fresh
+        let unload = Process()
+        unload.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+        unload.arguments = ["unload", plistURL.path]
+        try? unload.run()
+        unload.waitUntilExit()
+
+        let load = Process()
+        load.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+        load.arguments = ["load", plistURL.path]
+        try load.run()
+        load.waitUntilExit()
 
         print("devkat-push: daemon installed")
         print("  binary:   \(resolved)")
         print("  plist:    \(plistURL.path)")
         print("  log:      \(logPath)")
-        print("  interval: every 5 min + on Codex/Cursor activity")
+        print("  interval: every 5 min + on Claude/Codex/Cursor activity")
         print()
         print("Sessions will now sync automatically. Check status with: devkat-push --status")
     } catch {
