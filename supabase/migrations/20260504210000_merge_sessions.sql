@@ -60,13 +60,19 @@ declare
     v_existing  record;
     v_gap       interval := interval '30 minutes';
 begin
-    -- Find an existing session that overlaps or is within 30 min
+    -- Find the best existing session to merge with:
+    -- Must overlap or be within 30 min, pick the one with the closest time range
     select * into v_existing
     from sessions
     where user_id = v_uid
       and started_at <= p_ended_at + v_gap
       and ended_at   >= p_started_at - v_gap
-    order by started_at asc
+    order by
+        -- Prefer sessions that actually contain this time range
+        case when started_at <= p_started_at and ended_at >= p_ended_at then 0 else 1 end,
+        -- Then prefer closest by gap distance
+        greatest(0, extract(epoch from (p_started_at - ended_at)),
+                    extract(epoch from (started_at - p_ended_at)))
     limit 1;
 
     if found then
