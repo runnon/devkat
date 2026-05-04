@@ -62,17 +62,16 @@ struct HomeView: View {
 
             if app.isLoadingSessions {
                 ProgressView()
-                    .tint(Theme.logoGreen)
+                    .tint(.white)
                     .frame(width: 32, height: 32)
             }
 
             Spacer()
 
             HStack(alignment: .center, spacing: 8) {
-                PixelKat(pixelSize: 2, color: Theme.logoGreen)
                 Text("DEVKAT")
                     .font(.custom("Baskerville", size: 18).weight(.semibold))
-                    .foregroundStyle(Theme.logoGreen)
+                    .foregroundStyle(.white)
             }
 
             Spacer()

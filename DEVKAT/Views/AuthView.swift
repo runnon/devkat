@@ -19,10 +19,9 @@ struct AuthView: View {
                 // Logo
                 VStack(spacing: 10) {
                     HStack(alignment: .center, spacing: 8) {
-                        PixelKat(pixelSize: 3, color: Theme.logoGreen)
                         Text("DEVKAT")
                             .font(.custom("Baskerville", size: 26).weight(.semibold))
-                            .foregroundStyle(Theme.logoGreen)
+                            .foregroundStyle(.white)
                     }
                     Text("hello, sharing")
                         .font(.system(.caption, design: .monospaced))
@@ -61,7 +60,7 @@ struct AuthView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)
-                        .background(Theme.logoGreen)
+                        .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     }
                     .disabled(isLoading || email.isEmpty || password.isEmpty)

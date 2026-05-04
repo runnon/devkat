@@ -33,7 +33,6 @@
 		5B9516D365EA356DDCFDF029 /* NewYorkExtraLarge-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3336B65FA94233BA0EDBEEC0 /* NewYorkExtraLarge-Bold.otf */; };
 		5EF63DE1F125E8E75EE2D163 /* NewYorkLarge-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BEE0F40EDA4A79ED3B3CA3DE /* NewYorkLarge-Regular.otf */; };
 		642272699668D2F970C925FA /* NewYorkExtraLarge-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0CD6DC6D3C18BEC7E83DCF3D /* NewYorkExtraLarge-Medium.otf */; };
-		671375E503A4B1C7E50ED130 /* PixelKat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C631EB5A4F344118FBCAA6F3 /* PixelKat.swift */; };
 		6B5F67C19E95240F6D96F565 /* NewYorkExtraLarge-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5E48AE6FB020C385EF1B1A0D /* NewYorkExtraLarge-Heavy.otf */; };
 		6E31DCD7F8188804C51A50B4 /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 59F6EC3F346ECFA86C26F281 /* SF-Pro-Display-Medium.otf */; };
 		7546EDDD9BE65539A0541BC2 /* OverlayPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3953DF82B4F5EFE9DE0B36B3 /* OverlayPreset.swift */; };
@@ -133,7 +132,6 @@
 		B71F57DF6201D94BB2405BCE /* SF-Compact-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Semibold.otf"; sourceTree = "<group>"; };
 		BEE0F40EDA4A79ED3B3CA3DE /* NewYorkLarge-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Regular.otf"; sourceTree = "<group>"; };
 		BF340699BC32C0FFD12BE3F0 /* SF-Compact-Display-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Black.otf"; sourceTree = "<group>"; };
-		C631EB5A4F344118FBCAA6F3 /* PixelKat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelKat.swift; sourceTree = "<group>"; };
 		C81EBE43C6EEC11A0939786B /* SF-Mono-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Semibold.otf"; sourceTree = "<group>"; };
 		C86FB98566A9C96C4FCF1753 /* PixelText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelText.swift; sourceTree = "<group>"; };
 		CEA78A71BC7F5E06A47A39D9 /* CopyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyView.swift; sourceTree = "<group>"; };
@@ -227,7 +225,6 @@
 				9BECB8E96F5FC3F424C10DDE /* HomeView.swift */,
 				B419D746BD547C7B031AC711 /* LaunchScreenView.swift */,
 				AD6381D826E4D878180E4224 /* LegalView.swift */,
-				C631EB5A4F344118FBCAA6F3 /* PixelKat.swift */,
 				C86FB98566A9C96C4FCF1753 /* PixelText.swift */,
 				06F7C504C6B76264C7402709 /* RootView.swift */,
 				FA932260637A396E335EFB96 /* SessionCard.swift */,
@@ -419,7 +416,6 @@
 				07435DBB61C9AF4964F97295 /* LaunchScreenView.swift in Sources */,
 				0F84FBE1427E2FD5376D4AA3 /* LegalView.swift in Sources */,
 				7546EDDD9BE65539A0541BC2 /* OverlayPreset.swift in Sources */,
-				671375E503A4B1C7E50ED130 /* PixelKat.swift in Sources */,
 				CD8A11715F3732FA42F171AA /* PixelText.swift in Sources */,
 				A314BFFABC2420A2C50A13E7 /* RootView.swift in Sources */,
 				4AF9E96D290B588D1BC048FA /* Session.swift in Sources */,
