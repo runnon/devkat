@@ -109,7 +109,16 @@ public enum JSONLParseError: Error {
     case couldNotReadFile(URL)
 }
 
+/// Maximum inactivity gap before splitting into separate work sessions
+private let maxGapSeconds: TimeInterval = 4 * 3600 // 4 hours
+
 public func parseSession(at url: URL) throws -> ParsedSession {
+    let sessions = try parseSessions(at: url)
+    return sessions.last!
+}
+
+/// Parses a JSONL file, splitting into multiple sessions at 4-hour inactivity gaps.
+public func parseSessions(at url: URL) throws -> [ParsedSession] {
     guard let data = try? Data(contentsOf: url) else {
         throw JSONLParseError.couldNotReadFile(url)
     }
@@ -121,96 +130,132 @@ public func parseSession(at url: URL) throws -> ParsedSession {
     let isoFormatter = ISO8601DateFormatter()
     isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
-    var timestamps: [Date] = []
-    var activeDurationMs: Int = 0
-    var linesAdded = 0
-    var linesRemoved = 0
-    var touchedFiles = Set<String>()
-    var seenRequestIds = Set<String>()
-    var totalTokens = 0
-    var model = "claude"
-    var cwd: String?
-    var gitBranch: String?
+    // First pass: collect all records with timestamps
+    struct TimedRecord {
+        let timestamp: Date
+        let record: JSONLRecord
+    }
+
+    var timedRecords: [TimedRecord] = []
+    var allRecords: [JSONLRecord] = []
 
     for line in lines {
         guard let record = try? decoder.decode(JSONLRecord.self, from: Data(line)) else { continue }
-
-        // Timestamps
+        allRecords.append(record)
         if let tsStr = record.timestamp,
            let date = isoFormatter.date(from: tsStr) {
-            timestamps.append(date)
-        }
-
-        // cwd and gitBranch from user records
-        if record.type == "user" {
-            if cwd == nil, let c = record.cwd { cwd = c }
-            if gitBranch == nil, let b = record.gitBranch { gitBranch = b }
-        }
-
-        // Active duration from turn_duration system events
-        if record.type == "system",
-           record.subtype == "turn_duration",
-           let ms = record.durationMs {
-            activeDurationMs += ms
-        }
-
-        // Tokens -- deduplicate by requestId
-        if record.type == "assistant",
-           let msg = record.message,
-           msg.model != "<synthetic>",
-           let usage = msg.usage {
-            let rid = record.requestId ?? UUID().uuidString
-            if !seenRequestIds.contains(rid) {
-                seenRequestIds.insert(rid)
-                totalTokens += (usage.inputTokens ?? 0)
-                    + (usage.outputTokens ?? 0)
-                    + (usage.cacheReadInputTokens ?? 0)
-                    + (usage.cacheCreationInputTokens ?? 0)
-                if let m = msg.model, m != "<synthetic>", model == "claude" {
-                    model = m
-                }
-            }
-        }
-
-        // Lines added/removed from structuredPatch
-        if let result = record.toolUseResult {
-            if let patches = result.structuredPatch {
-                for hunk in patches {
-                    for patchLine in hunk.lines {
-                        if patchLine.hasPrefix("+") { linesAdded += 1 }
-                        else if patchLine.hasPrefix("-") { linesRemoved += 1 }
-                    }
-                }
-            }
-            if let fp = result.filePath {
-                touchedFiles.insert(fp)
-            }
+            timedRecords.append(TimedRecord(timestamp: date, record: record))
         }
     }
 
-    let startedAt = timestamps.min() ?? Date()
-    let endedAt   = timestamps.max() ?? Date()
-    let activeDuration: TimeInterval = activeDurationMs > 0
-        ? TimeInterval(activeDurationMs) / 1000.0
-        : endedAt.timeIntervalSince(startedAt)
+    guard !timedRecords.isEmpty else { throw JSONLParseError.emptyFile }
 
-    let repoAlias = cwd.map { URL(fileURLWithPath: $0).lastPathComponent }
-    let sessionId = url.deletingPathExtension().lastPathComponent
+    // Sort by timestamp
+    timedRecords.sort { $0.timestamp < $1.timestamp }
 
-    return ParsedSession(
-        id: sessionId,
-        startedAt: startedAt,
-        endedAt: endedAt,
-        activeDuration: activeDuration,
-        linesAdded: linesAdded,
-        linesRemoved: linesRemoved,
-        filesTouched: touchedFiles.count,
-        tokens: totalTokens,
-        model: model,
-        repoAlias: repoAlias,
-        gitBranch: gitBranch,
-        source: .claude
-    )
+    // Find split points (gaps > 4 hours)
+    var splitIndices: [Int] = [0]
+    for i in 1..<timedRecords.count {
+        let gap = timedRecords[i].timestamp.timeIntervalSince(timedRecords[i-1].timestamp)
+        if gap > maxGapSeconds {
+            splitIndices.append(i)
+        }
+    }
+
+    // Build sessions from each segment
+    let sessionIdBase = url.deletingPathExtension().lastPathComponent
+    var results: [ParsedSession] = []
+
+    for (segIdx, startIdx) in splitIndices.enumerated() {
+        let endIdx = segIdx + 1 < splitIndices.count ? splitIndices[segIdx + 1] : timedRecords.count
+        let segment = timedRecords[startIdx..<endIdx]
+
+        var activeDurationMs: Int = 0
+        var linesAdded = 0
+        var linesRemoved = 0
+        var touchedFiles = Set<String>()
+        var seenRequestIds = Set<String>()
+        var totalTokens = 0
+        var model = "claude"
+        var cwd: String?
+        var gitBranch: String?
+
+        let segStart = segment.first!.timestamp
+        let segEnd = segment.last!.timestamp
+
+        // Process all records that fall within this segment's time range
+        for tr in segment {
+            let record = tr.record
+
+            if record.type == "user" {
+                if cwd == nil, let c = record.cwd { cwd = c }
+                if gitBranch == nil, let b = record.gitBranch { gitBranch = b }
+            }
+
+            if record.type == "system",
+               record.subtype == "turn_duration",
+               let ms = record.durationMs {
+                activeDurationMs += ms
+            }
+
+            if record.type == "assistant",
+               let msg = record.message,
+               msg.model != "<synthetic>",
+               let usage = msg.usage {
+                let rid = record.requestId ?? UUID().uuidString
+                if !seenRequestIds.contains(rid) {
+                    seenRequestIds.insert(rid)
+                    totalTokens += (usage.inputTokens ?? 0)
+                        + (usage.outputTokens ?? 0)
+                        + (usage.cacheReadInputTokens ?? 0)
+                        + (usage.cacheCreationInputTokens ?? 0)
+                    if let m = msg.model, m != "<synthetic>", model == "claude" {
+                        model = m
+                    }
+                }
+            }
+
+            if let result = record.toolUseResult {
+                if let patches = result.structuredPatch {
+                    for hunk in patches {
+                        for patchLine in hunk.lines {
+                            if patchLine.hasPrefix("+") { linesAdded += 1 }
+                            else if patchLine.hasPrefix("-") { linesRemoved += 1 }
+                        }
+                    }
+                }
+                if let fp = result.filePath {
+                    touchedFiles.insert(fp)
+                }
+            }
+        }
+
+        let activeDuration: TimeInterval = activeDurationMs > 0
+            ? TimeInterval(activeDurationMs) / 1000.0
+            : segEnd.timeIntervalSince(segStart)
+
+        let repoAlias = cwd.map { URL(fileURLWithPath: $0).lastPathComponent }
+        let sessionId = splitIndices.count > 1
+            ? "\(sessionIdBase)_seg\(segIdx)"
+            : sessionIdBase
+
+        results.append(ParsedSession(
+            id: sessionId,
+            startedAt: segStart,
+            endedAt: segEnd,
+            activeDuration: activeDuration,
+            linesAdded: linesAdded,
+            linesRemoved: linesRemoved,
+            filesTouched: touchedFiles.count,
+            tokens: totalTokens,
+            model: model,
+            repoAlias: repoAlias,
+            gitBranch: gitBranch,
+            source: .claude
+        ))
+    }
+
+    return results
 }
 
 // MARK: - Session discovery

@@ -142,15 +142,18 @@ public func parseCodexDiffStats(rolloutPath: String) -> CodexDiffStats {
 
 // MARK: - Full session parse
 
-public func parseCodexSession(_ row: CodexThreadRow) -> ParsedSession {
-    let startedAt = Date(timeIntervalSince1970: Double(row.createdAtMs) / 1000.0)
-    let endedAt   = Date(timeIntervalSince1970: Double(row.updatedAtMs) / 1000.0)
-    let activeDuration = endedAt.timeIntervalSince(startedAt)
+/// Maximum inactivity gap before splitting into separate work sessions
+private let codexMaxGapSeconds: TimeInterval = 4 * 3600 // 4 hours
 
+public func parseCodexSession(_ row: CodexThreadRow) -> ParsedSession {
+    return parseCodexSessions(row).last ?? makeCodexFallback(row)
+}
+
+/// Parses a Codex session, splitting into multiple sessions at 4-hour inactivity gaps.
+public func parseCodexSessions(_ row: CodexThreadRow) -> [ParsedSession] {
     let diff = parseCodexDiffStats(rolloutPath: row.rolloutPath)
     let repoAlias = row.cwd.map { URL(fileURLWithPath: $0).lastPathComponent }
 
-    // Model label: prefer "provider/model", e.g. "azure/gpt-5"
     let modelLabel: String
     if row.model.isEmpty || row.model == "codex" {
         modelLabel = row.modelProvider
@@ -158,11 +161,66 @@ public func parseCodexSession(_ row: CodexThreadRow) -> ParsedSession {
         modelLabel = "\(row.modelProvider)/\(row.model)"
     }
 
+    // Try to get event timestamps from rollout JSONL for gap detection
+    let eventTimestamps = parseCodexEventTimestamps(rolloutPath: row.rolloutPath)
+
+    if eventTimestamps.count >= 2 {
+        // Split on 4-hour gaps
+        var splitIndices: [Int] = [0]
+        for i in 1..<eventTimestamps.count {
+            let gap = eventTimestamps[i].timeIntervalSince(eventTimestamps[i-1])
+            if gap > codexMaxGapSeconds {
+                splitIndices.append(i)
+            }
+        }
+
+        if splitIndices.count == 1 {
+            // No splits needed
+            return [makeSingleCodexSession(row, diff: diff, repoAlias: repoAlias, modelLabel: modelLabel)]
+        }
+
+        // Proportionally distribute metrics across segments based on time
+        let totalSpan = eventTimestamps.last!.timeIntervalSince(eventTimestamps.first!)
+        var results: [ParsedSession] = []
+
+        for (segIdx, startIdx) in splitIndices.enumerated() {
+            let endIdx = segIdx + 1 < splitIndices.count ? splitIndices[segIdx + 1] : eventTimestamps.count
+            let segStart = eventTimestamps[startIdx]
+            let segEnd = eventTimestamps[endIdx - 1]
+            let segSpan = segEnd.timeIntervalSince(segStart)
+            let proportion = totalSpan > 0 ? segSpan / totalSpan : 1.0 / Double(splitIndices.count)
+
+            let sessionId = "\(row.id)_seg\(segIdx)"
+
+            results.append(ParsedSession(
+                id: sessionId,
+                startedAt: segStart,
+                endedAt: segEnd,
+                activeDuration: segSpan,
+                linesAdded: Int(Double(diff.linesAdded) * proportion),
+                linesRemoved: Int(Double(diff.linesRemoved) * proportion),
+                filesTouched: diff.filesTouched.count,
+                tokens: Int(Double(row.tokensUsed) * proportion),
+                model: modelLabel,
+                repoAlias: repoAlias,
+                gitBranch: row.gitBranch,
+                source: .codex
+            ))
+        }
+        return results
+    }
+
+    return [makeSingleCodexSession(row, diff: diff, repoAlias: repoAlias, modelLabel: modelLabel)]
+}
+
+private func makeSingleCodexSession(_ row: CodexThreadRow, diff: CodexDiffStats, repoAlias: String?, modelLabel: String) -> ParsedSession {
+    let startedAt = Date(timeIntervalSince1970: Double(row.createdAtMs) / 1000.0)
+    let endedAt   = Date(timeIntervalSince1970: Double(row.updatedAtMs) / 1000.0)
     return ParsedSession(
         id: row.id,
         startedAt: startedAt,
         endedAt: endedAt,
-        activeDuration: activeDuration,
+        activeDuration: endedAt.timeIntervalSince(startedAt),
         linesAdded: diff.linesAdded,
         linesRemoved: diff.linesRemoved,
         filesTouched: diff.filesTouched.count,
@@ -172,4 +230,39 @@ public func parseCodexSession(_ row: CodexThreadRow) -> ParsedSession {
         gitBranch: row.gitBranch,
         source: .codex
     )
+}
+
+private func makeCodexFallback(_ row: CodexThreadRow) -> ParsedSession {
+    let diff = parseCodexDiffStats(rolloutPath: row.rolloutPath)
+    let repoAlias = row.cwd.map { URL(fileURLWithPath: $0).lastPathComponent }
+    let modelLabel = row.model.isEmpty ? row.modelProvider : "\(row.modelProvider)/\(row.model)"
+    return makeSingleCodexSession(row, diff: diff, repoAlias: repoAlias, modelLabel: modelLabel)
+}
+
+/// Extracts event timestamps from a Codex rollout JSONL
+private func parseCodexEventTimestamps(rolloutPath: String) -> [Date] {
+    guard let data = try? Data(contentsOf: URL(fileURLWithPath: rolloutPath)) else {
+        return []
+    }
+
+    let lines = data.split(separator: UInt8(ascii: "\n"), omittingEmptySubsequences: true)
+    var timestamps: [Date] = []
+    let isoFormatter = ISO8601DateFormatter()
+    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+    struct TimestampEvent: Decodable {
+        let timestamp: String?
+        let created_at: String?
+    }
+
+    let decoder = JSONDecoder()
+    for line in lines {
+        guard let event = try? decoder.decode(TimestampEvent.self, from: Data(line)) else { continue }
+        if let ts = event.timestamp ?? event.created_at,
+           let date = isoFormatter.date(from: ts) {
+            timestamps.append(date)
+        }
+    }
+
+    return timestamps.sorted()
 }

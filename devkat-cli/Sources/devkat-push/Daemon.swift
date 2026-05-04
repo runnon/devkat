@@ -24,16 +24,16 @@ func syncAll(verbose: Bool = false) {
         guard !state.contains(sid) else { continue }
 
         do {
-            let session = try parseSession(at: url)
-            // Skip trivially short sessions (< 60s or 0 tokens)
-            guard session.tokens > 0, session.activeDuration >= 60 else {
-                state.mark(sid)
-                continue
+            let sessions = try parseSessions(at: url)
+            for session in sessions {
+                guard session.tokens > 0, session.activeDuration >= 60 else { continue }
+                guard !state.contains(session.id) else { continue }
+                try writeSession(session)
+                state.mark(session.id)
+                pushed += 1
+                if verbose { printSyncLine(session) }
             }
-            try writeSession(session)
             state.mark(sid)
-            pushed += 1
-            if verbose { printSyncLine(session) }
         } catch {
             failed += 1
             if verbose { print("  ✗ claude/\(sid.prefix(8))… \(error.localizedDescription)") }
@@ -45,21 +45,22 @@ func syncAll(verbose: Bool = false) {
     for row in codexRows {
         guard !state.contains(row.id) else { continue }
 
-        let session = parseCodexSession(row)
-        guard session.tokens > 0, session.activeDuration >= 60 else {
-            state.mark(row.id)
-            continue
-        }
+        let sessions = parseCodexSessions(row)
+        for session in sessions {
+            guard session.tokens > 0, session.activeDuration >= 60 else { continue }
+            guard !state.contains(session.id) else { continue }
 
-        do {
-            try writeSession(session)
-            state.mark(row.id)
-            pushed += 1
-            if verbose { printSyncLine(session) }
-        } catch {
-            failed += 1
-            if verbose { print("  ✗ codex/\(row.id.prefix(8))… \(error.localizedDescription)") }
+            do {
+                try writeSession(session)
+                state.mark(session.id)
+                pushed += 1
+                if verbose { printSyncLine(session) }
+            } catch {
+                failed += 1
+                if verbose { print("  ✗ codex/\(row.id.prefix(8))… \(error.localizedDescription)") }
+            }
         }
+        state.mark(row.id)
     }
 
     // ── Cursor sessions ──
@@ -67,22 +68,22 @@ func syncAll(verbose: Bool = false) {
     for row in cursorRows {
         guard !state.contains(row.composerId) else { continue }
 
-        let session = parseCursorSession(row)
-        // Cursor doesn't have tokens; skip sessions with zero lines and < 60s
-        guard session.linesAdded + session.linesRemoved > 0, session.activeDuration >= 60 else {
-            state.mark(row.composerId)
-            continue
-        }
+        let sessions = parseCursorSessions(row)
+        for session in sessions {
+            guard session.linesAdded + session.linesRemoved > 0, session.activeDuration >= 60 else { continue }
+            guard !state.contains(session.id) else { continue }
 
-        do {
-            try writeSession(session)
-            state.mark(row.composerId)
-            pushed += 1
-            if verbose { printSyncLine(session) }
-        } catch {
-            failed += 1
-            if verbose { print("  ✗ cursor/\(row.composerId.prefix(8))… \(error.localizedDescription)") }
+            do {
+                try writeSession(session)
+                state.mark(session.id)
+                pushed += 1
+                if verbose { printSyncLine(session) }
+            } catch {
+                failed += 1
+                if verbose { print("  ✗ cursor/\(row.composerId.prefix(8))… \(error.localizedDescription)") }
+            }
         }
+        state.mark(row.composerId)
     }
 
     state.save()

@@ -96,25 +96,110 @@ public func findLatestCursorSession() -> CursorComposerRow? {
 
 // MARK: - Full session parse
 
+/// Maximum inactivity gap before splitting into separate work sessions
+private let cursorMaxGapSeconds: TimeInterval = 4 * 3600 // 4 hours
+
 public func parseCursorSession(_ row: CursorComposerRow) -> ParsedSession {
+    return parseCursorSessions(row).last ?? makeSingleCursorSession(row)
+}
+
+/// Parses a Cursor session, splitting into multiple sessions at 4-hour inactivity gaps.
+public func parseCursorSessions(_ row: CursorComposerRow) -> [ParsedSession] {
+    // Try to get bubble timestamps for this composer session
+    let bubbleTimestamps = getCursorBubbleTimestamps(composerId: row.composerId)
+
+    if bubbleTimestamps.count >= 2 {
+        var splitIndices: [Int] = [0]
+        for i in 1..<bubbleTimestamps.count {
+            let gap = bubbleTimestamps[i].timeIntervalSince(bubbleTimestamps[i-1])
+            if gap > cursorMaxGapSeconds {
+                splitIndices.append(i)
+            }
+        }
+
+        if splitIndices.count > 1 {
+            let totalSpan = bubbleTimestamps.last!.timeIntervalSince(bubbleTimestamps.first!)
+            let repoAlias = row.repoPath.map { URL(fileURLWithPath: $0).lastPathComponent }
+            var results: [ParsedSession] = []
+
+            for (segIdx, startIdx) in splitIndices.enumerated() {
+                let endIdx = segIdx + 1 < splitIndices.count ? splitIndices[segIdx + 1] : bubbleTimestamps.count
+                let segStart = bubbleTimestamps[startIdx]
+                let segEnd = bubbleTimestamps[endIdx - 1]
+                let segSpan = segEnd.timeIntervalSince(segStart)
+                let proportion = totalSpan > 0 ? segSpan / totalSpan : 1.0 / Double(splitIndices.count)
+
+                results.append(ParsedSession(
+                    id: "\(row.composerId)_seg\(segIdx)",
+                    startedAt: segStart,
+                    endedAt: segEnd,
+                    activeDuration: segSpan,
+                    linesAdded: Int(Double(row.linesAdded) * proportion),
+                    linesRemoved: Int(Double(row.linesRemoved) * proportion),
+                    filesTouched: row.filesChanged,
+                    tokens: 0,
+                    model: "cursor",
+                    repoAlias: repoAlias,
+                    gitBranch: row.gitBranch,
+                    source: .cursor
+                ))
+            }
+            return results
+        }
+    }
+
+    return [makeSingleCursorSession(row)]
+}
+
+private func makeSingleCursorSession(_ row: CursorComposerRow) -> ParsedSession {
     let startedAt = Date(timeIntervalSince1970: Double(row.createdAtMs) / 1000.0)
     let endedAt   = Date(timeIntervalSince1970: Double(row.updatedAtMs) / 1000.0)
-    let activeDuration = endedAt.timeIntervalSince(startedAt)
-
     let repoAlias = row.repoPath.map { URL(fileURLWithPath: $0).lastPathComponent }
 
     return ParsedSession(
         id: row.composerId,
         startedAt: startedAt,
         endedAt: endedAt,
-        activeDuration: activeDuration,
+        activeDuration: endedAt.timeIntervalSince(startedAt),
         linesAdded: row.linesAdded,
         linesRemoved: row.linesRemoved,
         filesTouched: row.filesChanged,
-        tokens: 0,  // Cursor doesn't expose per-session token counts
+        tokens: 0,
         model: "cursor",
         repoAlias: repoAlias,
         gitBranch: row.gitBranch,
         source: .cursor
     )
+}
+
+/// Reads bubble timestamps for a given composer session from cursorDiskKV
+private func getCursorBubbleTimestamps(composerId: String) -> [Date] {
+    var db: OpaquePointer?
+    guard sqlite3_open_v2(cursorDBPath, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
+        return []
+    }
+    defer { sqlite3_close(db) }
+
+    let sql = "SELECT value FROM cursorDiskKV WHERE key LIKE 'bubbleId:\(composerId):%' LIMIT 500"
+    var stmt: OpaquePointer?
+    guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else { return [] }
+    defer { sqlite3_finalize(stmt) }
+
+    let isoFormatter = ISO8601DateFormatter()
+    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+    var timestamps: [Date] = []
+
+    while sqlite3_step(stmt) == SQLITE_ROW {
+        guard let blob = sqlite3_column_text(stmt, 0) else { continue }
+        let jsonStr = String(cString: blob)
+        guard let data = jsonStr.data(using: .utf8),
+              let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let createdAt = obj["createdAt"] as? String,
+              let date = isoFormatter.date(from: createdAt)
+        else { continue }
+        timestamps.append(date)
+    }
+
+    return timestamps.sorted()
 }
