@@ -67,4 +67,10 @@ enum SessionFormatting {
         f.dateFormat = "EEE MMM d"
         return f.string(from: date).uppercased()
     }
+
+    static func time(for date: Date) -> String {
+        let f = DateFormatter()
+        f.dateFormat = "h:mm a"
+        return f.string(from: date).lowercased()
+    }
 }
