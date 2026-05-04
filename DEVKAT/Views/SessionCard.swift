@@ -84,6 +84,9 @@ struct SessionCard: View {
                 .foregroundStyle(Theme.textDim)
                 .tracking(1.5)
             Spacer(minLength: 4)
+            Text(SessionFormatting.time(for: session.endedAt))
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundStyle(Theme.textMuted)
         }
     }
 
