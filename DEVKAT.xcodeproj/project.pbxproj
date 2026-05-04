@@ -27,6 +27,7 @@
 		373FBB188F570887CD74D9E3 /* SF-Mono-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3DEEC7109A3A7EC9319ED286 /* SF-Mono-Medium.otf */; };
 		3DC6D9F56B44D222F9A9B846 /* SF-Compact-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2025929B6416241943670941 /* SF-Compact-Display-Medium.otf */; };
 		4A52F710574213AA54B86B53 /* SF-Mono-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */; };
+		4A52F710LEDLIGHT00000001 /* LEDLIGHT.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4A52F710LEDLIGHT00000002 /* LEDLIGHT.otf */; };
 		4AF9E96D290B588D1BC048FA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476660E9A89DDED9018120A9 /* Session.swift */; };
 		51CA498C684A34A262F4C612 /* NewYorkExtraLarge-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 84BA053E9B5DE2271C63B776 /* NewYorkExtraLarge-Regular.otf */; };
 		54E1EAFA1481C4C7A3CF27EB /* NewYorkLarge-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 59BF6AE4DD745E65A6A7AADD /* NewYorkLarge-Semibold.otf */; };
@@ -88,6 +89,7 @@
 		13C6778CCEBE4EF8628A92B1 /* SF-Compact-Rounded-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Semibold.otf"; sourceTree = "<group>"; };
 		1542D4197615B82C214F98E7 /* NewYorkMedium-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkMedium-Bold.otf"; sourceTree = "<group>"; };
 		18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Regular.otf"; sourceTree = "<group>"; };
+		4A52F710LEDLIGHT00000002 /* LEDLIGHT.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LEDLIGHT.otf"; sourceTree = "<group>"; };
 		1D349C933992F2C0FD0BF27D /* SF-Compact-Rounded-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Bold.otf"; sourceTree = "<group>"; };
 		2025929B6416241943670941 /* SF-Compact-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Medium.otf"; sourceTree = "<group>"; };
 		23F62578DC45BDE223590538 /* SF-Pro-Display-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Black.otf"; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				626CA09150AA8879D949C923 /* SF-Mono-Heavy.otf */,
 				3DEEC7109A3A7EC9319ED286 /* SF-Mono-Medium.otf */,
 				18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */,
+				4A52F710LEDLIGHT00000002 /* LEDLIGHT.otf */,
 				C81EBE43C6EEC11A0939786B /* SF-Mono-Semibold.otf */,
 				23F62578DC45BDE223590538 /* SF-Pro-Display-Black.otf */,
 				F061E5A2135512A655DC5E24 /* SF-Pro-Display-Bold.otf */,
@@ -382,6 +385,7 @@
 				8E13FEB03F0BBD9B6477B639 /* SF-Mono-Heavy.otf in Resources */,
 				373FBB188F570887CD74D9E3 /* SF-Mono-Medium.otf in Resources */,
 				4A52F710574213AA54B86B53 /* SF-Mono-Regular.otf in Resources */,
+				4A52F710LEDLIGHT00000001 /* LEDLIGHT.otf in Resources */,
 				30DC68D147B5BE25EDEA432F /* SF-Mono-Semibold.otf in Resources */,
 				2EE66C728E0F4A41B957FD3A /* SF-Pro-Display-Black.otf in Resources */,
 				8ABFB797FBC387A3F2CF1AC9 /* SF-Pro-Display-Bold.otf in Resources */,

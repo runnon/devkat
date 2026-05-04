@@ -70,7 +70,7 @@ struct HomeView: View {
 
             HStack(alignment: .center, spacing: 8) {
                 Text("DEVKAT")
-                    .font(.custom("Baskerville", size: 18).weight(.semibold))
+                    .font(.custom("LEDLIGHT", size: 18).weight(.semibold))
                     .foregroundStyle(.white)
             }
 
