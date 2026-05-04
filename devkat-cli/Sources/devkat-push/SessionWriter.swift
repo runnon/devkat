@@ -74,7 +74,12 @@ public func writeSession(_ session: ParsedSession) throws {
     let sem = DispatchSemaphore(value: 0)
     var writeError: Error?
 
-    URLSession.shared.dataTask(with: req) { data, response, error in
+    let config = URLSessionConfiguration.default
+    config.timeoutIntervalForRequest = 30
+    config.timeoutIntervalForResource = 60
+    let urlSession = URLSession(configuration: config)
+
+    urlSession.dataTask(with: req) { data, response, error in
         defer { sem.signal() }
         if let error { writeError = error; return }
         if let http = response as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
@@ -83,7 +88,10 @@ public func writeSession(_ session: ParsedSession) throws {
         }
     }.resume()
 
-    sem.wait()
+    let waitResult = sem.wait(timeout: .now() + 60)
+    if waitResult == .timedOut {
+        throw AuthError(message: "Request timed out")
+    }
 
     if let writeError { throw writeError }
     print("devkat-push: → synced (\(session.source.rawValue) · \(session.id.prefix(8))…)")

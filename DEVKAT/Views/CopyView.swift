@@ -173,9 +173,6 @@ struct CopyView: View {
 
     private var emptyState: some View {
         VStack(spacing: 16) {
-            Image(systemName: "doc.on.doc")
-                .font(.system(size: 44, weight: .regular, design: .monospaced))
-                .foregroundStyle(Theme.textDim)
             Text("PICK A SESSION ON HOME")
                 .font(.system(.footnote, design: .monospaced).weight(.bold))
                 .foregroundStyle(Theme.textDim)
