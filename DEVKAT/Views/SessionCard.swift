@@ -41,7 +41,7 @@ struct SessionCard: View {
                          value: "\(session.filesTouched)",
                          unit: "files")
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    stat(label: "TOKEN BURN",
+                    stat(label: "BURN",
                          value: SessionFormatting.tokens(session.tokens),
                          unit: "tokens")
                         .frame(maxWidth: .infinity, alignment: .leading)
