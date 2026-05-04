@@ -9,5 +9,8 @@ DerivedData/
 .env.*
 !.env.example
 
+# Supabase local state
+supabase/.temp/
+
 # macOS
 .DS_Store
