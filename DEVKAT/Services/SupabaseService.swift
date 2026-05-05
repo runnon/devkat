@@ -15,6 +15,22 @@ struct AuthTokens {
         Keychain.save(refreshToken, key: "refresh_token")
     }
 
+    /// Decode the email from the JWT payload without any network call.
+    var email: String? {
+        let parts = accessToken.split(separator: ".")
+        guard parts.count == 3 else { return nil }
+        var base64 = String(parts[1])
+        // Base64url → Base64
+        base64 = base64.replacingOccurrences(of: "-", with: "+")
+                       .replacingOccurrences(of: "_", with: "/")
+        let remainder = base64.count % 4
+        if remainder > 0 { base64 += String(repeating: "=", count: 4 - remainder) }
+        guard let data = Data(base64Encoded: base64),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let email = json["email"] as? String else { return nil }
+        return email
+    }
+
     static func clear() {
         Keychain.delete(key: "access_token")
         Keychain.delete(key: "refresh_token")
