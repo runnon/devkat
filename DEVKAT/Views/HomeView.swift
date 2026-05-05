@@ -8,6 +8,7 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var copiedCommand = false
     @State private var pulse = false
+    @State private var checkedNotConnected = false
 
     private var grouped: [(label: String, items: [Session])] {
         let cal = Calendar.current
@@ -187,11 +188,56 @@ struct HomeView: View {
                 .font(.system(.caption, design: .monospaced))
                 .foregroundStyle(Theme.textMuted)
                 .multilineTextAlignment(.center)
-            refreshButton(label: "CHECK CONNECTION")
+            if checkedNotConnected {
+                Text("Not connected yet. Run the command above.")
+                    .font(.system(size: 10, design: .monospaced).weight(.bold))
+                    .foregroundStyle(.red.opacity(0.8))
+                    .tracking(0.5)
+                    .multilineTextAlignment(.center)
+                    .transition(.opacity)
+            }
+            checkConnectionButton
             Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity)
         .containerRelativeFrame(.vertical)
+    }
+
+    private var checkConnectionButton: some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            checkedNotConnected = false
+            Task {
+                await app.fetchSessions()
+                if app.installations.isEmpty {
+                    withAnimation { checkedNotConnected = true }
+                }
+            }
+        } label: {
+            HStack(spacing: 8) {
+                if app.isLoadingSessions {
+                    ProgressView()
+                        .controlSize(.mini)
+                        .tint(Theme.logoGreen)
+                } else {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 11, weight: .bold))
+                }
+                Text(app.isLoadingSessions ? "CHECKING…" : "CHECK CONNECTION")
+                    .font(.system(size: 10, design: .monospaced).weight(.bold))
+                    .tracking(1.5)
+            }
+            .foregroundStyle(Theme.logoGreen)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 9)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Theme.logoGreen.opacity(0.5), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+        .disabled(app.isLoadingSessions)
+        .padding(.top, 8)
     }
 
     private func refreshButton(label: String) -> some View {
