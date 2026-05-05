@@ -6,6 +6,7 @@ import UIKit
 final class AppModel {
     var selectedSession: Session?
     var sessions: [Session] = []
+    var installations: [Installation] = []
     var isLoggedIn: Bool = AuthTokens.stored != nil
     var isLoadingSessions = false
 
@@ -32,6 +33,7 @@ final class AppModel {
         AuthTokens.clear()
         isLoggedIn = false
         sessions = []
+        installations = []
         selectedSession = nil
     }
 
@@ -59,19 +61,25 @@ final class AppModel {
         defer { isLoadingSessions = false }
 
         do {
-            var token = tokens.accessToken
-            // Try fetch; if 401 refresh and retry once
             do {
-                sessions = try await SupabaseService.shared.fetchSessions(token: token)
+                try await loadAll(token: tokens.accessToken)
             } catch SupabaseError.http(401, _) {
                 let refreshed = try await SupabaseService.shared.refreshTokens(tokens.refreshToken)
                 refreshed.persist()
-                token = refreshed.accessToken
-                sessions = try await SupabaseService.shared.fetchSessions(token: token)
+                try await loadAll(token: refreshed.accessToken)
             }
         } catch {
             // Keep whatever we have; don't blank the screen on transient errors
             print("AppModel: fetchSessions error – \(error)")
         }
+    }
+
+    @MainActor
+    private func loadAll(token: String) async throws {
+        async let s = SupabaseService.shared.fetchSessions(token: token)
+        async let i = SupabaseService.shared.fetchInstallations(token: token)
+        let (sList, iList) = try await (s, i)
+        sessions = sList
+        installations = iList
     }
 }

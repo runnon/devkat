@@ -7,6 +7,7 @@ struct HomeView: View {
     @Environment(AppModel.self) private var app
     @State private var showSettings = false
     @State private var copiedCommand = false
+    @State private var pulse = false
 
     private var grouped: [(label: String, items: [Session])] {
         let cal = Calendar.current
@@ -25,7 +26,11 @@ struct HomeView: View {
             titleBar
             Divider().background(Theme.border)
             if app.sessions.isEmpty {
-                emptyState
+                if app.installations.isEmpty {
+                    setupState
+                } else {
+                    waitingState
+                }
             } else {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 24, pinnedViews: []) {
@@ -84,7 +89,50 @@ struct HomeView: View {
         .padding(.vertical, 14)
     }
 
-    private var emptyState: some View {
+    private var waitingState: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            ZStack {
+                Circle()
+                    .stroke(Theme.logoGreen.opacity(0.4), lineWidth: 1)
+                    .frame(width: 64, height: 64)
+                    .scaleEffect(pulse ? 1.4 : 1.0)
+                    .opacity(pulse ? 0 : 0.8)
+                Image(systemName: "terminal")
+                    .font(.system(size: 36, weight: .thin))
+                    .foregroundStyle(Theme.logoGreen)
+            }
+            .onAppear {
+                withAnimation(.easeOut(duration: 1.6).repeatForever(autoreverses: false)) {
+                    pulse = true
+                }
+            }
+            Text("CONNECTED")
+                .font(.system(.footnote, design: .monospaced).weight(.bold))
+                .foregroundStyle(Theme.logoGreen)
+                .tracking(2)
+            VStack(spacing: 6) {
+                if let host = app.installations.first?.hostname {
+                    Text(host)
+                        .font(.system(.caption, design: .monospaced))
+                        .foregroundStyle(Theme.text)
+                }
+                Text("Waiting for your first session…")
+                    .font(.system(.caption, design: .monospaced))
+                    .foregroundStyle(Theme.textMuted)
+                    .multilineTextAlignment(.center)
+            }
+            Text("Run Claude, Codex, or Cursor on this Mac\nand sessions will sync automatically.")
+                .font(.system(.caption2, design: .monospaced))
+                .foregroundStyle(Theme.textDim)
+                .multilineTextAlignment(.center)
+                .padding(.top, 4)
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+    }
+
+    private var setupState: some View {
         VStack(spacing: 20) {
             Spacer()
             Image(systemName: "terminal")

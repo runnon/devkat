@@ -29,6 +29,7 @@
 		4A52F710574213AA54B86B53 /* SF-Mono-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */; };
 		4A52F710LEDLIGHT00000001 /* LEDLIGHT.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4A52F710LEDLIGHT00000002 /* LEDLIGHT.otf */; };
 		4AF9E96D290B588D1BC048FA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476660E9A89DDED9018120A9 /* Session.swift */; };
+		1A2B3C4D5E6F708192AABBCC /* Installation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F70819293BBCCDD /* Installation.swift */; };
 		51CA498C684A34A262F4C612 /* NewYorkExtraLarge-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 84BA053E9B5DE2271C63B776 /* NewYorkExtraLarge-Regular.otf */; };
 		54E1EAFA1481C4C7A3CF27EB /* NewYorkLarge-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 59BF6AE4DD745E65A6A7AADD /* NewYorkLarge-Semibold.otf */; };
 		5B9516D365EA356DDCFDF029 /* NewYorkExtraLarge-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3336B65FA94233BA0EDBEEC0 /* NewYorkExtraLarge-Bold.otf */; };
@@ -103,6 +104,7 @@
 		42093FDD0C086E1E3392D529 /* SF-Compact-Rounded-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Black.otf"; sourceTree = "<group>"; };
 		43D131E1E065C46A69B02AE1 /* NewYorkSmall-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkSmall-Regular.otf"; sourceTree = "<group>"; };
 		476660E9A89DDED9018120A9 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		2B3C4D5E6F70819293BBCCDD /* Installation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Installation.swift; sourceTree = "<group>"; };
 		4A2AE7B3925F8C529A8CD8FB /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		4A52F710LEDLIGHT00000002 /* LEDLIGHT.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LEDLIGHT.otf; sourceTree = "<group>"; };
 		59BF6AE4DD745E65A6A7AADD /* NewYorkLarge-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Semibold.otf"; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				3734C094DC090D8E5C6988DE /* AppModel.swift */,
+				2B3C4D5E6F70819293BBCCDD /* Installation.swift */,
 				476660E9A89DDED9018120A9 /* Session.swift */,
 			);
 			path = Models;
@@ -422,6 +425,7 @@
 				CD8A11715F3732FA42F171AA /* PixelText.swift in Sources */,
 				A314BFFABC2420A2C50A13E7 /* RootView.swift in Sources */,
 				4AF9E96D290B588D1BC048FA /* Session.swift in Sources */,
+				1A2B3C4D5E6F708192AABBCC /* Installation.swift in Sources */,
 				A0938D5E945E7FBB897E48D4 /* SessionCard.swift in Sources */,
 				D9BEF19D2741142FE6A02E91 /* SettingsView.swift in Sources */,
 				0B573E5EDA2F0027888C43EE /* SupabaseService.swift in Sources */,
