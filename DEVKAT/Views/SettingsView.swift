@@ -53,6 +53,10 @@ struct SettingsView: View {
                     }
 
                     settingsSection("Account") {
+                        if let email = AuthTokens.stored?.email {
+                            infoRow(label: "Email", value: email)
+                            divider
+                        }
                         row(label: "Log Out", color: .red) {
                             app.signOut()
                             dismiss()
