@@ -183,7 +183,7 @@ def main() -> None:
         print(f"  ✓ cards/{slug}-card.png")
 
         ipad_card = render_card(screenshot, item["lines"], IPAD_W, IPAD_H,
-                                phone_y_ratio=0.185, bottom_pad_ratio=0.025)
+                                phone_y_ratio=0.22, bottom_pad_ratio=0.025)
         ipad_card.save(ipad_cards_dir / f"{slug}-ipad-card.png")
         print(f"  ✓ ipad-cards/{slug}-ipad-card.png")
 
