@@ -124,23 +124,34 @@ public func parseCursorSessions(_ row: CursorComposerRow) -> [ParsedSession] {
             }
         }
 
+        // Active duration = sum of inter-bubble gaps ≤ 30 min (ignores idle time)
+        let activeGapCap: TimeInterval = 30 * 60
+        func activeTime(from startIdx: Int, to endIdx: Int) -> TimeInterval {
+            var active: TimeInterval = 0
+            for i in (startIdx + 1)..<endIdx {
+                let gap = bubbleTimestamps[i].timeIntervalSince(bubbleTimestamps[i-1])
+                active += min(gap, activeGapCap)
+            }
+            return max(active, 60) // at least 1 min if there were any bubbles
+        }
+
         if splitIndices.count > 1 {
-            let totalSpan = bubbleTimestamps.last!.timeIntervalSince(bubbleTimestamps.first!)
             let repoAlias = row.repoPath.map { URL(fileURLWithPath: $0).lastPathComponent }
+            let totalActive = activeTime(from: 0, to: bubbleTimestamps.count)
             var results: [ParsedSession] = []
 
             for (segIdx, startIdx) in splitIndices.enumerated() {
                 let endIdx = segIdx + 1 < splitIndices.count ? splitIndices[segIdx + 1] : bubbleTimestamps.count
                 let segStart = bubbleTimestamps[startIdx]
                 let segEnd = bubbleTimestamps[endIdx - 1]
-                let segSpan = segEnd.timeIntervalSince(segStart)
-                let proportion = totalSpan > 0 ? segSpan / totalSpan : 1.0 / Double(splitIndices.count)
+                let segActive = activeTime(from: startIdx, to: endIdx)
+                let proportion = totalActive > 0 ? segActive / totalActive : 1.0 / Double(splitIndices.count)
 
                 results.append(ParsedSession(
                     id: "\(row.composerId)_seg\(segIdx)",
                     startedAt: segStart,
                     endedAt: segEnd,
-                    activeDuration: segSpan,
+                    activeDuration: segActive,
                     linesAdded: Int(Double(row.linesAdded) * proportion),
                     linesRemoved: Int(Double(row.linesRemoved) * proportion),
                     filesTouched: row.filesChanged,
@@ -153,6 +164,26 @@ public func parseCursorSessions(_ row: CursorComposerRow) -> [ParsedSession] {
             }
             return results
         }
+
+        // Single segment — use active time instead of full wall span
+        let segActive = activeTime(from: 0, to: bubbleTimestamps.count)
+        let startedAt = bubbleTimestamps.first!
+        let endedAt   = bubbleTimestamps.last!
+        let repoAlias = row.repoPath.map { URL(fileURLWithPath: $0).lastPathComponent }
+        return [ParsedSession(
+            id: row.composerId,
+            startedAt: startedAt,
+            endedAt: endedAt,
+            activeDuration: segActive,
+            linesAdded: row.linesAdded,
+            linesRemoved: row.linesRemoved,
+            filesTouched: row.filesChanged,
+            tokens: 0,
+            model: "cursor",
+            repoAlias: repoAlias,
+            gitBranch: row.gitBranch,
+            source: .cursor
+        )]
     }
 
     return [makeSingleCursorSession(row)]
@@ -162,12 +193,15 @@ private func makeSingleCursorSession(_ row: CursorComposerRow) -> ParsedSession 
     let startedAt = Date(timeIntervalSince1970: Double(row.createdAtMs) / 1000.0)
     let endedAt   = Date(timeIntervalSince1970: Double(row.updatedAtMs) / 1000.0)
     let repoAlias = row.repoPath.map { URL(fileURLWithPath: $0).lastPathComponent }
+    // Without bubble timestamps, cap active time at 30 min as a conservative estimate
+    let wallTime  = endedAt.timeIntervalSince(startedAt)
+    let activeDuration = min(wallTime, 30 * 60)
 
     return ParsedSession(
         id: row.composerId,
         startedAt: startedAt,
         endedAt: endedAt,
-        activeDuration: endedAt.timeIntervalSince(startedAt),
+        activeDuration: activeDuration,
         linesAdded: row.linesAdded,
         linesRemoved: row.linesRemoved,
         filesTouched: row.filesChanged,
