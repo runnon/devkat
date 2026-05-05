@@ -47,7 +47,6 @@ struct CopyView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: toastMessage)
-        .onAppear { StickerGenerator.logFonts() }
     }
 
     private func showToast(_ message: String) {
@@ -185,187 +184,26 @@ struct CopyView: View {
     }
 }
 
-// MARK: – Sticker Generator (UIGraphicsImageRenderer — no SwiftUI/ImageRenderer)
-
-private enum StickerGenerator {
-
-    private static let size    = CGSize(width: 1080, height: 1080)
-    private static let white   = UIColor.white
-    private static let dim     = UIColor.white  // labels same opacity as values
-    private static let blue    = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
-    private static let margin: CGFloat = 72
-    private static let labelFont: UIFont = {
-        let f = UIFont(name: "Baskerville-Bold", size: 36)
-        print("[StickerGenerator] labelFont: \(f?.fontName ?? "⚠️ FALLBACK – Baskerville-Bold not found")")
-        return f ?? .boldSystemFont(ofSize: 36)
-    }()
-    private static let valueFont: UIFont = {
-        let f = UIFont(name: "Baskerville-BoldItalic", size: 96)
-        print("[StickerGenerator] valueFont: \(f?.fontName ?? "⚠️ FALLBACK – Baskerville-BoldItalic not found")")
-        return f ?? .boldSystemFont(ofSize: 96)
-    }()
-    private static let unitFont: UIFont = {
-        let f = UIFont(name: "Baskerville-Bold", size: 32)
-        print("[StickerGenerator] unitFont:  \(f?.fontName ?? "⚠️ FALLBACK – Baskerville-Bold not found")")
-        // Dump all available Baskerville faces once
-        let families = UIFont.familyNames.filter { $0.lowercased().contains("baskerville") }
-        for family in families {
-            print("[StickerGenerator] Baskerville family '\(family)' faces: \(UIFont.fontNames(forFamilyName: family))")
-        }
-        return f ?? .boldSystemFont(ofSize: 32)
-    }()
-
-    /// Call once on screen appear to force lazy statics to init and print logs.
-    static func logFonts() {
-        _ = labelFont; _ = valueFont; _ = unitFont
-    }
-
-    // Transparent 1080×1080 canvas
-    private static func makeRenderer() -> UIGraphicsImageRenderer {
-        let fmt = UIGraphicsImageRendererFormat()
-        fmt.opaque = false
-        fmt.scale = 1
-        return UIGraphicsImageRenderer(size: size, format: fmt)
-    }
-
-    // Single stat — large centred value + label above
-    static func single(label: String, value: String, unit: String?) -> UIImage {
-        makeRenderer().image { ctx in
-            ctx.cgContext.clear(CGRect(origin: .zero, size: size))
-
-            let combined = unit.map { "\(value) \($0)" } ?? value
-            let valStr  = NSAttributedString(string: combined, attributes: [.font: valueFont, .foregroundColor: white])
-            let lblStr  = NSAttributedString(string: label.uppercased(), attributes: [.font: labelFont, .foregroundColor: white, .kern: 3.0])
-
-            let cx = size.width / 2
-            let valSz = valStr.size()
-            let lblSz = lblStr.size()
-            let gap: CGFloat = 16
-            let totalH = lblSz.height + gap + valSz.height
-            var y = (size.height - totalH) / 2
-
-            lblStr.draw(at: CGPoint(x: cx - lblSz.width / 2, y: y))
-            y += lblSz.height + gap
-            valStr.draw(at: CGPoint(x: cx - valSz.width / 2, y: y))
-        }
-    }
-
-    // Two stats side by side
-    static func double(left: StatSlot, right: StatSlot) -> UIImage {
-        makeRenderer().image { ctx in
-            ctx.cgContext.clear(CGRect(origin: .zero, size: size))
-            let slots = [left, right]
-            let colW = (size.width - margin * 2 - 48) / 2
-            for (i, slot) in slots.enumerated() {
-                let x = margin + CGFloat(i) * (colW + 48)
-                drawStatColumn(slot: slot, x: x, colW: colW, ctx: ctx.cgContext)
-            }
-        }
-    }
-
-    // Three stats side by side
-    static func triple(slots: [StatSlot], headerLabel: String? = nil) -> UIImage {
-        let triLabelFont = UIFont(name: "Baskerville-Bold", size: 26) ?? .boldSystemFont(ofSize: 26)
-        let triValueFont = UIFont(name: "Baskerville-BoldItalic", size: 68) ?? .boldSystemFont(ofSize: 68)
-        let triUnitFont  = UIFont(name: "Baskerville-Bold", size: 22) ?? .boldSystemFont(ofSize: 22)
-        return makeRenderer().image { ctx in
-            ctx.cgContext.clear(CGRect(origin: .zero, size: size))
-            let spacing: CGFloat = 32
-            let colW = (size.width - margin * 2 - spacing * 2) / 3
-            for (i, slot) in slots.prefix(3).enumerated() {
-                let x = margin + CGFloat(i) * (colW + spacing)
-                drawStatColumn(slot: slot, x: x, colW: colW, ctx: ctx.cgContext,
-                               headerLabel: i == 0 ? headerLabel : nil,
-                               labelFont: triLabelFont, valueFont: triValueFont, unitFont: triUnitFont)
-            }
-        }
-    }
-
-    // iMessage-style bubble
-    static func message(session: Session) -> UIImage {
-        makeRenderer().image { ctx in
-            ctx.cgContext.clear(CGRect(origin: .zero, size: size))
-
-            let burn = session.tokens > 0
-                ? "\(SessionFormatting.tokens(session.tokens)) tokens" : "—"
-            let df = DateFormatter(); df.dateFormat = "HH:mm"
-            let bubbleText = "\(SessionFormatting.duration(session.activeDuration)), \(burn)"
-            let subText    = "Claude Monkey \(df.string(from: session.startedAt))"
-
-            let bubbleFont = UIFont.systemFont(ofSize: 52, weight: .bold)
-            let subFont    = UIFont.systemFont(ofSize: 36, weight: .bold)
-
-            let bubbleStr = NSAttributedString(string: bubbleText, attributes: [.font: bubbleFont, .foregroundColor: UIColor.white])
-            let subStr    = NSAttributedString(string: subText, attributes: [.font: subFont, .foregroundColor: UIColor.white.withAlphaComponent(0.8)])
-
-            let pad: CGFloat = 44
-            let bubbleSz = bubbleStr.size()
-            let subSz    = subStr.size()
-            let bubbleW  = bubbleSz.width + pad * 2
-            let bubbleH  = bubbleSz.height + pad
-
-            // Right-aligned bubble in lower-centre
-            let bubbleX = size.width - margin - bubbleW
-            let bubbleY = size.height / 2 - bubbleH / 2
-
-            let bubbleRect = CGRect(x: bubbleX, y: bubbleY, width: bubbleW, height: bubbleH)
-            let path = UIBezierPath(roundedRect: bubbleRect, cornerRadius: 28)
-            blue.setFill(); path.fill()
-
-            bubbleStr.draw(at: CGPoint(
-                x: bubbleX + pad,
-                y: bubbleY + (bubbleH - bubbleSz.height) / 2))
-
-            subStr.draw(at: CGPoint(
-                x: size.width - margin - subSz.width,
-                y: bubbleY + bubbleH + 16))
-        }
-    }
-
-    // Helper: draw a label + value column at x
-    private static func drawStatColumn(slot: StatSlot, x: CGFloat, colW: CGFloat,
-                                        ctx: CGContext, headerLabel: String? = nil,
-                                        labelFont lf: UIFont? = nil,
-                                        valueFont vf: UIFont? = nil,
-                                        unitFont uf: UIFont? = nil) {
-        let lFont = lf ?? labelFont
-        let vFont = vf ?? valueFont
-        let uFont = uf ?? unitFont
-        // Combine value + unit on one line (matching the UI's formattedValueWithUnit)
-        let combined = slot.unit.map { "\(slot.value) \($0)" } ?? slot.value
-        let valStr  = NSAttributedString(string: combined, attributes: [.font: vFont, .foregroundColor: white])
-        let lblStr  = NSAttributedString(string: slot.label.uppercased(), attributes: [.font: lFont, .foregroundColor: white, .kern: 2.0])
-        let hdrStr  = headerLabel.map { NSAttributedString(string: $0, attributes: [.font: uFont, .foregroundColor: white]) }
-
-        let gap: CGFloat = 14
-        let valSz = valStr.size()
-        let lblSz = lblStr.size()
-        let hdrH  = hdrStr.map  { $0.size().height + gap } ?? 0
-        let totalH = hdrH + lblSz.height + gap + valSz.height
-        var y = (size.height - totalH) / 2
-
-        hdrStr.flatMap { s -> () in s.draw(at: CGPoint(x: x, y: y)); y += hdrH }
-        lblStr.draw(at: CGPoint(x: x, y: y));  y += lblSz.height + gap
-        valStr.draw(at: CGPoint(x: x, y: y))
-    }
-
-}
-
-// MARK: – Shared render helper (now just a thin shim)
+// MARK: – Render helper: UIHostingController → UIGraphicsImageRenderer
+// Renders the exact SwiftUI view at `size` × 3 scale — pixel-identical to the on-screen tile.
 
 @MainActor
-private func renderOverlay<V: View>(_ content: V, size: CGSize, scale: CGFloat = 8) -> UIImage? {
-    let anchored = ZStack {
-        Rectangle().fill(Color.clear)
-            .frame(width: size.width, height: size.height)
-        content
-    }
-    .environment(\.colorScheme, .dark)
+private func renderView<V: View>(_ view: V, size: CGSize) -> UIImage? {
+    let hosting = UIHostingController(rootView:
+        view.frame(width: size.width, height: size.height)
+            .environment(\.colorScheme, .dark)
+    )
+    hosting.view.frame         = CGRect(origin: .zero, size: size)
+    hosting.view.backgroundColor = .clear
+    hosting.view.setNeedsLayout()
+    hosting.view.layoutIfNeeded()
 
-    let renderer = ImageRenderer(content: anchored)
-    renderer.scale = scale
-    renderer.isOpaque = false
-    return renderer.uiImage
+    let format = UIGraphicsImageRendererFormat()
+    format.opaque = false
+    format.scale  = 3
+    return UIGraphicsImageRenderer(size: size, format: format).image { _ in
+        hosting.view.drawHierarchy(in: hosting.view.bounds, afterScreenUpdates: true)
+    }
 }
 
 // MARK: – Overlay Tile
@@ -414,7 +252,7 @@ private struct OverlayTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        StickerGenerator.single(label: slot.label, value: slot.value, unit: slot.unit)
+        renderView(preset.view(for: slot, export: true), size: CGSize(width: 360, height: 225))
     }
 }
 
@@ -457,7 +295,7 @@ private struct DoubleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        StickerGenerator.double(left: left, right: right)
+        renderView(AuraDoubleOverlay(left: left, right: right, export: true), size: CGSize(width: 360, height: 225))
     }
 }
 
@@ -499,7 +337,7 @@ private struct TripleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        StickerGenerator.triple(slots: slots)
+        renderView(AuraTripleOverlay(slots: slots, export: true), size: CGSize(width: 360, height: 225))
     }
 }
 
@@ -539,7 +377,7 @@ private struct MessageTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        StickerGenerator.message(session: session)
+        renderView(AuraMessageOverlay(session: session, export: true), size: CGSize(width: 360, height: 180))
     }
 }
 
@@ -718,6 +556,7 @@ private struct WeeklyTripleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        StickerGenerator.triple(slots: slots, headerLabel: "This Week")
+        renderView(AuraTripleOverlay(slots: slots, showLabels: false, headerLabel: "This Week", export: true),
+                   size: CGSize(width: 360, height: 225))
     }
 }
