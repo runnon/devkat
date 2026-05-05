@@ -186,13 +186,23 @@ struct CopyView: View {
 
 // MARK: – Shared render helper
 
-/// Renders any SwiftUI view to a transparent PNG at 3× scale.
-/// Uses `proposedSize` so views with `.frame(maxWidth: .infinity)` fill correctly.
+/// Renders any SwiftUI view to a transparent PNG.
+/// Uses a ZStack anchor to force max-width/height views to fill correctly
+/// (ImageRenderer ignores .infinity frames without an explicit parent size).
+/// scale=8 at 200pt logical → 1600px output — large enough for social sharing.
 @MainActor
-private func renderOverlay<V: View>(_ content: V, size: CGSize) -> UIImage? {
-    let renderer = ImageRenderer(content: content.environment(\.colorScheme, .dark))
-    renderer.proposedSize = ProposedViewSize(width: size.width, height: size.height)
-    renderer.scale = 3
+private func renderOverlay<V: View>(_ content: V, size: CGSize, scale: CGFloat = 8) -> UIImage? {
+    // The anchor Rectangle forces the ZStack to exactly `size`,
+    // so children with .frame(maxWidth: .infinity) fill the whole tile.
+    let anchored = ZStack {
+        Rectangle().fill(Color.clear)
+            .frame(width: size.width, height: size.height)
+        content
+    }
+    .environment(\.colorScheme, .dark)
+
+    let renderer = ImageRenderer(content: anchored)
+    renderer.scale = scale
     renderer.isOpaque = false
     return renderer.uiImage
 }
@@ -243,10 +253,9 @@ private struct OverlayTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        renderOverlay(
-            preset.view(for: slot, export: true),
-            size: CGSize(width: 800, height: 500)   // 1.6:1
-        )
+        // 200×125pt at 8x = 1600×1000px, fonts proportional to on-screen tile
+        renderOverlay(preset.view(for: slot, export: true),
+                      size: CGSize(width: 200, height: 125))
     }
 }
 
@@ -289,10 +298,8 @@ private struct DoubleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        renderOverlay(
-            AuraDoubleOverlay(left: left, right: right, export: true),
-            size: CGSize(width: 800, height: 500)
-        )
+        renderOverlay(AuraDoubleOverlay(left: left, right: right, export: true),
+                      size: CGSize(width: 200, height: 125))
     }
 }
 
@@ -334,10 +341,8 @@ private struct TripleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        renderOverlay(
-            AuraTripleOverlay(slots: slots, export: true),
-            size: CGSize(width: 800, height: 500)
-        )
+        renderOverlay(AuraTripleOverlay(slots: slots, export: true),
+                      size: CGSize(width: 200, height: 125))
     }
 }
 
@@ -377,10 +382,9 @@ private struct MessageTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        renderOverlay(
-            AuraMessageOverlay(session: session, export: true),
-            size: CGSize(width: 800, height: 400)   // 2:1
-        )
+        // 200×100pt at 8x = 1600×800px
+        renderOverlay(AuraMessageOverlay(session: session, export: true),
+                      size: CGSize(width: 200, height: 100))
     }
 }
 
@@ -561,7 +565,6 @@ private struct WeeklyTripleTile: View {
     private func render() -> UIImage? {
         renderOverlay(
             AuraTripleOverlay(slots: slots, showLabels: false, headerLabel: "This Week", export: true),
-            size: CGSize(width: 800, height: 500)
-        )
+            size: CGSize(width: 200, height: 125))
     }
 }
