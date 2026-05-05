@@ -126,11 +126,11 @@ struct AuraTripleOverlay: View {
                     VStack(spacing: 2) {
                         if showLabels {
                             Text(slot.label)
-                                .font(.custom("Baskerville-Bold", size: 7))
+                                .font(.custom("Baskerville-Bold", size: 6))
                                 .foregroundStyle(.white)
                         }
                         Text(slot.formattedValueWithUnit)
-                            .font(.custom("Baskerville-BoldItalic", size: 10))
+                            .font(.custom("Baskerville-BoldItalic", size: 8))
                             .foregroundStyle(.white)
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)

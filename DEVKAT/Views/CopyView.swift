@@ -268,6 +268,9 @@ private enum StickerGenerator {
 
     // Three stats side by side
     static func triple(slots: [StatSlot], headerLabel: String? = nil) -> UIImage {
+        let triLabelFont = UIFont(name: "Baskerville-Bold", size: 26) ?? .boldSystemFont(ofSize: 26)
+        let triValueFont = UIFont(name: "Baskerville-BoldItalic", size: 68) ?? .boldSystemFont(ofSize: 68)
+        let triUnitFont  = UIFont(name: "Baskerville-Bold", size: 22) ?? .boldSystemFont(ofSize: 22)
         makeRenderer().image { ctx in
             ctx.cgContext.clear(CGRect(origin: .zero, size: size))
             let spacing: CGFloat = 32
@@ -275,7 +278,8 @@ private enum StickerGenerator {
             for (i, slot) in slots.prefix(3).enumerated() {
                 let x = margin + CGFloat(i) * (colW + spacing)
                 drawStatColumn(slot: slot, x: x, colW: colW, ctx: ctx.cgContext,
-                               headerLabel: i == 0 ? headerLabel : nil)
+                               headerLabel: i == 0 ? headerLabel : nil,
+                               labelFont: triLabelFont, valueFont: triValueFont, unitFont: triUnitFont)
             }
         }
     }
@@ -323,11 +327,17 @@ private enum StickerGenerator {
 
     // Helper: draw a label + value column at x
     private static func drawStatColumn(slot: StatSlot, x: CGFloat, colW: CGFloat,
-                                        ctx: CGContext, headerLabel: String? = nil) {
-        let valStr  = NSAttributedString(string: slot.value, attributes: [.font: valueFont, .foregroundColor: white])
-        let lblStr  = NSAttributedString(string: slot.label.uppercased(), attributes: [.font: labelFont, .foregroundColor: dim, .kern: 2.0])
-        let unitStr = slot.unit.map { NSAttributedString(string: $0, attributes: [.font: unitFont, .foregroundColor: dim]) }
-        let hdrStr  = headerLabel.map { NSAttributedString(string: $0, attributes: [.font: unitFont, .foregroundColor: dim]) }
+                                        ctx: CGContext, headerLabel: String? = nil,
+                                        labelFont lf: UIFont? = nil,
+                                        valueFont vf: UIFont? = nil,
+                                        unitFont uf: UIFont? = nil) {
+        let lFont = lf ?? labelFont
+        let vFont = vf ?? valueFont
+        let uFont = uf ?? unitFont
+        let valStr  = NSAttributedString(string: slot.value, attributes: [.font: vFont, .foregroundColor: white])
+        let lblStr  = NSAttributedString(string: slot.label.uppercased(), attributes: [.font: lFont, .foregroundColor: white, .kern: 2.0])
+        let unitStr = slot.unit.map { NSAttributedString(string: $0, attributes: [.font: uFont, .foregroundColor: white]) }
+        let hdrStr  = headerLabel.map { NSAttributedString(string: $0, attributes: [.font: uFont, .foregroundColor: white]) }
 
         let gap: CGFloat = 14
         let valSz = valStr.size()
