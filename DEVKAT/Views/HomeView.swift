@@ -26,11 +26,14 @@ struct HomeView: View {
             titleBar
             Divider().background(Theme.border)
             if app.sessions.isEmpty {
-                if app.installations.isEmpty {
-                    setupState
-                } else {
-                    waitingState
+                ScrollView {
+                    if app.installations.isEmpty {
+                        setupState
+                    } else {
+                        waitingState
+                    }
                 }
+                .refreshable { await app.fetchSessions() }
             } else {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 24, pinnedViews: []) {
@@ -91,7 +94,7 @@ struct HomeView: View {
 
     private var waitingState: some View {
         VStack(spacing: 20) {
-            Spacer()
+            Spacer(minLength: 0)
             ZStack {
                 Circle()
                     .stroke(Theme.logoGreen.opacity(0.4), lineWidth: 1)
@@ -127,14 +130,17 @@ struct HomeView: View {
                 .foregroundStyle(Theme.textDim)
                 .multilineTextAlignment(.center)
                 .padding(.top, 4)
-            Spacer()
+            refreshButton(label: "REFRESH")
+            Spacer(minLength: 0)
         }
         .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity)
+        .containerRelativeFrame(.vertical)
     }
 
     private var setupState: some View {
         VStack(spacing: 20) {
-            Spacer()
+            Spacer(minLength: 0)
             Image(systemName: "terminal")
                 .font(.system(size: 44, weight: .thin))
                 .foregroundStyle(Theme.textDim)
@@ -181,8 +187,42 @@ struct HomeView: View {
                 .font(.system(.caption, design: .monospaced))
                 .foregroundStyle(Theme.textMuted)
                 .multilineTextAlignment(.center)
-            Spacer()
+            refreshButton(label: "CHECK CONNECTION")
+            Spacer(minLength: 0)
         }
+        .frame(maxWidth: .infinity)
+        .containerRelativeFrame(.vertical)
+    }
+
+    private func refreshButton(label: String) -> some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            Task { await app.fetchSessions() }
+        } label: {
+            HStack(spacing: 8) {
+                if app.isLoadingSessions {
+                    ProgressView()
+                        .controlSize(.mini)
+                        .tint(Theme.logoGreen)
+                } else {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 11, weight: .bold))
+                }
+                Text(app.isLoadingSessions ? "CHECKING…" : label)
+                    .font(.system(size: 10, design: .monospaced).weight(.bold))
+                    .tracking(1.5)
+            }
+            .foregroundStyle(Theme.logoGreen)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 9)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Theme.logoGreen.opacity(0.5), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+        .disabled(app.isLoadingSessions)
+        .padding(.top, 8)
     }
 
     private func section(label: String, items: [Session]) -> some View {
