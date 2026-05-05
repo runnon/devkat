@@ -26,7 +26,7 @@ extension StatSlot {
             StatSlot(id: "volume", label: "Volume",
                      value: "\(session.linesAdded + session.linesRemoved)", unit: "lines"),
             StatSlot(id: "burn", label: "Burn",
-                     value: SessionFormatting.tokens(session.tokens), unit: "tokens"),
+                     value: SessionFormatting.tokens(session.tokens), unit: session.tokens > 0 ? "tokens" : nil),
         ]
     }
 }
@@ -154,7 +154,8 @@ struct AuraMessageOverlay: View {
     }
 
     private var bubbleText: String {
-        "\(SessionFormatting.duration(session.activeDuration)), \(SessionFormatting.tokens(session.tokens)) tokens"
+        let burn = session.tokens > 0 ? "\(SessionFormatting.tokens(session.tokens)) tokens" : "—"
+        return "\(SessionFormatting.duration(session.activeDuration)), \(burn)"
     }
 
     var body: some View {

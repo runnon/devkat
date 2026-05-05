@@ -479,7 +479,7 @@ private struct WeeklyTotalsView: View {
             StatSlot(id: "pace",     label: "Pace",
                      value: "\(weeklyPace)", unit: "lines/hr"),
             StatSlot(id: "burn",     label: "Burn",
-                     value: SessionFormatting.tokens(totalTokens), unit: "tokens"),
+                     value: SessionFormatting.tokens(totalTokens), unit: totalTokens > 0 ? "tokens" : nil),
         ]
     }
 
