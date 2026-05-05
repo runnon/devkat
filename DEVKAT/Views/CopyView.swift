@@ -47,6 +47,7 @@ struct CopyView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: toastMessage)
+        .onAppear { StickerGenerator.logFonts() }
     }
 
     private func showToast(_ message: String) {
@@ -213,6 +214,11 @@ private enum StickerGenerator {
         }
         return f ?? .boldSystemFont(ofSize: 32)
     }()
+
+    /// Call once on screen appear to force lazy statics to init and print logs.
+    static func logFonts() {
+        _ = labelFont; _ = valueFont; _ = unitFont
+    }
 
     // Transparent 1080×1080 canvas
     private static func makeRenderer() -> UIGraphicsImageRenderer {
