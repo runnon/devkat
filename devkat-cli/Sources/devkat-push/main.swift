@@ -142,7 +142,7 @@ func pushParsedSession(_ session: ParsedSession) {
 // MARK: - Login
 
 func runLogin() {
-    print("devkat-push: Supabase login")
+    print("devkat-push: DEVKAT login")
     print("  (no account yet? enter 'signup' as the password to create one)")
     print()
 
