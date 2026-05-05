@@ -245,7 +245,7 @@ private struct OverlayTile: View {
     private func render() -> UIImage? {
         renderOverlay(
             preset.view(for: slot, export: true),
-            size: CGSize(width: 400, height: 250)   // 1.6:1
+            size: CGSize(width: 800, height: 500)   // 1.6:1
         )
     }
 }
@@ -291,7 +291,7 @@ private struct DoubleTile: View {
     private func render() -> UIImage? {
         renderOverlay(
             AuraDoubleOverlay(left: left, right: right, export: true),
-            size: CGSize(width: 400, height: 250)
+            size: CGSize(width: 800, height: 500)
         )
     }
 }
@@ -336,7 +336,7 @@ private struct TripleTile: View {
     private func render() -> UIImage? {
         renderOverlay(
             AuraTripleOverlay(slots: slots, export: true),
-            size: CGSize(width: 400, height: 250)
+            size: CGSize(width: 800, height: 500)
         )
     }
 }
@@ -379,7 +379,7 @@ private struct MessageTile: View {
     private func render() -> UIImage? {
         renderOverlay(
             AuraMessageOverlay(session: session, export: true),
-            size: CGSize(width: 400, height: 200)   // 2:1
+            size: CGSize(width: 800, height: 400)   // 2:1
         )
     }
 }
@@ -561,7 +561,7 @@ private struct WeeklyTripleTile: View {
     private func render() -> UIImage? {
         renderOverlay(
             AuraTripleOverlay(slots: slots, showLabels: false, headerLabel: "This Week", export: true),
-            size: CGSize(width: 400, height: 250)
+            size: CGSize(width: 800, height: 500)
         )
     }
 }

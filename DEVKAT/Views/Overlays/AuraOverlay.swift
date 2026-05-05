@@ -178,7 +178,7 @@ struct AuraMessageOverlay: View {
 
             Text("Claude Monkey \(timeString)")
                 .font(.system(size: 9, weight: .regular))
-                .foregroundStyle(Color.white.opacity(0.4))
+                .foregroundStyle(Color.white.opacity(0.8))
 
             Spacer(minLength: 0)
         }
