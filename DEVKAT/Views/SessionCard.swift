@@ -43,7 +43,7 @@ struct SessionCard: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     stat(label: "BURN",
                          value: SessionFormatting.tokens(session.tokens),
-                         unit: "tokens")
+                         unit: session.tokens > 0 ? "tokens" : "")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }

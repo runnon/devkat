@@ -54,6 +54,7 @@ enum SessionFormatting {
     }
 
     static func tokens(_ n: Int) -> String {
+        if n == 0 { return "—" }
         if n >= 1_000_000 { return String(format: "%.1fM", Double(n) / 1_000_000) }
         if n >= 1_000     { return String(format: "%.1fk", Double(n) / 1_000) }
         return "\(n)"
