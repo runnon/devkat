@@ -193,9 +193,26 @@ private enum StickerGenerator {
     private static let dim     = UIColor.white.withAlphaComponent(0.5)
     private static let blue    = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
     private static let margin: CGFloat = 72
-    private static let labelFont = UIFont(name: "Baskerville-Bold", size: 36) ?? .boldSystemFont(ofSize: 36)
-    private static let valueFont = UIFont(name: "Baskerville-BoldItalic", size: 96) ?? .boldSystemFont(ofSize: 96)
-    private static let unitFont  = UIFont(name: "Baskerville-Bold", size: 32) ?? .boldSystemFont(ofSize: 32)
+    private static let labelFont: UIFont = {
+        let f = UIFont(name: "Baskerville-Bold", size: 36)
+        print("[StickerGenerator] labelFont: \(f?.fontName ?? "⚠️ FALLBACK – Baskerville-Bold not found")")
+        return f ?? .boldSystemFont(ofSize: 36)
+    }()
+    private static let valueFont: UIFont = {
+        let f = UIFont(name: "Baskerville-BoldItalic", size: 96)
+        print("[StickerGenerator] valueFont: \(f?.fontName ?? "⚠️ FALLBACK – Baskerville-BoldItalic not found")")
+        return f ?? .boldSystemFont(ofSize: 96)
+    }()
+    private static let unitFont: UIFont = {
+        let f = UIFont(name: "Baskerville-Bold", size: 32)
+        print("[StickerGenerator] unitFont:  \(f?.fontName ?? "⚠️ FALLBACK – Baskerville-Bold not found")")
+        // Dump all available Baskerville faces once
+        let families = UIFont.familyNames.filter { $0.lowercased().contains("baskerville") }
+        for family in families {
+            print("[StickerGenerator] Baskerville family '\(family)' faces: \(UIFont.fontNames(forFamilyName: family))")
+        }
+        return f ?? .boldSystemFont(ofSize: 32)
+    }()
 
     // Transparent 1080×1080 canvas
     private static func makeRenderer() -> UIGraphicsImageRenderer {
