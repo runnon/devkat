@@ -24,6 +24,8 @@ func syncAll(verbose: Bool = false) {
         exit(1)
     }
 
+    upsertInstallation() // heartbeat — keeps last_seen_at fresh for the iOS UI
+
     let cutoff = loadInstallTimestamp()
     var state = SyncState.load()
     var pushed = 0
@@ -138,6 +140,7 @@ private var plistURL: URL {
 
 func installDaemon() {
     writeInstallTimestamp()
+    upsertInstallation()
     // Find the devkat-push binary path
     let binaryPath = CommandLine.arguments[0].hasPrefix("/")
         ? CommandLine.arguments[0]

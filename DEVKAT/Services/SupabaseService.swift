@@ -106,6 +106,36 @@ actor SupabaseService {
         return try decoder.decode([Session].self, from: data)
     }
 
+    // MARK: Installations
+
+    func fetchInstallations(token: String) async throws -> [Installation] {
+        var comps = URLComponents(url: base.appendingPathComponent("rest/v1/installations"), resolvingAgainstBaseURL: false)!
+        comps.queryItems = [
+            .init(name: "select", value: "hostname,installed_at,last_seen_at"),
+            .init(name: "order",  value: "last_seen_at.desc"),
+            .init(name: "limit",  value: "10"),
+        ]
+
+        var req = URLRequest(url: comps.url!)
+        req.setValue(anon,              forHTTPHeaderField: "apikey")
+        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let (data, response) = try await URLSession.shared.data(for: req)
+        try checkStatus(response, data: data)
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .custom { dec in
+            let str = try dec.singleValueContainer().decode(String.self)
+            let f = ISO8601DateFormatter()
+            f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            if let d = f.date(from: str) { return d }
+            f.formatOptions = [.withInternetDateTime]
+            if let d = f.date(from: str) { return d }
+            throw DecodingError.dataCorrupted(.init(codingPath: dec.codingPath, debugDescription: "Bad date: \(str)"))
+        }
+        return try decoder.decode([Installation].self, from: data)
+    }
+
     func deleteCurrentUser(token: String) async throws {
         let url = base.appendingPathComponent("rest/v1/rpc/delete_current_user")
         var req = URLRequest(url: url)
