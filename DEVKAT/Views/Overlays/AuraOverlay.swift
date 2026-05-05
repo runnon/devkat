@@ -41,10 +41,10 @@ struct AuraOverlay: View {
         ZStack(alignment: .topTrailing) {
             VStack(spacing: 4) {
                 Text(slot.label)
-                    .font(.custom("Baskerville", size: 12))
+                    .font(.custom("Baskerville-Bold", size: 12))
                     .foregroundStyle(Color.white.opacity(0.5))
                 Text(slot.formattedValueWithUnit)
-                    .font(.custom("Baskerville", size: 17))
+                    .font(.custom("Baskerville-BoldItalic", size: 17))
                     .foregroundStyle(.white)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -85,10 +85,10 @@ struct AuraDoubleOverlay: View {
     private func statColumn(_ slot: StatSlot) -> some View {
         VStack(spacing: 3) {
             Text(slot.label)
-                .font(.custom("Baskerville", size: 10))
+                .font(.custom("Baskerville-Bold", size: 10))
                 .foregroundStyle(Color.white.opacity(0.5))
             Text(slot.formattedValueWithUnit)
-                .font(.custom("Baskerville", size: 14))
+                .font(.custom("Baskerville-BoldItalic", size: 14))
                 .foregroundStyle(.white)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -105,12 +105,12 @@ struct AuraTripleOverlay: View {
         if let headerLabel {
             VStack(alignment: .leading, spacing: 4) {
                 Text(headerLabel)
-                    .font(.custom("Baskerville", size: 8))
+                    .font(.custom("Baskerville-Bold", size: 8))
                     .foregroundStyle(Color.white.opacity(0.5))
                 HStack(alignment: .firstTextBaseline, spacing: 18) {
                     ForEach(slots) { slot in
                         Text(slot.formattedValueWithUnit)
-                            .font(.custom("Baskerville", size: 10))
+                            .font(.custom("Baskerville-BoldItalic", size: 10))
                             .foregroundStyle(.white)
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
@@ -126,11 +126,11 @@ struct AuraTripleOverlay: View {
                     VStack(spacing: 2) {
                         if showLabels {
                             Text(slot.label)
-                                .font(.custom("Baskerville", size: 7))
+                                .font(.custom("Baskerville-Bold", size: 7))
                                 .foregroundStyle(Color.white.opacity(0.5))
                         }
                         Text(slot.formattedValueWithUnit)
-                            .font(.custom("Baskerville", size: 10))
+                            .font(.custom("Baskerville-BoldItalic", size: 10))
                             .foregroundStyle(.white)
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
@@ -166,7 +166,7 @@ struct AuraMessageOverlay: View {
             HStack {
                 Spacer(minLength: 0)
                 Text(bubbleText)
-                    .font(.system(size: 11, weight: .regular))
+                    .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
@@ -177,7 +177,7 @@ struct AuraMessageOverlay: View {
             }
 
             Text("Claude Monkey \(timeString)")
-                .font(.system(size: 9, weight: .regular))
+                .font(.system(size: 9, weight: .bold))
                 .foregroundStyle(Color.white.opacity(0.8))
 
             Spacer(minLength: 0)
