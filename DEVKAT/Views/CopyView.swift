@@ -184,6 +184,29 @@ struct CopyView: View {
     }
 }
 
+// MARK: – Render helper: UIHostingController → UIGraphicsImageRenderer
+// Renders at the tile's natural on-screen size so spacing/fonts match exactly,
+// then outputs at 6× scale for a large shareable image.
+
+@MainActor
+private func renderView<V: View>(_ view: V, size: CGSize) -> UIImage? {
+    let hosting = UIHostingController(rootView:
+        view.frame(width: size.width, height: size.height)
+            .environment(\.colorScheme, .dark)
+    )
+    hosting.view.frame         = CGRect(origin: .zero, size: size)
+    hosting.view.backgroundColor = .clear
+    hosting.view.setNeedsLayout()
+    hosting.view.layoutIfNeeded()
+
+    let format = UIGraphicsImageRendererFormat()
+    format.opaque = false
+    format.scale  = 6   // 6× of natural tile size → large crisp output
+    return UIGraphicsImageRenderer(size: size, format: format).image { _ in
+        hosting.view.drawHierarchy(in: hosting.view.bounds, afterScreenUpdates: true)
+    }
+}
+
 // MARK: – Overlay Tile
 
 private struct OverlayTile: View {
@@ -230,12 +253,7 @@ private struct OverlayTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = preset.view(for: slot)
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderView(preset.view(for: slot, export: true), size: CGSize(width: 175, height: 110))
     }
 }
 
@@ -278,12 +296,7 @@ private struct DoubleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = AuraDoubleOverlay(left: left, right: right)
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderView(AuraDoubleOverlay(left: left, right: right, export: true), size: CGSize(width: 175, height: 110))
     }
 }
 
@@ -325,12 +338,7 @@ private struct TripleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = AuraTripleOverlay(slots: slots)
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderView(AuraTripleOverlay(slots: slots, export: true), size: CGSize(width: 175, height: 110))
     }
 }
 
@@ -370,12 +378,7 @@ private struct MessageTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = AuraMessageOverlay(session: session)
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderView(AuraMessageOverlay(session: session, export: true), size: CGSize(width: 175, height: 88))
     }
 }
 
@@ -554,11 +557,7 @@ private struct WeeklyTripleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = AuraTripleOverlay(slots: slots, showLabels: false, headerLabel: "This Week")
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderView(AuraTripleOverlay(slots: slots, showLabels: false, headerLabel: "This Week", export: true),
+                   size: CGSize(width: 175, height: 110))
     }
 }

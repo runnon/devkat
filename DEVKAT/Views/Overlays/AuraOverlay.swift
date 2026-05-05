@@ -35,15 +35,16 @@ struct AuraOverlay: View {
     let slot: StatSlot
     var showChevron: Bool = false
     var onChevronTap: (() -> Void)?
+    var export: Bool = false
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack(spacing: 4) {
                 Text(slot.label)
-                    .font(.custom("Baskerville", size: 12))
-                    .foregroundStyle(Color.white.opacity(0.5))
+                    .font(.custom("Baskerville-Bold", size: 12))
+                    .foregroundStyle(.white)
                 Text(slot.formattedValueWithUnit)
-                    .font(.custom("Baskerville", size: 17))
+                    .font(.custom("Baskerville-BoldItalic", size: 17))
                     .foregroundStyle(.white)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -63,13 +64,14 @@ struct AuraOverlay: View {
                 .padding(14)
             }
         }
-        .background(Theme.surface)
+        .background(export ? Color.clear : Theme.surface)
     }
 }
 
 struct AuraDoubleOverlay: View {
     let left: StatSlot
     let right: StatSlot
+    var export: Bool = false
 
     var body: some View {
         HStack(spacing: 0) {
@@ -77,16 +79,16 @@ struct AuraDoubleOverlay: View {
             statColumn(right)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.surface)
+        .background(export ? Color.clear : Theme.surface)
     }
 
     private func statColumn(_ slot: StatSlot) -> some View {
         VStack(spacing: 3) {
             Text(slot.label)
-                .font(.custom("Baskerville", size: 10))
-                .foregroundStyle(Color.white.opacity(0.5))
+                .font(.custom("Baskerville-Bold", size: 10))
+                .foregroundStyle(.white)
             Text(slot.formattedValueWithUnit)
-                .font(.custom("Baskerville", size: 14))
+                .font(.custom("Baskerville-BoldItalic", size: 14))
                 .foregroundStyle(.white)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -97,19 +99,18 @@ struct AuraTripleOverlay: View {
     let slots: [StatSlot]
     var showLabels: Bool = true
     var headerLabel: String? = nil
+    var export: Bool = false
 
     var body: some View {
         if let headerLabel {
-            // Left-aligned layout: header sits directly above values,
-            // items use natural widths with consistent gap between them.
             VStack(alignment: .leading, spacing: 4) {
                 Text(headerLabel)
-                    .font(.custom("Baskerville", size: 8))
-                    .foregroundStyle(Color.white.opacity(0.5))
+                    .font(.custom("Baskerville-Bold", size: 8))
+                    .foregroundStyle(.white)
                 HStack(alignment: .firstTextBaseline, spacing: 18) {
                     ForEach(slots) { slot in
                         Text(slot.formattedValueWithUnit)
-                            .font(.custom("Baskerville", size: 10))
+                            .font(.custom("Baskerville-BoldItalic", size: 10))
                             .foregroundStyle(.white)
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
@@ -118,19 +119,18 @@ struct AuraTripleOverlay: View {
             }
             .padding(.horizontal, 12)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .background(Theme.surface)
+            .background(export ? Color.clear : Theme.surface)
         } else {
-            // Centered equal-column layout used by the activity overlay.
             HStack(spacing: 0) {
                 ForEach(slots) { slot in
                     VStack(spacing: 2) {
                         if showLabels {
                             Text(slot.label)
-                                .font(.custom("Baskerville", size: 7))
-                                .foregroundStyle(Color.white.opacity(0.5))
+                                .font(.custom("Baskerville-Bold", size: 6))
+                                .foregroundStyle(.white)
                         }
                         Text(slot.formattedValueWithUnit)
-                            .font(.custom("Baskerville", size: 10))
+                            .font(.custom("Baskerville-BoldItalic", size: 8))
                             .foregroundStyle(.white)
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
@@ -139,13 +139,14 @@ struct AuraTripleOverlay: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Theme.surface)
+            .background(export ? Color.clear : Theme.surface)
         }
     }
 }
 
 struct AuraMessageOverlay: View {
     let session: Session
+    var export: Bool = false
 
     private var timeString: String {
         let f = DateFormatter()
@@ -165,7 +166,7 @@ struct AuraMessageOverlay: View {
             HStack {
                 Spacer(minLength: 0)
                 Text(bubbleText)
-                    .font(.system(size: 11, weight: .regular))
+                    .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
@@ -176,13 +177,13 @@ struct AuraMessageOverlay: View {
             }
 
             Text("Claude Monkey \(timeString)")
-                .font(.system(size: 9, weight: .regular))
-                .foregroundStyle(Color.white.opacity(0.4))
+                .font(.system(size: 9, weight: .bold))
+                .foregroundStyle(Color.white.opacity(0.8))
 
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-        .background(Theme.surface)
+        .background(export ? Color.clear : Theme.surface)
     }
 }
