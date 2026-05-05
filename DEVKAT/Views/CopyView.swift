@@ -184,6 +184,22 @@ struct CopyView: View {
     }
 }
 
+// MARK: – Shared render helper
+
+/// Renders any SwiftUI view to a UIImage at 3× scale.
+/// `size` is the logical-point canvas — the pixel dimensions will be size × 3.
+@MainActor
+private func renderOverlay<V: View>(_ content: V, size: CGSize) -> UIImage? {
+    let renderer = ImageRenderer(
+        content: content
+            .frame(width: size.width, height: size.height)
+            .environment(\.colorScheme, .dark)
+    )
+    renderer.scale = 3          // always 3× — crisp on all iPhones
+    renderer.isOpaque = false   // preserve transparency where the view has none
+    return renderer.uiImage
+}
+
 // MARK: – Overlay Tile
 
 private struct OverlayTile: View {
@@ -230,12 +246,10 @@ private struct OverlayTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = preset.view(for: slot)
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderOverlay(
+            preset.view(for: slot),
+            size: CGSize(width: 1080, height: 675)   // 1.6:1
+        )
     }
 }
 
@@ -278,12 +292,10 @@ private struct DoubleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = AuraDoubleOverlay(left: left, right: right)
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderOverlay(
+            AuraDoubleOverlay(left: left, right: right),
+            size: CGSize(width: 1080, height: 675)
+        )
     }
 }
 
@@ -325,12 +337,10 @@ private struct TripleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = AuraTripleOverlay(slots: slots)
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderOverlay(
+            AuraTripleOverlay(slots: slots),
+            size: CGSize(width: 1080, height: 675)
+        )
     }
 }
 
@@ -370,12 +380,10 @@ private struct MessageTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = AuraMessageOverlay(session: session)
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderOverlay(
+            AuraMessageOverlay(session: session),
+            size: CGSize(width: 1080, height: 540)   // 2:1
+        )
     }
 }
 
@@ -554,11 +562,9 @@ private struct WeeklyTripleTile: View {
 
     @MainActor
     private func render() -> UIImage? {
-        let view = AuraTripleOverlay(slots: slots, showLabels: false, headerLabel: "This Week")
-            .frame(width: 1080, height: 1080)
-            .environment(\.colorScheme, .dark)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = 1
-        return renderer.uiImage
+        renderOverlay(
+            AuraTripleOverlay(slots: slots, showLabels: false, headerLabel: "This Week"),
+            size: CGSize(width: 1080, height: 675)
+        )
     }
 }
