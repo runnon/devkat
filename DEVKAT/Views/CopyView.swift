@@ -194,7 +194,7 @@ private enum StickerGenerator {
     private static let blue    = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
     private static let margin: CGFloat = 72
     private static let labelFont = UIFont(name: "Baskerville", size: 36) ?? .systemFont(ofSize: 36)
-    private static let valueFont = UIFont(name: "Baskerville", size: 96) ?? .systemFont(ofSize: 96)
+    private static let valueFont = UIFont(name: "Baskerville-Italic", size: 96) ?? .italicSystemFont(ofSize: 96)
     private static let unitFont  = UIFont(name: "Baskerville", size: 32) ?? .systemFont(ofSize: 32)
 
     // Transparent 1080×1080 canvas
