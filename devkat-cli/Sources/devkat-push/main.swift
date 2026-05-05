@@ -42,9 +42,19 @@ func run() {
 // MARK: - Auto-detect
 
 func pushNewestSessionAcrossAllSources() {
+    guard let newest = newestParsedSessionAcrossAllSources() else {
+        print("devkat-push: no sessions found in ~/.claude, ~/.codex, or Cursor")
+        exit(1)
+    }
+
+    print("devkat-push: auto-detected newest session from \(newest.label)")
+    pushParsedSession(newest.session)
+}
+
+private func newestParsedSessionAcrossAllSources() -> (label: String, session: ParsedSession)? {
     struct Candidate {
         let date: Date
-        let action: () -> Void
+        let parse: () throws -> ParsedSession
         let label: String
     }
 
@@ -53,28 +63,30 @@ func pushNewestSessionAcrossAllSources() {
     // Claude
     if let url = findLatestSessionFile(in: claudeDir) {
         let date = (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? .distantPast
-        candidates.append(Candidate(date: date, action: { pushClaudeSession(at: url) }, label: "claude"))
+        candidates.append(Candidate(date: date, parse: { try parseSession(at: url) }, label: "claude"))
     }
 
     // Codex
     if let row = findLatestCodexSession(in: codexDir) {
         let date = Date(timeIntervalSince1970: Double(row.updatedAtMs) / 1000.0)
-        candidates.append(Candidate(date: date, action: { pushParsedSession(parseCodexSession(row)) }, label: "codex"))
+        candidates.append(Candidate(date: date, parse: { parseCodexSession(row) }, label: "codex"))
     }
 
     // Cursor
     if let row = findLatestCursorSession() {
         let date = Date(timeIntervalSince1970: Double(row.updatedAtMs) / 1000.0)
-        candidates.append(Candidate(date: date, action: { pushParsedSession(parseCursorSession(row)) }, label: "cursor"))
+        candidates.append(Candidate(date: date, parse: { parseCursorSession(row) }, label: "cursor"))
     }
 
-    guard let newest = candidates.max(by: { $0.date < $1.date }) else {
-        print("devkat-push: no sessions found in ~/.claude, ~/.codex, or Cursor")
-        exit(1)
+    for candidate in candidates.sorted(by: { $0.date > $1.date }) {
+        do {
+            return (candidate.label, try candidate.parse())
+        } catch {
+            print("devkat-push: skipped latest \(candidate.label) session – \(error.localizedDescription)")
+        }
     }
 
-    print("devkat-push: auto-detected newest session from \(newest.label)")
-    newest.action()
+    return nil
 }
 
 // MARK: - Per-source push helpers
@@ -160,9 +172,27 @@ func runLogin() {
             print("devkat-push: ✓ logged in as \(email)")
         }
         try saveCredentials(creds)
+        syncNewestSessionAfterLogin()
     } catch {
         print("devkat-push: login failed – \(error.localizedDescription)")
         exit(1)
+    }
+}
+
+private func syncNewestSessionAfterLogin() {
+    print("devkat-push: syncing your latest session…")
+
+    guard let newest = newestParsedSessionAcrossAllSources() else {
+        print("devkat-push: no local sessions found yet; daemon will keep watching")
+        return
+    }
+
+    do {
+        print("devkat-push: auto-detected newest session from \(newest.label)")
+        try writeSession(newest.session)
+        printSummary(newest.session)
+    } catch {
+        print("devkat-push: initial sync skipped – \(error.localizedDescription)")
     }
 }
 
