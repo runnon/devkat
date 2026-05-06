@@ -198,3 +198,48 @@ struct AuraMessageOverlay: View {
         .background(export ? Color.clear : Theme.surface)
     }
 }
+
+struct CodexMessageOverlay: View {
+    let session: Session
+    var export: Bool = false
+
+    private var timeString: String {
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm"
+        return f.string(from: session.startedAt)
+    }
+
+    private var bubbleText: String {
+        let burn = session.tokens > 0 ? "\(SessionFormatting.tokens(session.tokens)) tokens" : "—"
+        return "\(SessionFormatting.duration(session.activeDuration)), \(burn)"
+    }
+
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 4) {
+            Spacer(minLength: 0)
+
+            HStack {
+                Spacer(minLength: 0)
+                Text(bubbleText)
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 7)
+                    .background(Color(hex: 0x34C759))
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            }
+
+            Text("Codex Monkey \(timeString)")
+                .font(.system(size: 9, weight: .bold))
+                .foregroundStyle(Color.white.opacity(0.8))
+                .padding(.bottom, 3)
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+        .background(export ? Color.clear : Theme.surface)
+    }
+}

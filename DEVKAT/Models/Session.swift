@@ -36,6 +36,12 @@ struct Session: Identifiable, Hashable, Codable {
         return Int(Double(linesTotal) / hours)
     }
 
+    /// Session is considered in-progress if its end time is within the last 4 hours
+    /// (matches the daemon's cold-session threshold).
+    var isInProgress: Bool {
+        Date().timeIntervalSince(endedAt) < 4 * 3600
+    }
+
     /// e.g. "Claude + Codex" or "Cursor"
     var sourceLabel: String {
         sources.map { $0.capitalized }.joined(separator: " + ")

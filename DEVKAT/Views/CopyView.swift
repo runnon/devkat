@@ -103,6 +103,12 @@ struct CopyView: View {
                         onCopy: { showToast("Copied!") },
                         onSave: { showToast("Saved!") }
                     )
+
+                    CodexMessageTile(
+                        session: session,
+                        onCopy: { showToast("Copied!") },
+                        onSave: { showToast("Saved!") }
+                    )
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
@@ -394,6 +400,46 @@ private struct MessageTile: View {
     @MainActor
     private func render() -> UIImage? {
         renderView(AuraMessageOverlay(session: session, export: true), size: CGSize(width: 175, height: 88))
+    }
+}
+
+private struct CodexMessageTile: View {
+    let session: Session
+    var onCopy: (() -> Void)?
+    var onSave: (() -> Void)?
+
+    var body: some View {
+        CodexMessageOverlay(session: session)
+            .aspectRatio(2.0, contentMode: .fit)
+            .frame(maxWidth: .infinity)
+            .clipped()
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(Color.white.opacity(0.12), lineWidth: 1)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .onTapGesture { copy() }
+            .onLongPressGesture(minimumDuration: 0.4) { save() }
+    }
+
+    private func copy() {
+        guard let img = render() else { return }
+        UIPasteboard.general.image = img
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        onCopy?()
+    }
+
+    private func save() {
+        guard let img = render() else { return }
+        saveTransparentPNG(img)
+        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+        onSave?()
+    }
+
+    @MainActor
+    private func render() -> UIImage? {
+        renderView(CodexMessageOverlay(session: session, export: true), size: CGSize(width: 175, height: 88))
     }
 }
 

@@ -11,10 +11,22 @@ struct SessionCard: View {
             Spacer(minLength: 0)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("DURATION")
-                    .font(.system(size: 11, design: .monospaced).weight(.bold))
-                    .foregroundStyle(Theme.textMuted)
-                    .tracking(2)
+                if session.isInProgress {
+                    Text("IN PROGRESS")
+                        .font(.system(size: 9, design: .monospaced).weight(.bold))
+                        .foregroundStyle(Theme.logoGreen)
+                        .tracking(1.5)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Theme.logoGreen.opacity(0.12))
+                        .clipShape(Capsule())
+                        .overlay(Capsule().strokeBorder(Theme.logoGreen.opacity(0.3), lineWidth: 0.5))
+                } else {
+                    Text("DURATION")
+                        .font(.system(size: 11, design: .monospaced).weight(.bold))
+                        .foregroundStyle(Theme.textMuted)
+                        .tracking(2)
+                }
                 Text(SessionFormatting.duration(session.activeDuration))
                     .font(.system(size: 44, design: .monospaced).weight(.bold))
                     .foregroundStyle(Theme.text)
