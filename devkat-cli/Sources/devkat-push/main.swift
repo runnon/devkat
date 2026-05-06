@@ -1,4 +1,9 @@
 import Foundation
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
 import DevKatParser
 
 let args = CommandLine.arguments
@@ -151,8 +156,11 @@ func runLogin() {
         print("devkat-push: cancelled"); exit(1)
     }
 
-    print("Password: ", terminator: "")
-    guard let password = readLine()?.trimmingCharacters(in: .whitespaces), !password.isEmpty else {
+    guard let raw = getpass("Password: ") else {
+        print("\ndevkat-push: cancelled"); exit(1)
+    }
+    let password = String(cString: raw).trimmingCharacters(in: .whitespaces)
+    guard !password.isEmpty else {
         print("devkat-push: cancelled"); exit(1)
     }
 
@@ -162,8 +170,8 @@ func runLogin() {
             print("Creating account…")
             var newPassword = ""
             while newPassword.count < 8 {
-                print("Choose a password (min 8 chars): ", terminator: "")
-                newPassword = readLine()?.trimmingCharacters(in: .whitespaces) ?? ""
+                guard let pwRaw = getpass("Choose a password (min 8 chars): ") else { break }
+                newPassword = String(cString: pwRaw).trimmingCharacters(in: .whitespaces)
             }
             creds = try signUp(email: email, password: newPassword)
             print("devkat-push: ✓ account created and logged in as \(email)")

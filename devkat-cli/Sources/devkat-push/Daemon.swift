@@ -191,6 +191,8 @@ func installDaemon() {
         let unload = Process()
         unload.executableURL = URL(fileURLWithPath: "/bin/launchctl")
         unload.arguments = ["unload", plistURL.path]
+        unload.standardOutput = FileHandle.nullDevice
+        unload.standardError = FileHandle.nullDevice
         try? unload.run()
         unload.waitUntilExit()
 

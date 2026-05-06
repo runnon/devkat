@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build release binary
+        working-directory: devkat-cli
+        run: swift build -c release
+
+      - name: Package binary
+        run: |
+          cd devkat-cli/.build/arm64-apple-macosx/release
+          tar -czf /tmp/devkat-push-macos.tar.gz devkat-push
+
+      - name: Create release on devkat-releases
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_PAT }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          NOTES=$(git log -1 --pretty=%B)
+          gh release create "$TAG" /tmp/devkat-push-macos.tar.gz \
+            --repo runnon/devkat-releases \
+            --title "$TAG" \
+            --notes "$NOTES"
