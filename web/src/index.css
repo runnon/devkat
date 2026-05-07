@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+/* Custom fonts bundled for cross-platform consistency */
+
+@font-face {
+  font-family: "LEDLIGHT";
+  src: url("/fonts/LEDLIGHT.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Acid TM";
+  src: url("/fonts/AcidTM.woff2") format("woff2"),
+       url("/fonts/AcidTM.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dreamer TM";
+  src: url("/fonts/DreamerTM.woff2") format("woff2"),
+       url("/fonts/DreamerTM.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sokan Oumerig";
+  src: url("/fonts/SokanOumerig.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/SF-Mono-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/SF-Mono-Semibold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Mono";
+  src: url("/fonts/SF-Mono-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/fonts/SF-Pro-Display-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/fonts/SF-Pro-Display-Semibold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/fonts/SF-Pro-Display-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NewYork";
+  src: url("/fonts/NewYork.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NewYork";
+  src: url("/fonts/NewYorkItalic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@theme {
+  --color-background: #000000;
+  --color-surface: #0E0E0E;
+  --color-surface-raised: #1A1A1A;
+  --color-border: #2A2A2A;
+  --color-text: #FFFFFF;
+  --color-text-dim: #9A9A9A;
+  --color-text-muted: #5A5A5A;
+  --color-logo-green: #00FF41;
+  --color-imessage-blue: #007AFF;
+  --color-android-green: #34C759;
+  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-serif: Baskerville, "NewYork", "Baskerville Old Face", Georgia, serif;
+  --font-led: "LEDLIGHT", ui-monospace, monospace;
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.6s ease-out infinite;
+}

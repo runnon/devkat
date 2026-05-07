@@ -9,6 +9,7 @@ struct HomeView: View {
     @State private var copiedCommand = false
     @State private var pulse = false
     @State private var checkedNotConnected = false
+    @State private var showSetupInfo = false
 
     private var grouped: [(label: String, items: [Session])] {
         let cal = Calendar.current
@@ -37,6 +38,9 @@ struct HomeView: View {
                 .refreshable { await app.fetchSessions() }
             } else {
                 ScrollView {
+                    if !app.leaderboard.isEmpty {
+                        leaderboardStrip
+                    }
                     LazyVStack(alignment: .leading, spacing: 24, pinnedViews: []) {
                         ForEach(grouped, id: \.label) { group in
                             section(label: group.label, items: group.items)
@@ -55,6 +59,12 @@ struct HomeView: View {
             SettingsView()
                 .environment(app)
         }
+        .sheet(isPresented: $showSetupInfo) {
+            SetupInfoSheet()
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(Color(hex: 0x1A1A1A))
+        }
     }
 
     private var titleBar: some View {
@@ -63,6 +73,16 @@ struct HomeView: View {
                 showSettings = true
             } label: {
                 Image(systemName: "gearshape.fill")
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundStyle(Theme.text)
+                    .frame(width: 32, height: 32)
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                showSetupInfo = true
+            } label: {
+                Image(systemName: "info.circle")
                     .font(.system(size: 18, weight: .regular))
                     .foregroundStyle(Theme.text)
                     .frame(width: 32, height: 32)
@@ -145,10 +165,20 @@ struct HomeView: View {
             Image(systemName: "terminal")
                 .font(.system(size: 44, weight: .thin))
                 .foregroundStyle(Theme.textDim)
-            Text("SETUP")
-                .font(.system(.footnote, design: .monospaced).weight(.bold))
-                .foregroundStyle(Theme.textDim)
-                .tracking(2)
+            HStack(spacing: 8) {
+                Text("SETUP")
+                    .font(.system(.footnote, design: .monospaced).weight(.bold))
+                    .foregroundStyle(Theme.textDim)
+                    .tracking(2)
+                Button {
+                    showSetupInfo = true
+                } label: {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(Theme.logoGreen)
+                }
+                .buttonStyle(.plain)
+            }
             VStack(spacing: 10) {
                 Text("Paste this in your terminal:")
                     .font(.system(.caption, design: .monospaced))
@@ -292,6 +322,108 @@ struct HomeView: View {
                     }
                     .buttonStyle(.plain)
                 }
+            }
+        }
+    }
+
+    private var leaderboardStrip: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Text("TOKENS BURNED")
+                    .font(.system(size: 10, design: .monospaced).weight(.bold))
+                    .foregroundStyle(Theme.textMuted)
+                    .tracking(1.5)
+                Rectangle()
+                    .fill(Theme.border)
+                    .frame(height: 1)
+            }
+            .padding(.horizontal, 16)
+
+            HStack(spacing: 0) {
+                ForEach(Array(app.leaderboard.prefix(3).enumerated()), id: \.element.id) { index, entry in
+                    HStack(spacing: 6) {
+                        Text(leaderboardIcon(for: index))
+                            .font(.system(size: 14))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(entry.displayName)
+                                .font(.system(size: 11, design: .monospaced).weight(.semibold))
+                                .foregroundStyle(Theme.text)
+                                .lineLimit(1)
+                            Text(entry.formattedTokens)
+                                .font(.system(size: 10, design: .monospaced))
+                                .foregroundStyle(Theme.textMuted)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+        .padding(.vertical, 14)
+    }
+
+    private func leaderboardIcon(for index: Int) -> String {
+        switch index {
+        case 0: return "🦁"
+        case 1: return "🐆"
+        default: return "🐈"
+        }
+    }
+}
+
+private struct SetupInfoSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("How it works")
+                .font(.system(.body, design: .default).weight(.semibold))
+                .foregroundStyle(.white)
+
+            VStack(alignment: .leading, spacing: 12) {
+                infoBlock(
+                    icon: "terminal",
+                    title: "Local CLI daemon",
+                    body: "The curl command installs devkat-push, a lightweight background daemon that runs on your Mac."
+                )
+
+                infoBlock(
+                    icon: "chart.bar",
+                    title: "Tracks AI usage stats",
+                    body: "It watches your Claude, Codex, and Cursor sessions and computes aggregate stats — duration, lines changed, tokens burned, and files touched."
+                )
+
+                infoBlock(
+                    icon: "lock.shield",
+                    title: "No code leaves your machine",
+                    body: "Only numbers are synced. No source code, file paths, prompts, or responses are ever transmitted."
+                )
+
+                infoBlock(
+                    icon: "arrow.triangle.2.circlepath",
+                    title: "Syncs to this app",
+                    body: "Stats push to your Devkat account so you can view session history and create shareable overlay cards."
+                )
+            }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func infoBlock(icon: String, title: String, body: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 14))
+                .foregroundStyle(Theme.logoGreen)
+                .frame(width: 20)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.system(size: 13, design: .monospaced).weight(.semibold))
+                    .foregroundStyle(.white)
+                Text(body)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundStyle(Theme.textDim)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
