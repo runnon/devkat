@@ -165,6 +165,22 @@ actor SupabaseService {
         try checkStatus(response, data: data)
     }
 
+    // MARK: Leaderboard
+
+    func fetchLeaderboard(token: String) async throws -> [LeaderboardEntry] {
+        let url = base.appendingPathComponent("rest/v1/rpc/token_leaderboard")
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.setValue(anon, forHTTPHeaderField: "apikey")
+        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        req.httpBody = Data("{}".utf8)
+
+        let (data, response) = try await URLSession.shared.data(for: req)
+        try checkStatus(response, data: data)
+        return try JSONDecoder().decode([LeaderboardEntry].self, from: data)
+    }
+
     // MARK: Helpers
 
     private func checkStatus(_ response: URLResponse, data: Data) throws {

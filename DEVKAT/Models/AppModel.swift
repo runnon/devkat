@@ -7,6 +7,7 @@ final class AppModel {
     var selectedSession: Session?
     var sessions: [Session] = []
     var installations: [Installation] = []
+    var leaderboard: [LeaderboardEntry] = []
     var isLoggedIn: Bool = AuthTokens.stored != nil
     var isLoadingSessions = false
 
@@ -81,5 +82,13 @@ final class AppModel {
         let (sList, iList) = try await (s, i)
         sessions = sList
         installations = iList
+
+        // Leaderboard is optional — don't block sessions on it.
+        do {
+            leaderboard = try await SupabaseService.shared.fetchLeaderboard(token: token)
+        } catch {
+            print("AppModel: leaderboard unavailable – \(error)")
+            leaderboard = []
+        }
     }
 }

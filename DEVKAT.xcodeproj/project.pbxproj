@@ -17,6 +17,7 @@
 		0F84FBE1427E2FD5376D4AA3 /* LegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6381D826E4D878180E4224 /* LegalView.swift */; };
 		0FB3DBD26D7324493A0A59C6 /* NewYorkMedium-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DDC301F415DEB75935AFE1F9 /* NewYorkMedium-Semibold.otf */; };
 		0FFF998303AA0DAB4F4C82E8 /* AuraOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8909ACEC8A2DAC0C833D114 /* AuraOverlay.swift */; };
+		0FFF998303AA0DAB00AC1D01 /* AcidOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8909ACEC8A2DAC000AC1D02 /* AcidOverlay.swift */; };
 		1381EBC4DDEE205F362419ED /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6FD30B41FF737350BAFC4F /* Theme.swift */; };
 		1B6A36CA804CE03539640960 /* SF-Compact-Rounded-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1D349C933992F2C0FD0BF27D /* SF-Compact-Rounded-Bold.otf */; };
 		2A87CC0CD8B12BA64B5D0167 /* NewYorkLarge-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CF641AC85BCC9CCFC0E8DE32 /* NewYorkLarge-Bold.otf */; };
@@ -28,7 +29,9 @@
 		3DC6D9F56B44D222F9A9B846 /* SF-Compact-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2025929B6416241943670941 /* SF-Compact-Display-Medium.otf */; };
 		4A52F710574213AA54B86B53 /* SF-Mono-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */; };
 		4A52F710LEDLIGHT00000001 /* LEDLIGHT.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4A52F710LEDLIGHT00000002 /* LEDLIGHT.otf */; };
+		4A52F710ACIDTM0000000001 /* AcidTM.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4A52F710ACIDTM0000000002 /* AcidTM.otf */; };
 		4AF9E96D290B588D1BC048FA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476660E9A89DDED9018120A9 /* Session.swift */; };
+		4AF9E96D290B588D00LB0001 /* LeaderboardEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476660E9A89DDED900LB0002 /* LeaderboardEntry.swift */; };
 		1A2B3C4D5E6F708192AABBCC /* Installation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F70819293BBCCDD /* Installation.swift */; };
 		51CA498C684A34A262F4C612 /* NewYorkExtraLarge-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 84BA053E9B5DE2271C63B776 /* NewYorkExtraLarge-Regular.otf */; };
 		54E1EAFA1481C4C7A3CF27EB /* NewYorkLarge-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 59BF6AE4DD745E65A6A7AADD /* NewYorkLarge-Semibold.otf */; };
@@ -104,9 +107,11 @@
 		42093FDD0C086E1E3392D529 /* SF-Compact-Rounded-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Black.otf"; sourceTree = "<group>"; };
 		43D131E1E065C46A69B02AE1 /* NewYorkSmall-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkSmall-Regular.otf"; sourceTree = "<group>"; };
 		476660E9A89DDED9018120A9 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		476660E9A89DDED900LB0002 /* LeaderboardEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardEntry.swift; sourceTree = "<group>"; };
 		2B3C4D5E6F70819293BBCCDD /* Installation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Installation.swift; sourceTree = "<group>"; };
 		4A2AE7B3925F8C529A8CD8FB /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		4A52F710LEDLIGHT00000002 /* LEDLIGHT.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LEDLIGHT.otf; sourceTree = "<group>"; };
+		4A52F710ACIDTM0000000002 /* AcidTM.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AcidTM.otf; sourceTree = "<group>"; };
 		59BF6AE4DD745E65A6A7AADD /* NewYorkLarge-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Semibold.otf"; sourceTree = "<group>"; };
 		59F6EC3F346ECFA86C26F281 /* SF-Pro-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Medium.otf"; sourceTree = "<group>"; };
 		5B61184CE3C4F0445E94544D /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -126,6 +131,7 @@
 		A3555A7102B8E8B9751E9104 /* NewYorkLarge-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NewYorkLarge-Heavy.otf"; sourceTree = "<group>"; };
 		A785E7F72E85FDFAF6A20868 /* SF-Compact-Rounded-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Rounded-Medium.otf"; sourceTree = "<group>"; };
 		A8909ACEC8A2DAC0C833D114 /* AuraOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuraOverlay.swift; sourceTree = "<group>"; };
+		A8909ACEC8A2DAC000AC1D02 /* AcidOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcidOverlay.swift; sourceTree = "<group>"; };
 		AD6381D826E4D878180E4224 /* LegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalView.swift; sourceTree = "<group>"; };
 		AE40AE209C3BAFF04AF342F1 /* SF-Pro-Rounded-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Bold.otf"; sourceTree = "<group>"; };
 		AED8A60A107578D1F93E28D1 /* SF-Pro-Rounded-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Black.otf"; sourceTree = "<group>"; };
@@ -196,6 +202,7 @@
 				3DEEC7109A3A7EC9319ED286 /* SF-Mono-Medium.otf */,
 				18B8038AC4916873CBE16FAE /* SF-Mono-Regular.otf */,
 				4A52F710LEDLIGHT00000002 /* LEDLIGHT.otf */,
+				4A52F710ACIDTM0000000002 /* AcidTM.otf */,
 				C81EBE43C6EEC11A0939786B /* SF-Mono-Semibold.otf */,
 				23F62578DC45BDE223590538 /* SF-Pro-Display-Black.otf */,
 				F061E5A2135512A655DC5E24 /* SF-Pro-Display-Bold.otf */,
@@ -217,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				A8909ACEC8A2DAC0C833D114 /* AuraOverlay.swift */,
+				A8909ACEC8A2DAC000AC1D02 /* AcidOverlay.swift */,
 				3953DF82B4F5EFE9DE0B36B3 /* OverlayPreset.swift */,
 			);
 			path = Overlays;
@@ -244,6 +252,7 @@
 			children = (
 				3734C094DC090D8E5C6988DE /* AppModel.swift */,
 				2B3C4D5E6F70819293BBCCDD /* Installation.swift */,
+				476660E9A89DDED900LB0002 /* LeaderboardEntry.swift */,
 				476660E9A89DDED9018120A9 /* Session.swift */,
 			);
 			path = Models;
@@ -388,6 +397,7 @@
 				373FBB188F570887CD74D9E3 /* SF-Mono-Medium.otf in Resources */,
 				4A52F710574213AA54B86B53 /* SF-Mono-Regular.otf in Resources */,
 				4A52F710LEDLIGHT00000001 /* LEDLIGHT.otf in Resources */,
+				4A52F710ACIDTM0000000001 /* AcidTM.otf in Resources */,
 				30DC68D147B5BE25EDEA432F /* SF-Mono-Semibold.otf in Resources */,
 				2EE66C728E0F4A41B957FD3A /* SF-Pro-Display-Black.otf in Resources */,
 				8ABFB797FBC387A3F2CF1AC9 /* SF-Pro-Display-Bold.otf in Resources */,
@@ -413,6 +423,7 @@
 			files = (
 				2E059A2A9215A801A18595DF /* AppModel.swift in Sources */,
 				0FFF998303AA0DAB4F4C82E8 /* AuraOverlay.swift in Sources */,
+				0FFF998303AA0DAB00AC1D01 /* AcidOverlay.swift in Sources */,
 				FA2FF90739159BBC95C0BF34 /* AuthView.swift in Sources */,
 				D8B37B80D1BD0368DE3C0007 /* Config.swift in Sources */,
 				A0D7710A19B2483D12B6DBF7 /* CopyView.swift in Sources */,
@@ -425,6 +436,7 @@
 				CD8A11715F3732FA42F171AA /* PixelText.swift in Sources */,
 				A314BFFABC2420A2C50A13E7 /* RootView.swift in Sources */,
 				4AF9E96D290B588D1BC048FA /* Session.swift in Sources */,
+				4AF9E96D290B588D00LB0001 /* LeaderboardEntry.swift in Sources */,
 				1A2B3C4D5E6F708192AABBCC /* Installation.swift in Sources */,
 				A0938D5E945E7FBB897E48D4 /* SessionCard.swift in Sources */,
 				D9BEF19D2741142FE6A02E91 /* SettingsView.swift in Sources */,
