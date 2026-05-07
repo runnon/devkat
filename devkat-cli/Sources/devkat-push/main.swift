@@ -19,7 +19,7 @@ func run() {
     if args.contains("--uninstall") { return uninstallDaemon() }
     if args.contains("--status")    { return daemonStatus() }
     if args.contains("--sync-all")  { return syncAll(verbose: !args.contains("--quiet")) }
-    if args.contains("--resync")    { return resyncAll(verbose: !args.contains("--quiet")) }
+    if args.contains("--cursor-test") { return runCursorTest() }
 
     // --session <path>  forces a specific Claude JSONL file
     if let idx = args.firstIndex(of: "--session"), args.count > idx + 1 {

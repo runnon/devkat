@@ -17,7 +17,7 @@ private func fileIsCold(_ url: URL) -> Bool {
 
 // MARK: - Sync all sessions across every source
 
-func syncAll(verbose: Bool = false, ignoreCutoff: Bool = false) {
+func syncAll(verbose: Bool = false) {
     print("devkat-push: starting sync…"); fflush(stdout)
     guard loadCredentials() != nil else {
         print("devkat-push: not logged in. Run: devkat-push --login")
@@ -26,7 +26,7 @@ func syncAll(verbose: Bool = false, ignoreCutoff: Bool = false) {
 
     upsertInstallation() // heartbeat — keeps last_seen_at fresh for the iOS UI
 
-    let cutoff = ignoreCutoff ? Date(timeIntervalSince1970: 0) : loadInstallTimestamp()
+    let cutoff = loadInstallTimestamp()
     var state = SyncState.load()
     var pushed = 0
     var failed = 0
@@ -92,8 +92,23 @@ func syncAll(verbose: Bool = false, ignoreCutoff: Bool = false) {
     // ── Cursor sessions ──
     if verbose { print("  scanning cursor…"); fflush(stdout) }
     let cursorRows = findAllCursorSessions(since: cutoff)
+    // Cursor stopped writing tokenCount into local bubbles in early 2026, so
+    // pull token usage from Cursor's server-side dashboard API once per cycle.
+    // Each event is then attributed to the composer with the closest local
+    // bubble timestamp — never double-counted across concurrent composers.
+    let cursorEventsByComposer: [String: [CursorUsageEvent]] = {
+        guard !cursorRows.isEmpty else { return [:] }
+        let events = fetchCursorUsageEvents(since: cutoff)
+        let assigned = attributeCursorEvents(events, to: cursorRows)
+        if verbose {
+            let total = assigned.values.reduce(0) { $0 + $1.count }
+            print("  cursor api: \(events.count) events fetched, \(total) attributed to \(assigned.count) composer(s)")
+        }
+        return assigned
+    }()
     for row in cursorRows {
-        let sessions = parseCursorSessions(row)
+        let composerEvents = cursorEventsByComposer[row.composerId] ?? []
+        let sessions = parseCursorSessions(row, apiEvents: composerEvents, cutoff: cutoff)
         let allCold = sessions.allSatisfy { isCold($0) }
         if state.contains(row.composerId) && allCold { continue }
 
@@ -127,28 +142,6 @@ func syncAll(verbose: Bool = false, ignoreCutoff: Bool = false) {
 private func printSyncLine(_ s: ParsedSession) {
     let df = DateFormatter(); df.dateFormat = "MMM d HH:mm"
     print("  ✓ [\(s.source.rawValue)]  \(s.repoAlias ?? "?")  \(df.string(from: s.startedAt))  \(formatTokens(s.tokens)) tokens")
-}
-
-// MARK: - Force re-sync (clears local sync state, ignores install-time cutoff)
-//
-// Useful when:
-//   - the parser has been updated (e.g. Cursor token tracking) and previously
-//     pushed sessions in Supabase have stale tokens=0 values.
-//   - you want to backfill historical sessions that were excluded by cutoff.
-//
-// merge_session on the server is idempotent (keyed on session id), so this
-// will overwrite stale rows in place — not duplicate them.
-func resyncAll(verbose: Bool = true) {
-    print("devkat-push: clearing local sync state for full re-push…")
-
-    // Wipe local synced.json so the daemon will re-push everything.
-    let home = FileManager.default.homeDirectoryForCurrentUser
-    let syncedURL = home.appendingPathComponent(".devkat/synced.json")
-    try? FileManager.default.removeItem(at: syncedURL)
-
-    // Run with cutoff ignored so historical sessions get re-parsed and
-    // pushed with current parser values (e.g. backfilled Cursor tokens).
-    syncAll(verbose: verbose, ignoreCutoff: true)
 }
 
 // MARK: - launchd install / uninstall

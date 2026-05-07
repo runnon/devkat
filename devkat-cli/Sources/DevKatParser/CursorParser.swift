@@ -111,10 +111,24 @@ public func parseCursorSession(_ row: CursorComposerRow) -> ParsedSession {
 }
 
 /// Parses a Cursor session, splitting into multiple sessions at 4-hour inactivity gaps.
-public func parseCursorSessions(_ row: CursorComposerRow) -> [ParsedSession] {
-    // Get bubble data (timestamps + token counts) for this composer session
+///
+/// `apiEvents` are usage events that have already been attributed to *this*
+/// composer (see `attributeCursorEvents`). When provided, they back-fill
+/// token counts that Cursor stopped writing locally in 2026.
+///
+/// `cutoff` filters local bubbles and API events to those at or after the
+/// install timestamp, so a composer that existed before install but was
+/// reused afterwards only contributes its post-install activity.
+public func parseCursorSessions(
+    _ row: CursorComposerRow,
+    apiEvents: [CursorUsageEvent] = [],
+    cutoff: Date = Date(timeIntervalSince1970: 0)
+) -> [ParsedSession] {
     let bubbleData = getCursorBubbleData(composerId: row.composerId)
-    let totalTokens = bubbleData.reduce(0) { $0 + $1.inputTokens + $1.outputTokens }
+        .filter { ($0.timestamp ?? .distantPast) >= cutoff }
+    let localTokens = bubbleData.reduce(0) { $0 + $1.inputTokens + $1.outputTokens }
+
+    let composerEvents = apiEvents.filter { $0.timestamp >= cutoff }
 
     let bubbleTimestamps = bubbleData.compactMap { $0.timestamp }.sorted()
 
@@ -138,6 +152,12 @@ public func parseCursorSessions(_ row: CursorComposerRow) -> [ParsedSession] {
             return max(active, 60)
         }
 
+        // Total burn from the API across this composer's whole window. Used
+        // either as the segment-attributed value (preferred) or as a fallback
+        // total when local bubble token counts are zero.
+        let apiTotalTokens = composerEvents.reduce(0) { $0 + $1.burnTokens }
+        let totalTokens = localTokens > 0 ? localTokens : apiTotalTokens
+
         if splitIndices.count > 1 {
             let repoAlias = row.repoPath.map { URL(fileURLWithPath: $0).lastPathComponent }
             let totalActive = activeTime(from: 0, to: bubbleTimestamps.count)
@@ -150,6 +170,19 @@ public func parseCursorSessions(_ row: CursorComposerRow) -> [ParsedSession] {
                 let segActive = activeTime(from: startIdx, to: endIdx)
                 let proportion = totalActive > 0 ? segActive / totalActive : 1.0 / Double(splitIndices.count)
 
+                // Prefer attributing API events directly by timestamp. Fall
+                // back to proportional distribution if no API data.
+                let segTokens: Int
+                if !composerEvents.isEmpty {
+                    let lo = segStart.addingTimeInterval(-60)
+                    let hi = segEnd.addingTimeInterval(60)
+                    segTokens = composerEvents
+                        .filter { $0.timestamp >= lo && $0.timestamp <= hi }
+                        .reduce(0) { $0 + $1.burnTokens }
+                } else {
+                    segTokens = Int(Double(totalTokens) * proportion)
+                }
+
                 results.append(ParsedSession(
                     id: "\(row.composerId)_seg\(segIdx)",
                     startedAt: segStart,
@@ -158,7 +191,7 @@ public func parseCursorSessions(_ row: CursorComposerRow) -> [ParsedSession] {
                     linesAdded: Int(Double(row.linesAdded) * proportion),
                     linesRemoved: Int(Double(row.linesRemoved) * proportion),
                     filesTouched: row.filesChanged,
-                    tokens: Int(Double(totalTokens) * proportion),
+                    tokens: segTokens,
                     model: "cursor",
                     repoAlias: repoAlias,
                     gitBranch: row.gitBranch,
@@ -187,7 +220,8 @@ public func parseCursorSessions(_ row: CursorComposerRow) -> [ParsedSession] {
         )]
     }
 
-    return [makeSingleCursorSession(row, tokens: totalTokens)]
+    let fallbackTokens = localTokens > 0 ? localTokens : composerEvents.reduce(0) { $0 + $1.burnTokens }
+    return [makeSingleCursorSession(row, tokens: fallbackTokens)]
 }
 
 private func makeSingleCursorSession(_ row: CursorComposerRow, tokens: Int = 0) -> ParsedSession {
@@ -212,6 +246,53 @@ private func makeSingleCursorSession(_ row: CursorComposerRow, tokens: Int = 0) 
         gitBranch: row.gitBranch,
         source: .cursor
     )
+}
+
+/// Public accessor for a composer's bubble timestamps. Used by the daemon
+/// to attribute server-side API events to the right composer.
+public func cursorBubbleTimestamps(composerId: String) -> [Date] {
+    getCursorBubbleData(composerId: composerId).compactMap { $0.timestamp }.sorted()
+}
+
+/// Attributes a flat list of API usage events to specific composers by
+/// matching each event's timestamp to the closest local bubble across all
+/// candidate composers (within `tolerance` seconds). An event is assigned
+/// to AT MOST one composer — preventing the double-counting that occurs
+/// when concurrent composers share wall-clock windows.
+public func attributeCursorEvents(
+    _ events: [CursorUsageEvent],
+    to rows: [CursorComposerRow],
+    tolerance: TimeInterval = 60
+) -> [String: [CursorUsageEvent]] {
+    // Build (composerId, sortedTimestamps) for fast nearest lookup
+    let stamps: [(id: String, timestamps: [Date])] = rows.map {
+        (id: $0.composerId, timestamps: cursorBubbleTimestamps(composerId: $0.composerId))
+    }
+
+    var byComposer: [String: [CursorUsageEvent]] = [:]
+    for event in events {
+        var bestId: String?
+        var bestGap: TimeInterval = tolerance
+        for entry in stamps {
+            // Binary search for nearest
+            var lo = 0, hi = entry.timestamps.count
+            while lo < hi {
+                let mid = (lo + hi) / 2
+                if entry.timestamps[mid] < event.timestamp { lo = mid + 1 } else { hi = mid }
+            }
+            for idx in [lo - 1, lo] where idx >= 0 && idx < entry.timestamps.count {
+                let gap = abs(entry.timestamps[idx].timeIntervalSince(event.timestamp))
+                if gap < bestGap {
+                    bestGap = gap
+                    bestId = entry.id
+                }
+            }
+        }
+        if let id = bestId {
+            byComposer[id, default: []].append(event)
+        }
+    }
+    return byComposer
 }
 
 /// Reads bubble timestamps and token counts for a given composer session from cursorDiskKV
