@@ -46,7 +46,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Content area */}
-      <div className="flex-1 overflow-auto pb-[70px]">
+      <div className="flex-1 overflow-auto pb-[88px]">
         {activeTab === "home" && !showSettings && (
           <HomeView
             onSessionTap={(s) => {
@@ -68,20 +68,22 @@ export default function App() {
         )}
       </div>
 
-      {/* Bottom tab bar — matches iOS: 2 icon tabs */}
+      {/* Bottom tab bar — matches iOS: 2 icon+label tabs */}
       {!showSettings && (
         <nav className="fixed bottom-0 left-0 right-0 z-40">
           <div className="h-px bg-white/15" />
           <div className="bg-black/80 backdrop-blur-xl">
-            <div className="max-w-lg mx-auto flex items-center justify-center gap-[72px] py-3">
-              <TabIcon
+            <div className="max-w-lg mx-auto flex items-center justify-center gap-[72px] pt-[6px] pb-3">
+              <TabButton
                 active={activeTab === "home"}
                 icon={activeTab === "home" ? "house-fill" : "house"}
+                label="Home"
                 onClick={() => { setActiveTab("home"); setShowSettings(false); }}
               />
-              <TabIcon
+              <TabButton
                 active={activeTab === "copy"}
                 icon={activeTab === "copy" ? "copy-fill" : "copy"}
+                label="Overlays"
                 onClick={() => { setActiveTab("copy"); setShowSettings(false); }}
               />
             </div>
@@ -92,37 +94,47 @@ export default function App() {
   );
 }
 
-function TabIcon({ icon, onClick }: { active: boolean; icon: string; onClick: () => void }) {
+function TabButton({ active, icon, label, onClick }: { active: boolean; icon: string; label: string; onClick: () => void }) {
+  const tint = active ? "white" : "rgba(255,255,255,0.45)";
   return (
-    <button onClick={onClick} className="w-14 h-[50px] flex items-center justify-center">
+    <button
+      onClick={onClick}
+      className="w-16 h-[50px] flex flex-col items-center justify-center gap-[3px]"
+    >
       {/* SF Symbol: house.fill */}
       {icon === "house-fill" && (
-        <svg className="w-[22px] h-[22px]" fill="white" viewBox="0 0 22 22">
+        <svg className="w-[22px] h-[22px]" fill={tint} viewBox="0 0 22 22">
           <path d="M11 1.5L1 9.5h3v10h5v-6h4v6h5v-10h3L11 1.5z"/>
         </svg>
       )}
       {/* SF Symbol: house */}
       {icon === "house" && (
-        <svg className="w-[22px] h-[22px] opacity-45" fill="none" stroke="white" strokeWidth={1.2} viewBox="0 0 22 22">
+        <svg className="w-[22px] h-[22px]" fill="none" stroke={tint} strokeWidth={1.2} viewBox="0 0 22 22">
           <path d="M2.5 10L11 2.5 19.5 10M5 9.5v9.5h4.5v-5.5h3v5.5H17V9.5"/>
         </svg>
       )}
       {/* SF Symbol: plus.square.on.square.fill */}
       {icon === "copy-fill" && (
-        <svg className="w-[22px] h-[22px]" fill="white" viewBox="0 0 22 22">
+        <svg className="w-[22px] h-[22px]" fill={tint} viewBox="0 0 22 22">
           <rect x="6" y="6" width="14" height="14" rx="3"/>
-          <path d="M4 14.5V4a2.5 2.5 0 012.5-2.5H13" stroke="white" strokeWidth={1.5} fill="none"/>
+          <path d="M4 14.5V4a2.5 2.5 0 012.5-2.5H13" stroke={tint} strokeWidth={1.5} fill="none"/>
           <path d="M13 9.5v5M10.5 12h5" stroke="black" strokeWidth={1.5} strokeLinecap="round"/>
         </svg>
       )}
       {/* SF Symbol: plus.square.on.square */}
       {icon === "copy" && (
-        <svg className="w-[22px] h-[22px] opacity-45" fill="none" stroke="white" strokeWidth={1.2} viewBox="0 0 22 22">
+        <svg className="w-[22px] h-[22px]" fill="none" stroke={tint} strokeWidth={1.2} viewBox="0 0 22 22">
           <rect x="6" y="6" width="14" height="14" rx="3"/>
           <path d="M4 14.5V4a2.5 2.5 0 012.5-2.5H13"/>
           <path d="M13 9.5v5M10.5 12h5" strokeLinecap="round"/>
         </svg>
       )}
+      <span
+        className="text-[10px] leading-none"
+        style={{ color: tint, fontWeight: active ? 600 : 400 }}
+      >
+        {label}
+      </span>
     </button>
   );
 }
