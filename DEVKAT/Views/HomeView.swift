@@ -329,7 +329,7 @@ struct HomeView: View {
     private var leaderboardStrip: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
-                Text("TOKENS BURNED")
+                Text("TOP TOKEN BURNERS")
                     .font(.system(size: 10, design: .monospaced).weight(.bold))
                     .foregroundStyle(Theme.textMuted)
                     .tracking(1.5)
@@ -339,22 +339,10 @@ struct HomeView: View {
             }
             .padding(.horizontal, 16)
 
-            HStack(spacing: 0) {
+            HStack(spacing: 12) {
                 ForEach(Array(app.leaderboard.prefix(3).enumerated()), id: \.element.id) { index, entry in
-                    HStack(spacing: 6) {
-                        Text(leaderboardIcon(for: index))
-                            .font(.system(size: 14))
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(entry.displayName)
-                                .font(.system(size: 11, design: .monospaced).weight(.semibold))
-                                .foregroundStyle(Theme.text)
-                                .lineLimit(1)
-                            Text(entry.formattedTokens)
-                                .font(.system(size: 10, design: .monospaced))
-                                .foregroundStyle(Theme.textMuted)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    leaderboardRow(index: index, entry: entry)
+                        .frame(maxWidth: .infinity)
                 }
             }
             .padding(.horizontal, 16)
@@ -367,6 +355,26 @@ struct HomeView: View {
         case 0: return "🦁"
         case 1: return "🐆"
         default: return "🐈"
+        }
+    }
+
+    private func leaderboardRow(index: Int, entry: LeaderboardEntry) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 6) {
+                Text("\(index + 1)")
+                    .font(.system(size: 11, design: .monospaced).weight(.bold))
+                    .foregroundStyle(index == 0 ? Theme.logoGreen : Theme.textDim)
+                Text(entry.displayName)
+                    .font(.system(size: 11, design: .monospaced).weight(.semibold))
+                    .foregroundStyle(Theme.text)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                Text(leaderboardIcon(for: index))
+                    .font(.system(size: 12))
+            }
+            Text(entry.formattedTokens)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundStyle(Theme.textMuted)
         }
     }
 }

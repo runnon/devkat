@@ -17,7 +17,7 @@ private func fileIsCold(_ url: URL) -> Bool {
 
 // MARK: - Sync all sessions across every source
 
-func syncAll(verbose: Bool = false) {
+func syncAll(verbose: Bool = false, ignoreCutoff: Bool = false) {
     print("devkat-push: starting sync…"); fflush(stdout)
     guard loadCredentials() != nil else {
         print("devkat-push: not logged in. Run: devkat-push --login")
@@ -26,7 +26,7 @@ func syncAll(verbose: Bool = false) {
 
     upsertInstallation() // heartbeat — keeps last_seen_at fresh for the iOS UI
 
-    let cutoff = loadInstallTimestamp()
+    let cutoff = ignoreCutoff ? Date(timeIntervalSince1970: 0) : loadInstallTimestamp()
     var state = SyncState.load()
     var pushed = 0
     var failed = 0
@@ -127,6 +127,28 @@ func syncAll(verbose: Bool = false) {
 private func printSyncLine(_ s: ParsedSession) {
     let df = DateFormatter(); df.dateFormat = "MMM d HH:mm"
     print("  ✓ [\(s.source.rawValue)]  \(s.repoAlias ?? "?")  \(df.string(from: s.startedAt))  \(formatTokens(s.tokens)) tokens")
+}
+
+// MARK: - Force re-sync (clears local sync state, ignores install-time cutoff)
+//
+// Useful when:
+//   - the parser has been updated (e.g. Cursor token tracking) and previously
+//     pushed sessions in Supabase have stale tokens=0 values.
+//   - you want to backfill historical sessions that were excluded by cutoff.
+//
+// merge_session on the server is idempotent (keyed on session id), so this
+// will overwrite stale rows in place — not duplicate them.
+func resyncAll(verbose: Bool = true) {
+    print("devkat-push: clearing local sync state for full re-push…")
+
+    // Wipe local synced.json so the daemon will re-push everything.
+    let home = FileManager.default.homeDirectoryForCurrentUser
+    let syncedURL = home.appendingPathComponent(".devkat/synced.json")
+    try? FileManager.default.removeItem(at: syncedURL)
+
+    // Run with cutoff ignored so historical sessions get re-parsed and
+    // pushed with current parser values (e.g. backfilled Cursor tokens).
+    syncAll(verbose: verbose, ignoreCutoff: true)
 }
 
 // MARK: - launchd install / uninstall
