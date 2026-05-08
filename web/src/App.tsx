@@ -5,7 +5,7 @@ import { HomeView } from "./components/HomeView";
 import { CopyView } from "./components/CopyView";
 import { SettingsView } from "./components/SettingsView";
 import type { Session as UserSession } from "@supabase/supabase-js";
-import type { Session } from "./lib/types";
+import type { Session, LeaderboardEntry } from "./lib/types";
 
 type Tab = "home" | "copy";
 
@@ -17,6 +17,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
 
   const fetchSessions = useCallback(async () => {
     setSessionsLoading(true);
@@ -27,6 +28,11 @@ export default function App() {
       .limit(200);
     if (!error && data) setSessions(data as Session[]);
     setSessionsLoading(false);
+  }, []);
+
+  const fetchLeaderboard = useCallback(async () => {
+    const { data, error } = await supabase.rpc("token_leaderboard");
+    if (!error && data) setLeaderboard(data as LeaderboardEntry[]);
   }, []);
 
   useEffect(() => {
@@ -45,9 +51,14 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (session) fetchSessions();
-    else setSessions([]);
-  }, [session, fetchSessions]);
+    if (session) {
+      fetchSessions();
+      fetchLeaderboard();
+    } else {
+      setSessions([]);
+      setLeaderboard([]);
+    }
+  }, [session, fetchSessions, fetchLeaderboard]);
 
   if (loading) {
     return (
@@ -68,6 +79,7 @@ export default function App() {
         {activeTab === "home" && !showSettings && (
           <HomeView
             sessions={sessions}
+            leaderboard={leaderboard}
             loading={sessionsLoading}
             onRefresh={fetchSessions}
             onSessionTap={(s) => {

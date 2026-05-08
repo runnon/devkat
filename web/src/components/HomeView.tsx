@@ -1,10 +1,11 @@
 import { useState } from "react";
-import type { Session } from "../lib/types";
-import { dayLabel } from "../lib/types";
+import type { Session, LeaderboardEntry } from "../lib/types";
+import { dayLabel, leaderboardDisplayName, leaderboardFormattedTokens } from "../lib/types";
 import { SessionCard } from "./SessionCard";
 
 export function HomeView({
   sessions,
+  leaderboard,
   loading,
   onRefresh,
   onSessionTap,
@@ -12,6 +13,7 @@ export function HomeView({
   onSettingsTap,
 }: {
   sessions: Session[];
+  leaderboard: LeaderboardEntry[];
   loading: boolean;
   onRefresh: () => void;
   onSessionTap: (s: Session) => void;
@@ -66,7 +68,11 @@ export function HomeView({
           loading={loading}
         />
       ) : (
-        <div className="px-[16px] pt-[18px] pb-[100px]">
+        <>
+          {leaderboard.length > 0 && (
+            <LeaderboardStrip entries={leaderboard} />
+          )}
+          <div className="px-[16px] pt-[18px] pb-[100px]">
           <div className="flex flex-col gap-[24px]">
             {grouped.map(({ label, items }) => (
               <section key={label} className="flex flex-col gap-[12px]">
@@ -85,6 +91,7 @@ export function HomeView({
             ))}
           </div>
         </div>
+        </>
       )}
       </div>
     </div>
@@ -144,6 +151,42 @@ function SetupState({
           {loading ? "CHECKING..." : "CHECK CONNECTION"}
         </span>
       </button>
+    </div>
+  );
+}
+
+const LEADERBOARD_ICONS = ["🦁", "🐆", "🐈"];
+
+function LeaderboardStrip({ entries }: { entries: LeaderboardEntry[] }) {
+  return (
+    <div className="py-[14px]">
+      <div className="px-[16px] flex items-center gap-[8px] mb-[10px]">
+        <span className="text-[10px] font-bold font-mono text-text-muted tracking-[0.15em]">
+          TOP TOKEN BURNERS
+        </span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+      <div className="px-[16px] flex gap-[12px]">
+        {entries.slice(0, 3).map((entry, i) => (
+          <div key={entry.email} className="flex-1 flex flex-col gap-[4px]">
+            <div className="flex items-center gap-[6px]">
+              <span
+                className="text-[11px] font-bold font-mono"
+                style={{ color: i === 0 ? "var(--logo-green)" : "var(--text-dim)" }}
+              >
+                {i + 1}
+              </span>
+              <span className="text-[11px] font-semibold font-mono text-text truncate">
+                {leaderboardDisplayName(entry.email)}
+              </span>
+              <span className="text-[12px]">{LEADERBOARD_ICONS[i]}</span>
+            </div>
+            <span className="text-[10px] font-mono text-text-muted">
+              {leaderboardFormattedTokens(entry.total_tokens)}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

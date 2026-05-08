@@ -19,6 +19,21 @@ export interface Installation {
   last_seen_at: string;
 }
 
+export interface LeaderboardEntry {
+  email: string;
+  total_tokens: number;
+}
+
+export function leaderboardDisplayName(email: string): string {
+  return email.split("@")[0] ?? email;
+}
+
+export function leaderboardFormattedTokens(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return `${n}`;
+}
+
 export function isInProgress(session: Session): boolean {
   const endedAt = new Date(session.ended_at).getTime();
   return Date.now() - endedAt < 4 * 3600 * 1000;
