@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
 import { AuthView } from "./components/AuthView";
 import { HomeView } from "./components/HomeView";
 import { CopyView } from "./components/CopyView";
 import { SettingsView } from "./components/SettingsView";
 import type { Session as UserSession } from "@supabase/supabase-js";
-import type { Session } from "./lib/types";
+import type { Session, LeaderboardEntry } from "./lib/types";
 
 type Tab = "home" | "copy";
 
@@ -15,6 +15,25 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+
+  const fetchSessions = useCallback(async () => {
+    setSessionsLoading(true);
+    const { data, error } = await supabase
+      .from("sessions")
+      .select("*")
+      .order("started_at", { ascending: false })
+      .limit(200);
+    if (!error && data) setSessions(data as Session[]);
+    setSessionsLoading(false);
+  }, []);
+
+  const fetchLeaderboard = useCallback(async () => {
+    const { data, error } = await supabase.rpc("token_leaderboard");
+    if (!error && data) setLeaderboard(data as LeaderboardEntry[]);
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -30,6 +49,16 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (session) {
+      fetchSessions();
+      fetchLeaderboard();
+    } else {
+      setSessions([]);
+      setLeaderboard([]);
+    }
+  }, [session, fetchSessions, fetchLeaderboard]);
 
   if (loading) {
     return (
@@ -49,6 +78,10 @@ export default function App() {
       <div className="flex-1 overflow-auto pb-[70px]">
         {activeTab === "home" && !showSettings && (
           <HomeView
+            sessions={sessions}
+            leaderboard={leaderboard}
+            loading={sessionsLoading}
+            onRefresh={fetchSessions}
             onSessionTap={(s) => {
               setSelectedSession(s);
               setActiveTab("copy");
@@ -58,7 +91,7 @@ export default function App() {
           />
         )}
         {activeTab === "copy" && !showSettings && (
-          <CopyView session={selectedSession} />
+          <CopyView session={selectedSession} sessions={sessions} />
         )}
         {showSettings && (
           <SettingsView
@@ -71,9 +104,10 @@ export default function App() {
       {/* Bottom tab bar — matches iOS: 2 icon tabs */}
       {!showSettings && (
         <nav className="fixed bottom-0 left-0 right-0 z-40">
-          <div className="h-px bg-white/15" />
           <div className="bg-black/80 backdrop-blur-xl">
-            <div className="max-w-lg mx-auto flex items-center justify-center gap-[72px] py-3">
+            <div className="max-w-lg mx-auto">
+              <div className="h-px bg-white/15" />
+              <div className="flex items-center justify-center gap-[72px] py-3">
               <TabIcon
                 active={activeTab === "home"}
                 icon={activeTab === "home" ? "house-fill" : "house"}
@@ -84,6 +118,7 @@ export default function App() {
                 icon={activeTab === "copy" ? "copy-fill" : "copy"}
                 onClick={() => { setActiveTab("copy"); setShowSettings(false); }}
               />
+              </div>
             </div>
           </div>
         </nav>

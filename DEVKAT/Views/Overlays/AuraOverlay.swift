@@ -115,20 +115,19 @@ struct AuraTripleOverlay: View {
         if let headerLabel {
             VStack(alignment: .leading, spacing: 4) {
                 Text(headerLabel)
-                    .font(.custom("Baskerville-Bold", size: 8))
+                    .font(.custom("Baskerville-Bold", size: 9))
                     .foregroundStyle(.white)
-                HStack(alignment: .firstTextBaseline, spacing: 18) {
-                    ForEach(slots) { slot in
-                        Text(slot.formattedValueWithUnit)
-                            .font(.custom("Baskerville-BoldItalic", size: 10))
-                            .foregroundStyle(.white)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.6)
-                    }
+                ForEach(slots) { slot in
+                    Text(slot.formattedValueWithUnit)
+                        .font(.custom("Baskerville-BoldItalic", size: 12))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                 }
             }
-            .padding(.horizontal, 12)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             .background(export ? Color.clear : Theme.surface)
         } else {
             HStack(spacing: 0) {

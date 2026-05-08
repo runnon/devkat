@@ -5,7 +5,7 @@ import { OverlayTiles } from "./OverlayTiles";
 
 type CopyTab = "activity" | "totals";
 
-export function CopyView({ session }: { session: Session | null }) {
+export function CopyView({ session, sessions }: { session: Session | null; sessions: Session[] }) {
   const [toast, setToast] = useState<string | null>(null);
   const [tab, setTab] = useState<CopyTab>("activity");
   const [selectedStatId, setSelectedStatId] = useState("duration");
@@ -65,7 +65,7 @@ export function CopyView({ session }: { session: Session | null }) {
             </div>
           ) : (
             <div className="px-[16px] pt-[12px] pb-[100px]">
-              <WeeklyTotals session={session} onCopied={() => showToast("Copied!")} />
+              <WeeklyTotals sessions={sessions} onCopied={() => showToast("Copied!")} />
             </div>
           )}
         </>
@@ -150,29 +150,44 @@ function StatPickerSheet({
   );
 }
 
-function WeeklyTotals({ session }: { session: Session; onCopied: () => void }) {
-  const dur = formatDuration(session.active_duration);
-  const pace = linesPerHour(session);
-  const burn = session.tokens > 0 ? `${formatTokens(session.tokens)} tokens` : "—";
+function WeeklyTotals({ sessions }: { sessions: Session[]; onCopied: () => void }) {
+  const weekSessions = filterToCurrentWeek(sessions);
+  const totalDuration = weekSessions.reduce((sum, s) => sum + s.active_duration, 0);
+  const totalLines = weekSessions.reduce((sum, s) => sum + s.lines_added + s.lines_removed, 0);
+  const totalTokens = weekSessions.reduce((sum, s) => sum + s.tokens, 0);
+  const hours = Math.max(totalDuration / 3600, 0.0001);
+  const pace = Math.round(totalLines / hours);
+
+  const dur = formatDuration(totalDuration);
+  const burn = totalTokens > 0 ? `${formatTokens(totalTokens)} tokens` : "—";
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      <div className="aspect-[1.6] bg-surface rounded-[14px] border border-white/[0.12] flex items-center justify-center px-3">
-        <div className="space-y-1">
-          <p className="text-[8px] font-bold text-white font-serif">
+      <div className="aspect-[1.6] bg-surface rounded-[14px] border border-white/[0.12] flex items-center justify-center px-[14px] py-[12px]">
+        <div className="flex flex-col items-start gap-[4px]">
+          <p className="text-[9px] font-bold text-white font-serif leading-none">
             This Week
           </p>
-          <div className="flex gap-[18px]">
-            {[dur, `${pace} l/hr`, burn].map((v, i) => (
-              <span key={i} className="text-[10px] text-white italic font-serif">
-                {v}
-              </span>
-            ))}
-          </div>
+          {[dur, `${pace} lines/hr`, burn].map((v, i) => (
+            <span
+              key={i}
+              className="text-[12px] text-white italic font-serif leading-tight whitespace-nowrap"
+            >
+              {v}
+            </span>
+          ))}
         </div>
       </div>
     </div>
   );
+}
+
+function filterToCurrentWeek(sessions: Session[]): Session[] {
+  // Mirror iOS Calendar.dateInterval(of: .weekOfYear) — week starts on Sunday.
+  const now = new Date();
+  const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+  const cutoff = startOfWeek.getTime();
+  return sessions.filter((s) => new Date(s.started_at).getTime() >= cutoff);
 }
 
 interface StatSlotWeb {
