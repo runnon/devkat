@@ -20,13 +20,6 @@ struct RootView: View {
             case .copy: "plus.square.on.square"
             }
         }
-
-        var label: String {
-            switch self {
-            case .home: "Home"
-            case .copy: "Overlays"
-            }
-        }
     }
 
     var body: some View {
@@ -67,23 +60,18 @@ struct RootView: View {
                     Button {
                         selectTab(tab)
                     } label: {
-                        VStack(spacing: 3) {
-                            Image(systemName: selected == tab ? tab.selectedIcon : tab.unselectedIcon)
-                                .font(.system(size: 22, weight: selected == tab ? .medium : .light))
-                            Text(tab.label)
-                                .font(.system(size: 10, weight: selected == tab ? .semibold : .regular))
-                        }
-                        .foregroundStyle(selected == tab
-                                         ? .white
-                                         : Color.white.opacity(0.45))
-                        .frame(width: 64, height: 50)
-                        .contentShape(Rectangle())
+                        Image(systemName: selected == tab ? tab.selectedIcon : tab.unselectedIcon)
+                            .font(.system(size: 22, weight: selected == tab ? .medium : .light))
+                            .foregroundStyle(selected == tab
+                                             ? .white
+                                             : Color.white.opacity(0.45))
+                            .frame(width: 56, height: 50)
+                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 6)
         }
         .background(
             ZStack {
