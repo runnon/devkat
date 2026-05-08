@@ -336,10 +336,26 @@ struct HomeView: View {
             }
             .padding(.horizontal, 16)
 
-            HStack(spacing: 12) {
+            HStack(spacing: 0) {
                 ForEach(Array(app.leaderboard.prefix(3).enumerated()), id: \.element.id) { index, entry in
-                    leaderboardRow(index: index, entry: entry)
-                        .frame(maxWidth: .infinity)
+                    let alignment: HorizontalAlignment = index == 0 ? .leading : index == 1 ? .center : .trailing
+                    VStack(alignment: alignment, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Text("\(index + 1)")
+                                .font(.system(size: 11, design: .monospaced).weight(.bold))
+                                .foregroundStyle(index == 0 ? Theme.logoGreen : Theme.textDim)
+                            Text(entry.displayName)
+                                .font(.system(size: 11, design: .monospaced).weight(.semibold))
+                                .foregroundStyle(Theme.text)
+                                .lineLimit(1)
+                            Text(leaderboardIcon(for: index))
+                                .font(.system(size: 12))
+                        }
+                        Text(entry.formattedTokens)
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundStyle(Theme.textMuted)
+                    }
+                    .frame(maxWidth: .infinity, alignment: index == 0 ? .leading : index == 1 ? .center : .trailing)
                 }
             }
             .padding(.horizontal, 16)
@@ -355,25 +371,6 @@ struct HomeView: View {
         }
     }
 
-    private func leaderboardRow(index: Int, entry: LeaderboardEntry) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 6) {
-                Text("\(index + 1)")
-                    .font(.system(size: 11, design: .monospaced).weight(.bold))
-                    .foregroundStyle(index == 0 ? Theme.logoGreen : Theme.textDim)
-                Text(entry.displayName)
-                    .font(.system(size: 11, design: .monospaced).weight(.semibold))
-                    .foregroundStyle(Theme.text)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                Text(leaderboardIcon(for: index))
-                    .font(.system(size: 12))
-            }
-            Text(entry.formattedTokens)
-                .font(.system(size: 10, design: .monospaced))
-                .foregroundStyle(Theme.textMuted)
-        }
-    }
 }
 
 private struct SetupInfoSheet: View {

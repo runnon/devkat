@@ -272,7 +272,7 @@ function LeaderboardStrip({ entries }: { entries: LeaderboardEntry[] }) {
               <div className="flex items-center gap-[6px]">
                 <span
                   className="text-[11px] font-bold font-mono"
-                  style={{ color: i === 0 ? "var(--logo-green)" : "var(--text-dim)" }}
+                  style={{ color: i === 0 ? "var(--color-logo-green)" : "var(--color-text-dim)" }}
                 >
                   {i + 1}
                 </span>
