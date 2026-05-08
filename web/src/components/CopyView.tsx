@@ -157,18 +157,19 @@ function WeeklyTotals({ session }: { session: Session; onCopied: () => void }) {
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      <div className="aspect-[1.6] bg-surface rounded-[14px] border border-white/[0.12] flex items-center justify-center px-3">
-        <div className="space-y-1">
-          <p className="text-[8px] font-bold text-white font-serif">
+      <div className="aspect-[1.6] bg-surface rounded-[14px] border border-white/[0.12] flex items-center justify-center px-[14px] py-[12px]">
+        <div className="flex flex-col items-start gap-[4px]">
+          <p className="text-[9px] font-bold text-white font-serif leading-none">
             This Week
           </p>
-          <div className="flex gap-[18px]">
-            {[dur, `${pace} l/hr`, burn].map((v, i) => (
-              <span key={i} className="text-[10px] text-white italic font-serif">
-                {v}
-              </span>
-            ))}
-          </div>
+          {[dur, `${pace} lines/hr`, burn].map((v, i) => (
+            <span
+              key={i}
+              className="text-[12px] text-white italic font-serif leading-tight whitespace-nowrap"
+            >
+              {v}
+            </span>
+          ))}
         </div>
       </div>
     </div>
