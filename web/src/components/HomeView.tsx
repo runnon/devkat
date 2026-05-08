@@ -73,6 +73,7 @@ export function HomeView({
             setTimeout(() => setCopiedCommand(false), 2000);
           }}
           onRefresh={onRefresh}
+          onInfoTap={() => setShowInfo(true)}
           loading={loading}
         />
       ) : (
@@ -110,11 +111,13 @@ function SetupState({
   copiedCommand,
   onCopy,
   onRefresh,
+  onInfoTap,
   loading,
 }: {
   copiedCommand: boolean;
   onCopy: () => void;
   onRefresh: () => void;
+  onInfoTap: () => void;
   loading: boolean;
 }) {
   return (
@@ -124,7 +127,15 @@ function SetupState({
         <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
       </svg>
 
-      <p className="text-[11px] font-bold font-mono text-text-dim tracking-[0.15em]">SETUP</p>
+      <div className="flex items-center gap-[8px]">
+        <p className="text-[11px] font-bold font-mono text-text-dim tracking-[0.15em]">SETUP</p>
+        <button onClick={onInfoTap}>
+          <svg className="w-[14px] h-[14px] text-logo-green" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4M12 8h.01" strokeLinecap="round" />
+          </svg>
+        </button>
+      </div>
 
       <div className="space-y-2.5 w-full max-w-sm">
         <p className="text-[11px] font-mono text-text-muted">Paste this in your terminal:</p>
