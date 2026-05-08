@@ -10,6 +10,8 @@ struct HomeView: View {
     @State private var pulse = false
     @State private var checkedNotConnected = false
     @State private var showSetupInfo = false
+    @State private var showUpdatePrompt = false
+    @State private var copiedUpdateCommand = false
 
     private var grouped: [(label: String, items: [Session])] {
         let cal = Calendar.current
@@ -61,6 +63,29 @@ struct HomeView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(Color(hex: 0x1A1A1A))
+        }
+        .sheet(isPresented: $showUpdatePrompt) {
+            CLIUpdateSheet(
+                version: app.availableCLIUpdate ?? "",
+                copied: $copiedUpdateCommand,
+                onDismiss: {
+                    app.dismissCLIUpdate()
+                    showUpdatePrompt = false
+                }
+            )
+            .presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
+            .presentationBackground(Color(hex: 0x1A1A1A))
+        }
+        .onAppear {
+            if app.availableCLIUpdate != nil {
+                showUpdatePrompt = true
+            }
+        }
+        .onChange(of: app.availableCLIUpdate) { _, newValue in
+            if newValue != nil {
+                showUpdatePrompt = true
+            }
         }
     }
 
@@ -429,6 +454,76 @@ private struct SetupInfoSheet: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
+    }
+}
+
+// MARK: - CLI Update Sheet
+
+private struct CLIUpdateSheet: View {
+    let version: String
+    @Binding var copied: Bool
+    let onDismiss: () -> Void
+
+    private let command = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh"
+
+    var body: some View {
+        VStack(spacing: 20) {
+            VStack(spacing: 8) {
+                Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                    .font(.system(size: 36))
+                    .foregroundStyle(Theme.logoGreen)
+
+                Text("CLI Update Available")
+                    .font(.system(size: 17, design: .monospaced).weight(.bold))
+                    .foregroundStyle(.white)
+
+                Text("Version \(version) is ready. Run this in your terminal to update:")
+                    .font(.system(size: 13, design: .monospaced))
+                    .foregroundStyle(Theme.textDim)
+                    .multilineTextAlignment(.center)
+            }
+
+            Button {
+                UIPasteboard.general.string = command
+                copied = true
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.impactOccurred()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    copied = false
+                }
+            } label: {
+                VStack(spacing: 8) {
+                    Text(command)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(.white.opacity(0.9))
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white.opacity(0.06))
+                        .cornerRadius(8)
+
+                    Text(copied ? "Copied!" : "Tap to copy")
+                        .font(.system(size: 12, design: .monospaced).weight(.medium))
+                        .foregroundStyle(copied ? Theme.logoGreen : Theme.textDim)
+                }
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                onDismiss()
+            } label: {
+                Text("Dismiss")
+                    .font(.system(size: 14, design: .monospaced).weight(.medium))
+                    .foregroundStyle(Theme.textDim)
+                    .padding(.vertical, 10)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity)
     }
 }
 

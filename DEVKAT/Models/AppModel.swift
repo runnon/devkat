@@ -10,6 +10,9 @@ final class AppModel {
     var leaderboard: [LeaderboardEntry] = []
     var isLoggedIn: Bool = AuthTokens.stored != nil
     var isLoadingSessions = false
+    var availableCLIUpdate: String?
+
+    private static let lastDismissedCLIVersionKey = "lastDismissedCLIVersion"
 
     init() {
         if isLoggedIn { Task { await fetchSessions() } }
@@ -21,6 +24,37 @@ final class AppModel {
             guard let self, self.isLoggedIn else { return }
             Task { await self.fetchSessions() }
         }
+        Task { await checkForCLIUpdate() }
+    }
+
+    // MARK: - CLI Update Check
+
+    @MainActor
+    func checkForCLIUpdate() async {
+        guard let url = URL(string: "https://api.github.com/repos/runnon/devkat-releases/releases/latest") else { return }
+        var req = URLRequest(url: url)
+        req.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+        req.cachePolicy = .reloadIgnoringLocalCacheData
+
+        guard let (data, response) = try? await URLSession.shared.data(for: req),
+              let http = response as? HTTPURLResponse, http.statusCode == 200 else { return }
+
+        struct Release: Decodable { let tag_name: String }
+        guard let release = try? JSONDecoder().decode(Release.self, from: data) else { return }
+
+        let latest = release.tag_name
+        let dismissed = UserDefaults.standard.string(forKey: Self.lastDismissedCLIVersionKey)
+
+        if dismissed != latest {
+            availableCLIUpdate = latest
+        }
+    }
+
+    func dismissCLIUpdate() {
+        if let version = availableCLIUpdate {
+            UserDefaults.standard.set(version, forKey: Self.lastDismissedCLIVersionKey)
+        }
+        availableCLIUpdate = nil
     }
 
     // MARK: - Auth
