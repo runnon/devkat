@@ -27,20 +27,17 @@ struct HomeView: View {
         VStack(spacing: 0) {
             titleBar
             Divider().background(Theme.border)
-            if app.sessions.isEmpty {
-                ScrollView {
+            ScrollView {
+                if !app.leaderboard.isEmpty {
+                    leaderboardStrip
+                }
+                if app.sessions.isEmpty {
                     if app.installations.isEmpty {
                         setupState
                     } else {
                         waitingState
                     }
-                }
-                .refreshable { await app.fetchSessions() }
-            } else {
-                ScrollView {
-                    if !app.leaderboard.isEmpty {
-                        leaderboardStrip
-                    }
+                } else {
                     LazyVStack(alignment: .leading, spacing: 24, pinnedViews: []) {
                         ForEach(grouped, id: \.label) { group in
                             section(label: group.label, items: group.items)
@@ -50,8 +47,8 @@ struct HomeView: View {
                     .padding(.top, 18)
                     .padding(.bottom, 100)
                 }
-                .refreshable { await app.fetchSessions() }
             }
+            .refreshable { await app.fetchSessions() }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.background)

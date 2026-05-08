@@ -60,48 +60,46 @@ export function HomeView({
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
+        {leaderboard.length > 0 && (
+          <LeaderboardStrip entries={leaderboard} />
+        )}
         {loading && sessions.length === 0 ? (
-        <div className="flex items-center justify-center py-20">
-          <p className="text-text-muted text-xs font-mono tracking-widest">LOADING...</p>
-        </div>
-      ) : sessions.length === 0 ? (
-        <SetupState
-          copiedCommand={copiedCommand}
-          onCopy={() => {
-            navigator.clipboard.writeText("curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh");
-            setCopiedCommand(true);
-            setTimeout(() => setCopiedCommand(false), 2000);
-          }}
-          onRefresh={onRefresh}
-          onInfoTap={() => setShowInfo(true)}
-          loading={loading}
-        />
-      ) : (
-        <>
-          {leaderboard.length > 0 && (
-            <LeaderboardStrip entries={leaderboard} />
-          )}
-          <div className="px-[16px] pt-[18px] pb-[100px]">
-          <div className="flex flex-col gap-[24px]">
-            {grouped.map(({ label, items }) => (
-              <section key={label} className="flex flex-col gap-[12px]">
-                <div className="flex items-center gap-[8px]">
-                  <span className="text-[12px] font-bold font-mono text-text-dim tracking-[0.15em]">
-                    {label}
-                  </span>
-                  <div className="flex-1 h-px bg-border" />
-                </div>
-                <div className="flex flex-col gap-[12px]">
-                  {items.map((s) => (
-                    <SessionCard key={s.id} session={s} onClick={() => onSessionTap(s)} />
-                  ))}
-                </div>
-              </section>
-            ))}
+          <div className="flex items-center justify-center py-20">
+            <p className="text-text-muted text-xs font-mono tracking-widest">LOADING...</p>
           </div>
-        </div>
-        </>
-      )}
+        ) : sessions.length === 0 ? (
+          <SetupState
+            copiedCommand={copiedCommand}
+            onCopy={() => {
+              navigator.clipboard.writeText("curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh");
+              setCopiedCommand(true);
+              setTimeout(() => setCopiedCommand(false), 2000);
+            }}
+            onRefresh={onRefresh}
+            onInfoTap={() => setShowInfo(true)}
+            loading={loading}
+          />
+        ) : (
+          <div className="px-[16px] pt-[18px] pb-[100px]">
+            <div className="flex flex-col gap-[24px]">
+              {grouped.map(({ label, items }) => (
+                <section key={label} className="flex flex-col gap-[12px]">
+                  <div className="flex items-center gap-[8px]">
+                    <span className="text-[12px] font-bold font-mono text-text-dim tracking-[0.15em]">
+                      {label}
+                    </span>
+                    <div className="flex-1 h-px bg-border" />
+                  </div>
+                  <div className="flex flex-col gap-[12px]">
+                    {items.map((s) => (
+                      <SessionCard key={s.id} session={s} onClick={() => onSessionTap(s)} />
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
