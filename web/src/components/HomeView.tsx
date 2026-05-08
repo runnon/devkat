@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { Session, LeaderboardEntry } from "../lib/types";
 import { dayLabel, leaderboardDisplayName, leaderboardFormattedTokens } from "../lib/types";
 import { SessionCard } from "./SessionCard";
@@ -181,14 +181,50 @@ function SetupInfoSheet({ onClose }: { onClose: () => void }) {
     }
   };
 
+  const [dragY, setDragY] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const startY = useRef(0);
+
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    startY.current = e.clientY;
+    setDragging(true);
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  }, []);
+
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragging) return;
+    const dy = Math.max(0, e.clientY - startY.current);
+    setDragY(dy);
+  }, [dragging]);
+
+  const onPointerUp = useCallback(() => {
+    setDragging(false);
+    if (dragY > 80) {
+      onClose();
+    } else {
+      setDragY(0);
+    }
+  }, [dragY, onClose]);
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60" />
       <div
         className="relative w-full max-w-lg bg-[#1A1A1A] rounded-t-2xl p-5 pb-10"
+        style={{
+          transform: `translateY(${dragY}px)`,
+          transition: dragging ? "none" : "transform 0.25s ease-out",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-9 h-1 bg-white/30 rounded-full mx-auto mb-5" />
+        <div
+          className="w-full pt-1 pb-4 cursor-grab active:cursor-grabbing touch-none"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+        >
+          <div className="w-9 h-1 bg-white/30 rounded-full mx-auto" />
+        </div>
         <p className="text-[16px] font-semibold text-white mb-4">How it works</p>
         <div className="flex flex-col gap-3">
           {items.map((item) => (
