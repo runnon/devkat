@@ -6,7 +6,7 @@ import Glibc
 #endif
 import DevKatParser
 
-let cliVersion = "0.3.9"
+let cliVersion = "DEVKAT_CLI_VERSION_PLACEHOLDER"
 
 let args = CommandLine.arguments
 let home = FileManager.default.homeDirectoryForCurrentUser

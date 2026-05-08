@@ -11,6 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Inject CLI version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i.bak "s/DEVKAT_CLI_VERSION_PLACEHOLDER/${VERSION}/g" devkat-cli/Sources/devkat-push/main.swift
+          rm devkat-cli/Sources/devkat-push/main.swift.bak
+
       - name: Build release binary
         working-directory: devkat-cli
         run: swift build -c release
