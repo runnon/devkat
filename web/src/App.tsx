@@ -104,9 +104,10 @@ export default function App() {
       {/* Bottom tab bar — matches iOS: 2 icon tabs */}
       {!showSettings && (
         <nav className="fixed bottom-0 left-0 right-0 z-40">
-          <div className="h-px bg-white/15" />
           <div className="bg-black/80 backdrop-blur-xl">
-            <div className="max-w-lg mx-auto flex items-center justify-center gap-[72px] py-3">
+            <div className="max-w-lg mx-auto">
+              <div className="h-px bg-white/15" />
+              <div className="flex items-center justify-center gap-[72px] py-3">
               <TabIcon
                 active={activeTab === "home"}
                 icon={activeTab === "home" ? "house-fill" : "house"}
@@ -117,6 +118,7 @@ export default function App() {
                 icon={activeTab === "copy" ? "copy-fill" : "copy"}
                 onClick={() => { setActiveTab("copy"); setShowSettings(false); }}
               />
+              </div>
             </div>
           </div>
         </nav>
