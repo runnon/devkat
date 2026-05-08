@@ -98,15 +98,6 @@ final class AppModel {
 
     // MARK: - Review Prompt
 
-#if DEBUG
-    @MainActor
-    func debugResetReviewPromptState() {
-        ReviewPromptState.debugReset()
-        Self.log.info("review_prompt_debug_reset")
-        evaluateReviewPromptEligibility()
-    }
-#endif
-
     @MainActor
     func evaluateReviewPromptEligibility() {
         let eligible = ReviewPromptState.isEligibleForPrompt
@@ -330,13 +321,4 @@ private enum ReviewPromptState {
         defaults.set("negative_feedback", forKey: lastResponseKey)
         defaults.set(defaults.integer(forKey: feedbackCountKey) + 1, forKey: feedbackCountKey)
     }
-
-#if DEBUG
-    static func debugReset() {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: lastPromptedAtKey)
-        defaults.removeObject(forKey: lastPromptedAppVersionKey)
-        defaults.removeObject(forKey: lastResponseKey)
-    }
-#endif
 }
