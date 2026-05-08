@@ -10,6 +10,8 @@ struct HomeView: View {
     @State private var pulse = false
     @State private var checkedNotConnected = false
     @State private var showSetupInfo = false
+    @State private var showUpdatePrompt = false
+    @State private var copiedUpdateCommand = false
 
     private var grouped: [(label: String, items: [Session])] {
         let cal = Calendar.current
@@ -61,6 +63,29 @@ struct HomeView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(Color(hex: 0x1A1A1A))
+        }
+        .sheet(isPresented: $showUpdatePrompt) {
+            CLIUpdateSheet(
+                version: app.availableCLIUpdate ?? "",
+                copied: $copiedUpdateCommand,
+                onDismiss: {
+                    app.dismissCLIUpdate()
+                    showUpdatePrompt = false
+                }
+            )
+            .presentationDetents([.height(280)])
+            .presentationDragIndicator(.visible)
+            .presentationBackground(Color(hex: 0x1A1A1A))
+        }
+        .onAppear {
+            if app.availableCLIUpdate != nil {
+                showUpdatePrompt = true
+            }
+        }
+        .onChange(of: app.availableCLIUpdate) { _, newValue in
+            if newValue != nil {
+                showUpdatePrompt = true
+            }
         }
     }
 
@@ -336,32 +361,54 @@ struct HomeView: View {
             }
             .padding(.horizontal, 16)
 
-            HStack(spacing: 0) {
-                ForEach(Array(app.leaderboard.prefix(3).enumerated()), id: \.element.id) { index, entry in
-                    let alignment: HorizontalAlignment = index == 0 ? .leading : index == 1 ? .center : .trailing
-                    VStack(alignment: alignment, spacing: 4) {
-                        HStack(spacing: 6) {
-                            Text("\(index + 1)")
-                                .font(.system(size: 11, design: .monospaced).weight(.bold))
-                                .foregroundStyle(index == 0 ? Theme.logoGreen : Theme.textDim)
-                            Text(entry.displayName)
-                                .font(.system(size: 11, design: .monospaced).weight(.semibold))
-                                .foregroundStyle(Theme.text)
-                                .lineLimit(1)
-                                .fixedSize(horizontal: true, vertical: false)
-                            Text(leaderboardIcon(for: index))
-                                .font(.system(size: 12))
-                        }
-                        Text(entry.formattedTokens)
-                            .font(.system(size: 10, design: .monospaced))
-                            .foregroundStyle(Theme.textMuted)
+            GeometryReader { proxy in
+                HStack(spacing: 0) {
+                    ForEach(Array(app.leaderboard.prefix(3).enumerated()), id: \.element.id) { index, entry in
+                        leaderboardEntry(index: index, entry: entry)
+                            .frame(
+                                width: proxy.size.width * leaderboardColumnWidth(for: index),
+                                alignment: leaderboardFrameAlignment(for: index)
+                            )
                     }
-                    .frame(maxWidth: .infinity, alignment: index == 0 ? .leading : index == 1 ? .center : .trailing)
                 }
             }
+            .frame(height: 32)
             .padding(.horizontal, 16)
         }
         .padding(.vertical, 14)
+    }
+
+    private func leaderboardEntry(index: Int, entry: LeaderboardEntry) -> some View {
+        let alignment: HorizontalAlignment = index == 0 ? .leading : index == 1 ? .center : .trailing
+        return VStack(alignment: alignment, spacing: 4) {
+            HStack(spacing: 6) {
+                Text("\(index + 1)")
+                    .font(.system(size: 11, design: .monospaced).weight(.bold))
+                    .foregroundStyle(index == 0 ? Theme.logoGreen : Theme.textDim)
+                    .fixedSize()
+                Text(entry.displayName)
+                    .font(.system(size: 11, design: .monospaced).weight(.semibold))
+                    .foregroundStyle(Theme.text)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+                Text(leaderboardIcon(for: index))
+                    .font(.system(size: 12))
+                    .fixedSize()
+            }
+            .fixedSize(horizontal: true, vertical: false)
+
+            Text(entry.formattedTokens)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundStyle(Theme.textMuted)
+        }
+    }
+
+    private func leaderboardColumnWidth(for index: Int) -> CGFloat {
+        index == 1 ? 0.46 : 0.27
+    }
+
+    private func leaderboardFrameAlignment(for index: Int) -> Alignment {
+        index == 0 ? .leading : index == 1 ? .center : .trailing
     }
 
     private func leaderboardIcon(for index: Int) -> String {
@@ -429,6 +476,76 @@ private struct SetupInfoSheet: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
+    }
+}
+
+// MARK: - CLI Update Sheet
+
+private struct CLIUpdateSheet: View {
+    let version: String
+    @Binding var copied: Bool
+    let onDismiss: () -> Void
+
+    private let command = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh"
+
+    var body: some View {
+        VStack(spacing: 16) {
+            VStack(spacing: 6) {
+                Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                    .font(.system(size: 28))
+                    .foregroundStyle(Theme.logoGreen)
+
+                Text("CLI Update Available")
+                    .font(.system(size: 15, design: .monospaced).weight(.bold))
+                    .foregroundStyle(.white)
+
+                Text("Version \(version) is ready. Run this in your terminal:")
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundStyle(Theme.textDim)
+                    .multilineTextAlignment(.center)
+            }
+
+            Button {
+                UIPasteboard.general.string = command
+                copied = true
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.impactOccurred()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    copied = false
+                }
+            } label: {
+                VStack(spacing: 6) {
+                    Text(command)
+                        .font(.system(size: 10, design: .monospaced))
+                        .foregroundStyle(.white.opacity(0.9))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white.opacity(0.06))
+                        .cornerRadius(8)
+
+                    Text(copied ? "Copied!" : "Tap to copy")
+                        .font(.system(size: 12, design: .monospaced).weight(.medium))
+                        .foregroundStyle(Theme.logoGreen)
+                }
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                onDismiss()
+            } label: {
+                Text("Dismiss")
+                    .font(.system(size: 13, design: .monospaced).weight(.medium))
+                    .foregroundStyle(Theme.textDim)
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity)
     }
 }
 

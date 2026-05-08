@@ -127,7 +127,7 @@ actor SupabaseService {
     func fetchInstallations(token: String) async throws -> [Installation] {
         var comps = URLComponents(url: base.appendingPathComponent("rest/v1/installations"), resolvingAgainstBaseURL: false)!
         comps.queryItems = [
-            .init(name: "select", value: "hostname,installed_at,last_seen_at"),
+            .init(name: "select", value: "hostname,installed_at,last_seen_at,cli_version"),
             .init(name: "order",  value: "last_seen_at.desc"),
             .init(name: "limit",  value: "10"),
         ]
@@ -160,6 +160,32 @@ actor SupabaseService {
         req.setValue(anon, forHTTPHeaderField: "apikey")
         req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         req.httpBody = Data("{}".utf8)
+
+        let (data, response) = try await URLSession.shared.data(for: req)
+        try checkStatus(response, data: data)
+    }
+
+    // MARK: Feedback
+
+    func submitFeedback(token: String, kind: String, message: String?, appVersion: String) async throws {
+        struct FeedbackBody: Encodable {
+            let kind: String
+            let message: String?
+            let app_version: String
+        }
+
+        let url = base.appendingPathComponent("rest/v1/feedback")
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.setValue("return=minimal", forHTTPHeaderField: "Prefer")
+        req.setValue(anon, forHTTPHeaderField: "apikey")
+        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        req.httpBody = try JSONEncoder().encode(FeedbackBody(
+            kind: kind,
+            message: message,
+            app_version: appVersion
+        ))
 
         let (data, response) = try await URLSession.shared.data(for: req)
         try checkStatus(response, data: data)
