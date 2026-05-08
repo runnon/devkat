@@ -266,22 +266,28 @@ function LeaderboardStrip({ entries }: { entries: LeaderboardEntry[] }) {
         </span>
         <div className="flex-1 h-px bg-border" />
       </div>
-      <div className="px-[16px] grid grid-cols-3 gap-[12px]" style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
+      <div
+        className="px-[16px]"
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}
+      >
         {entries.slice(0, 3).map((entry, i) => (
-          <div key={entry.email} className="flex flex-col gap-[4px] overflow-hidden">
-            <div className="flex items-center gap-[6px] min-w-0">
+          <div key={entry.email} style={{ overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", overflow: "hidden" }}>
               <span
-                className="text-[11px] font-bold font-mono shrink-0"
-                style={{ color: i === 0 ? "var(--logo-green)" : "var(--text-dim)" }}
+                className="text-[11px] font-bold font-mono"
+                style={{ color: i === 0 ? "var(--logo-green)" : "var(--text-dim)", flexShrink: 0 }}
               >
                 {i + 1}
               </span>
-              <span className="text-[11px] font-semibold font-mono text-text truncate min-w-0">
+              <span
+                className="text-[11px] font-semibold font-mono text-text"
+                style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}
+              >
                 {leaderboardDisplayName(entry.email)}
               </span>
-              <span className="text-[12px] shrink-0">{LEADERBOARD_ICONS[i]}</span>
+              <span style={{ fontSize: "12px", flexShrink: 0 }}>{LEADERBOARD_ICONS[i]}</span>
             </div>
-            <span className="text-[10px] font-mono text-text-muted">
+            <span className="text-[10px] font-mono text-text-muted" style={{ display: "block", marginTop: "4px" }}>
               {leaderboardFormattedTokens(entry.total_tokens)}
             </span>
           </div>
