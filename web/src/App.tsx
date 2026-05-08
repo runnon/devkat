@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
 import { AuthView } from "./components/AuthView";
 import { HomeView } from "./components/HomeView";
@@ -15,6 +15,19 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [sessionsLoading, setSessionsLoading] = useState(false);
+
+  const fetchSessions = useCallback(async () => {
+    setSessionsLoading(true);
+    const { data, error } = await supabase
+      .from("sessions")
+      .select("*")
+      .order("started_at", { ascending: false })
+      .limit(200);
+    if (!error && data) setSessions(data as Session[]);
+    setSessionsLoading(false);
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -30,6 +43,11 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (session) fetchSessions();
+    else setSessions([]);
+  }, [session, fetchSessions]);
 
   if (loading) {
     return (
@@ -49,6 +67,9 @@ export default function App() {
       <div className="flex-1 overflow-auto pb-[88px]">
         {activeTab === "home" && !showSettings && (
           <HomeView
+            sessions={sessions}
+            loading={sessionsLoading}
+            onRefresh={fetchSessions}
             onSessionTap={(s) => {
               setSelectedSession(s);
               setActiveTab("copy");
@@ -58,7 +79,7 @@ export default function App() {
           />
         )}
         {activeTab === "copy" && !showSettings && (
-          <CopyView session={selectedSession} />
+          <CopyView session={selectedSession} sessions={sessions} />
         )}
         {showSettings && (
           <SettingsView

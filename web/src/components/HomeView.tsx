@@ -1,39 +1,24 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { useState } from "react";
 import type { Session } from "../lib/types";
 import { dayLabel } from "../lib/types";
 import { SessionCard } from "./SessionCard";
 
 export function HomeView({
+  sessions,
+  loading,
+  onRefresh,
   onSessionTap,
   onCopyTap,
   onSettingsTap,
 }: {
+  sessions: Session[];
+  loading: boolean;
+  onRefresh: () => void;
   onSessionTap: (s: Session) => void;
   onCopyTap: () => void;
   onSettingsTap: () => void;
 }) {
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [loading, setLoading] = useState(true);
   const [copiedCommand, setCopiedCommand] = useState(false);
-
-  async function fetchSessions() {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("sessions")
-      .select("*")
-      .order("started_at", { ascending: false })
-      .limit(200);
-
-    if (!error && data) {
-      setSessions(data as Session[]);
-    }
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    fetchSessions();
-  }, []);
 
   const grouped = groupByDay(sessions);
 
@@ -77,7 +62,7 @@ export function HomeView({
             setCopiedCommand(true);
             setTimeout(() => setCopiedCommand(false), 2000);
           }}
-          onRefresh={fetchSessions}
+          onRefresh={onRefresh}
           loading={loading}
         />
       ) : (
