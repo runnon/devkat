@@ -22,4 +22,6 @@ git tag v0.X.Y && git push origin v0.X.Y
 
 The GitHub Actions workflow (`.github/workflows/release.yml`) handles the rest — builds on macOS, packages the binary, and creates the release on `runnon/devkat-releases`.
 
-**Version format:** semver-ish `v0.MINOR.PATCH`. Bump patch for fixes, minor for new features. Current: v0.3.6.
+**Version format:** semver-ish `v0.MINOR.PATCH`. Bump patch for fixes, minor for new features.
+
+**CLI version tracking:** `devkat-cli/Sources/devkat-push/main.swift` intentionally uses `DEVKAT_CLI_VERSION_PLACEHOLDER`. Do not manually edit it for releases. The GitHub Actions release workflow injects the pushed tag without the leading `v` before building, so a `v0.4.0` tag produces a binary that reports `0.4.0` to Supabase.
