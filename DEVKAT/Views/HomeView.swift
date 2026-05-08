@@ -348,6 +348,7 @@ struct HomeView: View {
                                 .font(.system(size: 11, design: .monospaced).weight(.semibold))
                                 .foregroundStyle(Theme.text)
                                 .lineLimit(1)
+                                .fixedSize(horizontal: true, vertical: false)
                             Text(leaderboardIcon(for: index))
                                 .font(.system(size: 12))
                         }
