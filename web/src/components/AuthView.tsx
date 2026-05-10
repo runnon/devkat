@@ -35,7 +35,7 @@ export function AuthView() {
       <div className="w-full max-w-sm space-y-10">
         {/* Logo */}
         <div className="text-center space-y-2.5">
-          <h1 className="text-[34px] font-semibold text-text font-led">
+          <h1 className="text-[34px] font-normal text-text font-led">
             DEVKAT
           </h1>
           <p className="text-[11px] font-mono text-text-muted">
