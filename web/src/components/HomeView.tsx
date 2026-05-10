@@ -42,7 +42,7 @@ export function HomeView({
             </svg>
           </button>
           <div className="flex-1 text-center">
-            <span className="text-2xl font-semibold tracking-[0.1em] text-white font-led">DEVKAT</span>
+            <span className="text-2xl font-normal tracking-[0.1em] text-white font-led">DEVKAT</span>
           </div>
           <button onClick={onCopyTap} className="w-[32px] h-[32px] flex items-center justify-center">
             <svg className="w-[18px] h-[18px]" fill="none" stroke="white" strokeWidth={1.3} viewBox="0 0 22 22">
