@@ -1,4 +1,5 @@
 import SwiftUI
+import PostHog
 
 struct AuthView: View {
     var onAuthenticated: () -> Void
@@ -124,6 +125,11 @@ struct AuthView: View {
         isLoading = true
         errorMessage = nil
 
+        // PostHog: Capture auth form submission
+        PostHogSDK.shared.capture(isSignUp ? "sign_up_submitted" : "sign_in_submitted", properties: [
+            "method": "email",
+        ])
+
         Task {
             do {
                 let tokens: AuthTokens
@@ -133,9 +139,15 @@ struct AuthView: View {
                     tokens = try await SupabaseService.shared.signIn(email: email, password: password)
                 }
                 tokens.persist()
+                // PostHog: Identify the user on successful auth
+                PostHogSDK.shared.identify(email, userProperties: ["email": email])
                 await MainActor.run { onAuthenticated() }
             } catch {
                 await MainActor.run {
+                    // PostHog: Capture auth failure
+                    PostHogSDK.shared.capture(isSignUp ? "sign_up_failed" : "sign_in_failed", properties: [
+                        "error": error.localizedDescription,
+                    ])
                     errorMessage = error.localizedDescription
                     isLoading = false
                 }
