@@ -34,4 +34,7 @@ The GitHub Actions workflow (`.github/workflows/release.yml`) handles the rest â
 
 - Never commit `.env`, credentials, private keys, or tokens. `.gitignore` blocks them, and the `gitleaks` CI workflow (`.github/workflows/gitleaks.yml`) scans every PR.
 - The Supabase **publishable** key (`sb_publishable_...`) is intentionally embedded in client code (iOS app, web app). RLS protects user data â€” every user-facing table has policies that key on `auth.uid() = user_id`. Never put the Supabase **secret** key in client code.
-- PostHog project tokens (`phc_...`) used in the iOS app are loaded from the Xcode scheme environment, not hardcoded.
+- PostHog project tokens (`phc_...`) are loaded from environment variables, never hardcoded:
+  - **iOS**: read from the Xcode scheme's Run environment (`POSTHOG_PROJECT_TOKEN`, `POSTHOG_HOST`) via `PostHogEnv` in `DEVKATApp.swift`.
+  - **Web**: read from Vite env vars (`VITE_POSTHOG_PROJECT_TOKEN`, `VITE_POSTHOG_HOST`) via `web/src/lib/posthog.ts`. Set in `web/.env.local` for dev and in Vercel project settings for production.
+  - Both platforms should point at the same PostHog project so user events line up. The web client uses the user's email as the distinct ID (matching the iOS `identify(email, ...)` pattern in `AuthView.swift`).

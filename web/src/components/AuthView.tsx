@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import { capture } from "../lib/posthog";
 
 export function AuthView() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,10 @@ export function AuthView() {
     setError(null);
     setLoading(true);
 
+    capture(mode === "signup" ? "sign_up_submitted" : "sign_in_submitted", {
+      method: "email",
+    });
+
     const { error: authError } =
       mode === "signin"
         ? await supabase.auth.signInWithPassword({ email, password })
@@ -20,6 +25,9 @@ export function AuthView() {
 
     setLoading(false);
     if (authError) {
+      capture(mode === "signup" ? "sign_up_failed" : "sign_in_failed", {
+        error: authError.message,
+      });
       if (authError.message.includes("email_not_confirmed")) {
         setError("Check your inbox — confirm your email before signing in.");
       } else if (authError.message.includes("Invalid login credentials")) {

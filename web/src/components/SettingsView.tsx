@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import { capture } from "../lib/posthog";
 
 type LegalSheet = "dataPrivacy" | "terms" | "privacy" | null;
 
@@ -10,6 +11,7 @@ export function SettingsView({ email, onClose }: { email: string; onClose: () =>
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function handleLogout() {
+    capture("signed_out");
     await supabase.auth.signOut();
   }
 
@@ -19,6 +21,7 @@ export function SettingsView({ email, onClose }: { email: string; onClose: () =>
     try {
       const { error } = await supabase.rpc("delete_user_account");
       if (error) throw error;
+      capture("account_deleted");
       await supabase.auth.signOut();
     } catch (e: unknown) {
       setDeleteError(e instanceof Error ? e.message : "Failed to delete account");
