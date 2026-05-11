@@ -220,12 +220,28 @@ begin
 end;
 $$;
 
--- One-shot recovery: re-fragment every user's components.
+-- One-shot recovery: drop orphan (deleted-user) rows that would trip the
+-- sessions_user_id_fkey on upsert, then re-fragment every remaining user's
+-- components.
+delete from session_components sc
+where not exists (
+    select 1 from auth.users u where u.id = sc.user_id
+);
+
+delete from sessions s
+where not exists (
+    select 1 from auth.users u where u.id = s.user_id
+);
+
 do $$
 declare
     r_user uuid;
 begin
-    for r_user in select distinct user_id from session_components loop
+    for r_user in
+        select distinct sc.user_id
+        from session_components sc
+        join auth.users u on u.id = sc.user_id
+    loop
         perform devkat_refragment_user(r_user, null);
     end loop;
 end $$;
