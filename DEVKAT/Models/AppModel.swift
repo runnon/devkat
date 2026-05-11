@@ -13,6 +13,10 @@ final class AppModel {
     var leaderboard: [LeaderboardEntry] = []
     var isLoggedIn: Bool = AuthTokens.stored != nil
     var isLoadingSessions = false
+    /// True once the first authenticated session fetch has settled. Prevents
+    /// HomeView from flashing the "install the CLI" empty state on cold start
+    /// before the network response lands.
+    var hasFetchedOnce = false
     var availableCLIUpdate: String?
     var shouldShowReviewPrompt = false
 
@@ -231,6 +235,7 @@ final class AppModel {
         let (sList, iList) = try await (s, i)
         sessions = sList
         installations = iList
+        hasFetchedOnce = true
         Self.log.info("load_all_succeeded sessions=\(sList.count) installations=\(iList.count)")
 
         // Leaderboard is optional — don't block sessions on it.
