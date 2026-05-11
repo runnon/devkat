@@ -238,6 +238,15 @@ final class AppModel {
         hasFetchedOnce = true
         Self.log.info("load_all_succeeded sessions=\(sList.count) installations=\(iList.count)")
 
+        let inProgress = sList.filter { $0.isInProgress }
+        let fmt = ISO8601DateFormatter()
+        for s in inProgress {
+            Self.log.info("session_in_progress id=\(s.id, privacy: .public) started=\(fmt.string(from: s.startedAt), privacy: .public) ended=\(fmt.string(from: s.endedAt), privacy: .public) active=\(Int(s.activeDuration)) sources=\(s.sources.joined(separator: ","), privacy: .public) repo=\(s.repoAlias ?? "?", privacy: .public)")
+        }
+        if inProgress.count > 1 {
+            Self.log.error("multiple_in_progress_sessions count=\(inProgress.count) ids=\(inProgress.map(\.id).joined(separator: ","), privacy: .public)")
+        }
+
         // Leaderboard is optional — don't block sessions on it.
         do {
             leaderboard = try await SupabaseService.shared.fetchLeaderboard(token: token)
