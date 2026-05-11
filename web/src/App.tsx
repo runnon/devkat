@@ -60,13 +60,15 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (session) {
-      fetchSessions();
-      fetchLeaderboard();
-    } else {
-      setSessions([]);
-      setLeaderboard([]);
-    }
+    queueMicrotask(() => {
+      if (session) {
+        void fetchSessions();
+        void fetchLeaderboard();
+      } else {
+        setSessions([]);
+        setLeaderboard([]);
+      }
+    });
   }, [session, fetchSessions, fetchLeaderboard]);
 
   if (loading) {

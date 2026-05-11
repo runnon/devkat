@@ -302,7 +302,7 @@ function groupByDay(sessions: Session[]): { label: string; items: Session[] }[] 
     map.get(key)!.push(s);
   }
 
-  return Array.from(map.entries()).map(([_, items]) => ({
+  return Array.from(map.entries()).map(([, items]) => ({
     label: dayLabel(items[0].started_at),
     items,
   }));
