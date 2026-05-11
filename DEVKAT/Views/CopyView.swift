@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import Photos
+import PostHog
 
 struct CopyView: View {
     @Environment(AppModel.self) private var app
@@ -57,6 +58,18 @@ struct CopyView: View {
         }
     }
 
+    private func onCopy(tile: String) {
+        // PostHog: Capture overlay copied
+        PostHogSDK.shared.capture("overlay_copied", properties: ["tile": tile])
+        showToast("Copied!")
+    }
+
+    private func onSave(tile: String) {
+        // PostHog: Capture overlay saved
+        PostHogSDK.shared.capture("overlay_saved", properties: ["tile": tile])
+        showToast("Saved!")
+    }
+
     private let columns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12),
@@ -81,39 +94,39 @@ struct CopyView: View {
                         slot: activeSlot,
                         isFirst: true,
                         onChevronTap: { showLayoutPicker = true },
-                        onCopy: { showToast("Copied!") },
-                        onSave: { showToast("Saved!") }
+                        onCopy: { onCopy(tile: "single_overlay") },
+                        onSave: { onSave(tile: "single_overlay") }
                     )
 
                     DoubleTile(
                         left: volumeSlot,
                         right: paceSlot,
-                        onCopy: { showToast("Copied!") },
-                        onSave: { showToast("Saved!") }
+                        onCopy: { onCopy(tile: "double_overlay") },
+                        onSave: { onSave(tile: "double_overlay") }
                     )
 
                     TripleTile(
                         slots: [durationSlot, paceSlot, burnSlot],
-                        onCopy: { showToast("Copied!") },
-                        onSave: { showToast("Saved!") }
+                        onCopy: { onCopy(tile: "triple_overlay") },
+                        onSave: { onSave(tile: "triple_overlay") }
                     )
 
                     MessageTile(
                         session: session,
-                        onCopy: { showToast("Copied!") },
-                        onSave: { showToast("Saved!") }
+                        onCopy: { onCopy(tile: "message_overlay") },
+                        onSave: { onSave(tile: "message_overlay") }
                     )
 
                     CodexMessageTile(
                         session: session,
-                        onCopy: { showToast("Copied!") },
-                        onSave: { showToast("Saved!") }
+                        onCopy: { onCopy(tile: "codex_message_overlay") },
+                        onSave: { onSave(tile: "codex_message_overlay") }
                     )
 
                     AcidTile(
                         session: session,
-                        onCopy: { showToast("Copied!") },
-                        onSave: { showToast("Saved!") }
+                        onCopy: { onCopy(tile: "acid_overlay") },
+                        onSave: { onSave(tile: "acid_overlay") }
                     )
                 }
                 .padding(.horizontal, 16)
@@ -645,6 +658,8 @@ private struct WeeklyTripleTile: View {
         guard let img = render() else { return }
         UIPasteboard.general.image = img
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        // PostHog: Capture weekly totals copied
+        PostHogSDK.shared.capture("weekly_totals_copied")
         showToast("Copied!")
     }
 
@@ -652,6 +667,8 @@ private struct WeeklyTripleTile: View {
         guard let img = render() else { return }
         saveTransparentPNG(img)
         UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+        // PostHog: Capture weekly totals saved
+        PostHogSDK.shared.capture("weekly_totals_saved")
         showToast("Saved!")
     }
 

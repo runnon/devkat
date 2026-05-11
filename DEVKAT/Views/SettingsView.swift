@@ -1,4 +1,5 @@
 import SwiftUI
+import PostHog
 
 struct SettingsView: View {
     @Environment(AppModel.self) private var app
@@ -58,6 +59,9 @@ struct SettingsView: View {
                             divider
                         }
                         row(label: "Log Out", color: .red) {
+                            // PostHog: Capture sign out and reset identity
+                            PostHogSDK.shared.capture("signed_out")
+                            PostHogSDK.shared.reset()
                             app.signOut()
                             dismiss()
                         }
@@ -253,6 +257,9 @@ struct SettingsView: View {
             do {
                 try await app.deleteAccount()
                 await MainActor.run {
+                    // PostHog: Capture account deletion and reset identity
+                    PostHogSDK.shared.capture("account_deleted")
+                    PostHogSDK.shared.reset()
                     isDeletingAccount = false
                     dismiss()
                 }

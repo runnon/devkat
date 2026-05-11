@@ -80,7 +80,19 @@
 		F3DAC488F82F94F9F1952DA7 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A2AE7B3925F8C529A8CD8FB /* Keychain.swift */; };
 		FA2FF90739159BBC95C0BF34 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5FF9E99BC9AA4BEC9325F8 /* AuthView.swift */; };
 		FDF0AE8958099E22AC84F2CA /* SF-Pro-Rounded-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6467EEF20912738EB19BF965 /* SF-Pro-Rounded-Regular.otf */; };
+		POSTHOG0BLDFILE00000001C /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = POSTHOG0PKGDEP000000001B /* PostHog */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		POSTHOG0FRMWRKS00000001D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				POSTHOG0BLDFILE00000001C /* PostHog in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXFileReference section */
 		06105429A2B33D646118AA6D /* SF-Pro-Rounded-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Semibold.otf"; sourceTree = "<group>"; };
@@ -307,6 +319,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = ACE206D5B02B089BDA4DBC71 /* Build configuration list for PBXNativeTarget "DEVKAT" */;
 			buildPhases = (
+				POSTHOG0FRMWRKS00000001D /* Frameworks */,
 				3FD5740860B7ADE5C62E9501 /* Sources */,
 				0F519C89667BBCDCEC71F210 /* Resources */,
 			);
@@ -316,6 +329,7 @@
 			);
 			name = DEVKAT;
 			packageProductDependencies = (
+				POSTHOG0PKGDEP000000001B /* PostHog */,
 			);
 			productName = DEVKAT;
 			productReference = 8D8C5F431D8D3BF2F890A923 /* DEVKAT.app */;
@@ -348,6 +362,9 @@
 			productRefGroup = CD06A470E8EC645DC4B5C659 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				POSTHOG0PKGREF000000001A /* XCRemoteSwiftPackageReference "posthog-ios" */,
+			);
 			targets = (
 				A0003F355A317664F8535B44 /* DEVKAT */,
 			);
@@ -614,6 +631,25 @@
 			name = Debug;
 		};
 /* End XCBuildConfiguration section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		POSTHOG0PKGREF000000001A /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = "3.58.1";
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		POSTHOG0PKGDEP000000001B /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = POSTHOG0PKGREF000000001A /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCConfigurationList section */
 		31E0DE90CB948A72C215A75E /* Build configuration list for PBXProject "DEVKAT" */ = {

@@ -1,6 +1,7 @@
 import SwiftUI
 import StoreKit
 import OSLog
+import PostHog
 
 struct RootView: View {
     private static let log = Logger(subsystem: "app.devkat.ios", category: "RootView")
@@ -39,6 +40,12 @@ struct RootView: View {
                         selectTab(.copy)
                     },
                     onSessionTap: { session in
+                        // PostHog: Capture session tapped
+                        PostHogSDK.shared.capture("session_tapped", properties: [
+                            "sources": session.sourceLabel,
+                            "duration_seconds": Int(session.activeDuration),
+                            "tokens": session.tokens,
+                        ])
                         app.selectedSession = session
                         selected = .copy
                     }
@@ -63,6 +70,8 @@ struct RootView: View {
             ReviewPromptSheet(
                 onNo: {
                     Self.log.info("review_prompt_no_button_tapped")
+                    // PostHog: Capture negative review response
+                    PostHogSDK.shared.capture("review_prompt_negative")
                     app.recordNegativeReviewIntent()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                         Self.log.info("review_feedback_sheet_presented")
@@ -71,6 +80,8 @@ struct RootView: View {
                 },
                 onYes: {
                     Self.log.info("review_prompt_yes_button_tapped")
+                    // PostHog: Capture positive review response
+                    PostHogSDK.shared.capture("review_prompt_positive")
                     Task {
                         await app.recordPositiveReviewIntent()
                         try? await Task.sleep(nanoseconds: 700_000_000)
@@ -95,6 +106,10 @@ struct RootView: View {
                 onSubmit: {
                     let message = feedbackMessage.trimmingCharacters(in: .whitespacesAndNewlines)
                     Self.log.info("review_feedback_send_tapped chars=\(message.count)")
+                    // PostHog: Capture review feedback submitted
+                    PostHogSDK.shared.capture("review_feedback_submitted", properties: [
+                        "char_count": message.count,
+                    ])
                     feedbackMessage = ""
                     showNegativeFeedback = false
                     Task {

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
+import { identify, reset } from "./lib/posthog";
 import { AuthView } from "./components/AuthView";
 import { HomeView } from "./components/HomeView";
 import { CopyView } from "./components/CopyView";
@@ -38,12 +39,20 @@ export default function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      if (session?.user?.email) {
+        identify(session.user.email, { email: session.user.email });
+      }
       setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setSession(session);
+        if (event === "SIGNED_IN" && session?.user?.email) {
+          identify(session.user.email, { email: session.user.email });
+        } else if (event === "SIGNED_OUT") {
+          reset();
+        }
       }
     );
 

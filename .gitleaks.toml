@@ -1,0 +1,24 @@
+# gitleaks config — runs in CI on every PR + push to main/dev.
+# Extends the default ruleset, adds DEVKAT-specific allowlist for known-public client keys.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "DEVKAT — known public client-side keys (designed to be in client code)"
+
+# Supabase publishable key is designed to be public. RLS protects user data.
+# If we ever rotate it, update this regex.
+regexes = [
+  '''sb_publishable_[A-Za-z0-9_\-]+''',
+]
+
+# Skip generated, vendored, and lockfile noise
+paths = [
+  '''(.*?)package-lock\.json$''',
+  '''(.*?)Package\.resolved$''',
+  '''(.*?)\.xcuserstate$''',
+  '''node_modules/''',
+  '''\.build/''',
+  '''DerivedData/''',
+]

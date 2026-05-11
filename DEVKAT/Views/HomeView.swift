@@ -1,5 +1,6 @@
 import SwiftUI
 import OSLog
+import PostHog
 
 struct HomeView: View {
     private static let log = Logger(subsystem: "app.devkat.ios", category: "HomeView")
@@ -73,6 +74,10 @@ struct HomeView: View {
                 copied: $copiedUpdateCommand,
                 onDismiss: {
                     Self.log.info("cli_update_prompt_dismiss_tapped version=\(app.availableCLIUpdate ?? "unknown", privacy: .public)")
+                    // PostHog: Capture CLI update prompt dismissed
+                    PostHogSDK.shared.capture("cli_update_prompt_dismissed", properties: [
+                        "version": app.availableCLIUpdate ?? "unknown",
+                    ])
                     app.dismissCLIUpdate()
                     showUpdatePrompt = false
                 }
@@ -226,7 +231,7 @@ struct HomeView: View {
                     .font(.system(.caption, design: .monospaced))
                     .foregroundStyle(Theme.textMuted)
                 VStack(spacing: 8) {
-                    Text("curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh")
+                    Text("curl -fsSL https://raw.githubusercontent.com/runnon/devkat/main/scripts/install.sh | sh")
                         .font(.system(size: 11, design: .monospaced))
                         .foregroundStyle(Theme.textMuted)
                         .tint(Theme.textMuted)
@@ -250,8 +255,10 @@ struct HomeView: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    UIPasteboard.general.string = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh"
+                    UIPasteboard.general.string = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat/main/scripts/install.sh | sh"
                     copiedCommand = true
+                    // PostHog: Capture CLI install command copied
+                    PostHogSDK.shared.capture("cli_install_command_copied")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) { copiedCommand = false }
                 }
             }
@@ -508,7 +515,7 @@ private struct CLIUpdateSheet: View {
     @Binding var copied: Bool
     let onDismiss: () -> Void
 
-    private let command = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh"
+    private let command = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat/main/scripts/install.sh | sh"
 
     var body: some View {
         VStack(spacing: 16) {
@@ -531,6 +538,8 @@ private struct CLIUpdateSheet: View {
                 UIPasteboard.general.string = command
                 copied = true
                 Self.log.info("cli_update_command_copied version=\(self.version, privacy: .public)")
+                // PostHog: Capture CLI update command copied
+                PostHogSDK.shared.capture("cli_update_command_copied", properties: ["version": version])
                 let generator = UIImpactFeedbackGenerator(style: .medium)
                 generator.impactOccurred()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
