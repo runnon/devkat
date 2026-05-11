@@ -73,6 +73,8 @@
 		<string>SF-Pro-Rounded-Bold.otf</string>
 		<string>SF-Pro-Rounded-Heavy.otf</string>
 		<string>SF-Pro-Rounded-Black.otf</string>
+		<string>LEDLIGHT.otf</string>
+		<string>AcidTM.otf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

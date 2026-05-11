@@ -92,6 +92,9 @@ targets:
           - SF-Pro-Rounded-Bold.otf
           - SF-Pro-Rounded-Heavy.otf
           - SF-Pro-Rounded-Black.otf
+          # Display
+          - LEDLIGHT.otf
+          - AcidTM.otf
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.xavierkahn.devkat
