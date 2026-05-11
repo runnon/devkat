@@ -51,7 +51,7 @@ func syncAll(verbose: Bool = false) {
             let sessions = try parseSessions(at: url)
             for session in sessions {
                 guard session.tokens > 0, session.activeDuration >= 60 else { continue }
-                guard session.endedAt > cutoff else { continue }
+                guard session.startedAt >= cutoff else { continue }
                 if state.contains(session.id) && isCold(session) { continue }
 
                 try writeSession(session)
