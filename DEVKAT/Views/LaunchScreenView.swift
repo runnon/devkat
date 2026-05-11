@@ -9,7 +9,7 @@ struct LaunchScreenView: View {
                 .ignoresSafeArea()
 
             Text("DEVKAT")
-                .font(.custom("LEDLIGHT", size: 36).weight(.semibold))
+                .font(.custom("LEDLIGHT", size: 36))
                 .foregroundStyle(.white)
         }
     }
