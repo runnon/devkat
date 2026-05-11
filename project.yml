@@ -4,6 +4,10 @@ options:
   deploymentTarget:
     iOS: "26.0"
   createIntermediateGroups: true
+packages:
+  PostHog:
+    url: https://github.com/PostHog/posthog-ios
+    version: 3.58.1
 settings:
   base:
     SWIFT_VERSION: "5.10"
@@ -18,6 +22,9 @@ targets:
     platform: iOS
     sources:
       - path: DEVKAT
+    dependencies:
+      - package: PostHog
+        product: PostHog
     info:
       path: DEVKAT/Info.plist
       properties:

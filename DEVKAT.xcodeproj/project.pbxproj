@@ -14,6 +14,7 @@
 		0ADC6C8B6D07FA5C97F6CD6E /* NewYorkSmall-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0ED79CB7C26FE67D6966422 /* NewYorkSmall-Medium.otf */; };
 		0B446C61AA64A3B16114ED2F /* SF-Compact-Rounded-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 42093FDD0C086E1E3392D529 /* SF-Compact-Rounded-Black.otf */; };
 		0B573E5EDA2F0027888C43EE /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9C98F893DEA8B989FB41DF /* SupabaseService.swift */; };
+		0E5DC44F5F2D01274E3C9065 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = AD73CD19E3CFEEF8DD6129C5 /* PostHog */; };
 		0F84FBE1427E2FD5376D4AA3 /* LegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6381D826E4D878180E4224 /* LegalView.swift */; };
 		0FB3DBD26D7324493A0A59C6 /* NewYorkMedium-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DDC301F415DEB75935AFE1F9 /* NewYorkMedium-Semibold.otf */; };
 		0FFF998303AA0DAB4F4C82E8 /* AuraOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8909ACEC8A2DAC0C833D114 /* AuraOverlay.swift */; };
@@ -162,6 +163,17 @@
 		FC6FD30B41FF737350BAFC4F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		FEEE5C336ABFBC377CA4EAA8 /* NewYorkItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewYorkItalic.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A0A1CB1444049CB2CA5D2D64 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E5DC44F5F2D01274E3C9065 /* PostHog in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		1006EEE918FB139B25F3AAED /* Fonts */ = {
@@ -312,6 +324,7 @@
 			buildPhases = (
 				3FD5740860B7ADE5C62E9501 /* Sources */,
 				0F519C89667BBCDCEC71F210 /* Resources */,
+				A0A1CB1444049CB2CA5D2D64 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -319,6 +332,7 @@
 			);
 			name = DEVKAT;
 			packageProductDependencies = (
+				AD73CD19E3CFEEF8DD6129C5 /* PostHog */,
 			);
 			productName = DEVKAT;
 			productReference = 8D8C5F431D8D3BF2F890A923 /* DEVKAT.app */;
@@ -348,6 +362,9 @@
 			);
 			mainGroup = D759DBBBB529C4D77F776336;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C5D999BAA33A0230F09816C7 /* XCRemoteSwiftPackageReference "posthog-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CD06A470E8EC645DC4B5C659 /* Products */;
 			projectDirPath = "";
@@ -638,6 +655,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C5D999BAA33A0230F09816C7 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 3.58.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AD73CD19E3CFEEF8DD6129C5 /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C5D999BAA33A0230F09816C7 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 14751ADE1B6C739F076CAD99 /* Project object */;
 }
