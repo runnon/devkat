@@ -2,6 +2,22 @@
 
 Project conventions and rules for AI assistants working on this codebase.
 
+## This is an open-source project
+
+**devkat is public on GitHub.** Every file you commit will be visible to anyone.
+Before committing or pushing, verify that no real secrets, API keys, tokens, or
+credentials are present in any tracked file. If in doubt, do not push — ask first.
+
+Specifically safe to commit (intentionally public):
+- Supabase **publishable** key (`sb_publishable_...`) in iOS/CLI client code — designed to be public; RLS enforces per-user access
+- `.env.example` — placeholder values only, no real secrets
+
+Never commit:
+- `.env` (gitignored — contains real keys)
+- Supabase **secret** key (`sb_secret_...`)
+- PostHog project token (`phc_...`) — loaded from Xcode scheme env vars and Vite env vars, never hardcoded
+- Any `*.key`, `secrets.*`, or signing certificate files
+
 ## Supabase Migrations
 
 - **Never edit an already-applied migration.** Once a migration has been pushed to the remote database, it is immutable. To fix or change behavior, create a new migration file with the corrective SQL (e.g., `CREATE OR REPLACE FUNCTION`, `ALTER TABLE`, etc.).
