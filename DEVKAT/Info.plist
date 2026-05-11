@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>1</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>DEVKAT saves your overlay images to Photos.</string>
 	<key>UIAppFonts</key>
@@ -73,8 +73,6 @@
 		<string>SF-Pro-Rounded-Bold.otf</string>
 		<string>SF-Pro-Rounded-Heavy.otf</string>
 		<string>SF-Pro-Rounded-Black.otf</string>
-		<string>LEDLIGHT.otf</string>
-		<string>AcidTM.otf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -90,9 +88,5 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>UIRequiresFullScreen</key>
-	<true/>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 </dict>
 </plist>
