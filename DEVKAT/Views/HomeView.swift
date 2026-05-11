@@ -37,7 +37,11 @@ struct HomeView: View {
                 leaderboardStrip
             }
             if app.sessions.isEmpty {
-                if app.installations.isEmpty {
+                if !app.hasFetchedOnce {
+                    // First fetch in flight — stay neutral so we don't flash
+                    // the "install the CLI" CTA before the response lands.
+                    Color.clear.frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if app.installations.isEmpty {
                     setupState
                 } else {
                     waitingState
@@ -388,26 +392,21 @@ struct HomeView: View {
             }
             .padding(.horizontal, 16)
 
-            GeometryReader { proxy in
-                HStack(spacing: 0) {
-                    ForEach(Array(app.leaderboard.prefix(3).enumerated()), id: \.element.id) { index, entry in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(alignment: .top, spacing: 24) {
+                    ForEach(Array(app.leaderboard.prefix(5).enumerated()), id: \.element.id) { index, entry in
                         leaderboardEntry(index: index, entry: entry)
-                            .frame(
-                                width: proxy.size.width * leaderboardColumnWidth(for: index),
-                                alignment: leaderboardFrameAlignment(for: index)
-                            )
                     }
                 }
+                .padding(.horizontal, 16)
             }
             .frame(height: 32)
-            .padding(.horizontal, 16)
         }
         .padding(.vertical, 14)
     }
 
     private func leaderboardEntry(index: Int, entry: LeaderboardEntry) -> some View {
-        let alignment: HorizontalAlignment = index == 0 ? .leading : index == 1 ? .center : .trailing
-        return VStack(alignment: alignment, spacing: 4) {
+        VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
                 Text("\(index + 1)")
                     .font(.system(size: 11, design: .monospaced).weight(.bold))
@@ -418,9 +417,11 @@ struct HomeView: View {
                     .foregroundStyle(Theme.text)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
-                Text(leaderboardIcon(for: index))
-                    .font(.system(size: 12))
-                    .fixedSize()
+                if let icon = leaderboardIcon(for: index) {
+                    Text(icon)
+                        .font(.system(size: 12))
+                        .fixedSize()
+                }
             }
             .fixedSize(horizontal: true, vertical: false)
 
@@ -430,19 +431,12 @@ struct HomeView: View {
         }
     }
 
-    private func leaderboardColumnWidth(for index: Int) -> CGFloat {
-        index == 1 ? 0.46 : 0.27
-    }
-
-    private func leaderboardFrameAlignment(for index: Int) -> Alignment {
-        index == 0 ? .leading : index == 1 ? .center : .trailing
-    }
-
-    private func leaderboardIcon(for index: Int) -> String {
+    private func leaderboardIcon(for index: Int) -> String? {
         switch index {
         case 0: return "🦁"
         case 1: return "🐆"
-        default: return "🐈"
+        case 2: return "🐈"
+        default: return nil
         }
     }
 
