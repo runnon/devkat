@@ -71,7 +71,7 @@ export function HomeView({
           <SetupState
             copiedCommand={copiedCommand}
             onCopy={() => {
-              navigator.clipboard.writeText("curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh");
+              navigator.clipboard.writeText("curl -fsSL https://raw.githubusercontent.com/runnon/devkat/main/scripts/install.sh | sh");
               setCopiedCommand(true);
               setTimeout(() => setCopiedCommand(false), 2000);
             }}
@@ -143,7 +143,7 @@ function SetupState({
         >
           <div className="bg-surface rounded-[10px] px-3 py-2 text-left">
             <code className="text-[11px] font-mono text-text-muted leading-relaxed break-all">
-              curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh
+              curl -fsSL https://raw.githubusercontent.com/runnon/devkat/main/scripts/install.sh | sh
             </code>
           </div>
           <p className="text-[10px] font-bold font-mono text-logo-green tracking-[0.1em] mt-2">

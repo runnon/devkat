@@ -231,7 +231,7 @@ struct HomeView: View {
                     .font(.system(.caption, design: .monospaced))
                     .foregroundStyle(Theme.textMuted)
                 VStack(spacing: 8) {
-                    Text("curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh")
+                    Text("curl -fsSL https://raw.githubusercontent.com/runnon/devkat/main/scripts/install.sh | sh")
                         .font(.system(size: 11, design: .monospaced))
                         .foregroundStyle(Theme.textMuted)
                         .tint(Theme.textMuted)
@@ -255,7 +255,7 @@ struct HomeView: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    UIPasteboard.general.string = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh"
+                    UIPasteboard.general.string = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat/main/scripts/install.sh | sh"
                     copiedCommand = true
                     // PostHog: Capture CLI install command copied
                     PostHogSDK.shared.capture("cli_install_command_copied")
@@ -515,7 +515,7 @@ private struct CLIUpdateSheet: View {
     @Binding var copied: Bool
     let onDismiss: () -> Void
 
-    private let command = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat-releases/main/install.sh | sh"
+    private let command = "curl -fsSL https://raw.githubusercontent.com/runnon/devkat/main/scripts/install.sh | sh"
 
     var body: some View {
         VStack(spacing: 16) {

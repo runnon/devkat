@@ -36,7 +36,7 @@ final class AppModel {
     /// against the latest GitHub release. Shows update prompt if outdated.
     @MainActor
     func checkForCLIUpdate() async {
-        guard let url = URL(string: "https://api.github.com/repos/runnon/devkat-releases/releases/latest") else { return }
+        guard let url = URL(string: "https://api.github.com/repos/runnon/devkat/releases/latest") else { return }
         Self.log.info("cli_update_check_started installations=\(self.installations.count)")
         var req = URLRequest(url: url)
         req.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")

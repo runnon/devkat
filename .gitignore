@@ -1,6 +1,7 @@
 # Dependencies
 .build/
 *.xcuserdata/
+**/xcuserdata/
 *.xcworkspace/xcshareddata/
 DerivedData/
 
@@ -8,6 +9,14 @@ DerivedData/
 .env
 .env.*
 !.env.example
+*.pem
+*.p12
+*.mobileprovision
+*.cer
+*.key
+secrets.*
+credentials.*
+serviceAccount*.json
 
 # Supabase local state
 supabase/.temp/
@@ -15,3 +24,10 @@ supabase/.temp/
 # macOS
 .DS_Store
 .vercel
+
+# Agent / tooling caches (not for distribution)
+.claude/
+.cursor/
+.codex/
+posthog-setup-report.md
+*.posthog-wizard
