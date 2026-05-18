@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-desk: 900px;
+}
+
 /* Custom fonts bundled for cross-platform consistency */
 
 @font-face {

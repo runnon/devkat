@@ -16,9 +16,11 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [weeklyLeaderboard, setWeeklyLeaderboard] = useState<LeaderboardEntry[]>([]);
 
   const fetchSessions = useCallback(async () => {
     setSessionsLoading(true);
@@ -32,8 +34,12 @@ export default function App() {
   }, []);
 
   const fetchLeaderboard = useCallback(async () => {
-    const { data, error } = await supabase.rpc("token_leaderboard");
-    if (!error && data) setLeaderboard(data as LeaderboardEntry[]);
+    const [allTimeResult, weeklyResult] = await Promise.all([
+      supabase.rpc("token_leaderboard"),
+      supabase.rpc("weekly_token_leaderboard"),
+    ]);
+    if (!allTimeResult.error && allTimeResult.data) setLeaderboard(allTimeResult.data as LeaderboardEntry[]);
+    if (!weeklyResult.error && weeklyResult.data) setWeeklyLeaderboard(weeklyResult.data as LeaderboardEntry[]);
   }, []);
 
   useEffect(() => {
@@ -67,6 +73,7 @@ export default function App() {
       } else {
         setSessions([]);
         setLeaderboard([]);
+        setWeeklyLeaderboard([]);
       }
     });
   }, [session, fetchSessions, fetchLeaderboard]);
@@ -84,12 +91,20 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background md:flex">
+    <div className="min-h-screen bg-background desk:flex">
       {!showSettings && (
-        <aside className="hidden md:flex w-[220px] shrink-0 flex-col border-r border-border bg-black/60 px-4 py-6">
-          <div className="mb-8 px-3">
-            <div className="font-led text-[28px] tracking-[0.08em] text-logo-green">devkat</div>
-            <div className="mt-1 text-[10px] font-mono font-bold tracking-[0.18em] text-text-muted">WEB</div>
+        <aside className="hidden desk:flex w-[220px] shrink-0 flex-col border-r border-border bg-black/60 px-4 py-6">
+          <div className="mb-8 px-3 flex items-start justify-between">
+            <div>
+              <div className="font-led text-[28px] tracking-[0.08em] text-logo-green">devkat</div>
+              <div className="mt-1 text-[10px] font-mono font-bold tracking-[0.18em] text-text-muted">WEB</div>
+            </div>
+            <button onClick={() => setShowInfo(true)} className="mt-1 w-[28px] h-[28px] flex items-center justify-center text-text-muted hover:text-text transition-colors">
+              <svg className="w-[16px] h-[16px]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4M12 8h.01" strokeLinecap="round" />
+              </svg>
+            </button>
           </div>
           <div className="flex flex-col gap-2">
             <SidebarButton active={activeTab === "home"} icon="home" label="Home" onClick={() => { setActiveTab("home"); setShowSettings(false); }} />
@@ -102,12 +117,16 @@ export default function App() {
       )}
 
       {/* Content area */}
-      <div className="flex-1 min-w-0 overflow-auto pb-[70px] md:pb-0">
+      <div className="flex-1 min-w-0 overflow-auto pb-[70px] desk:pb-0">
         {activeTab === "home" && !showSettings && (
           <HomeView
             sessions={sessions}
             leaderboard={leaderboard}
+            weeklyLeaderboard={weeklyLeaderboard}
             loading={sessionsLoading}
+            showInfo={showInfo}
+            onInfoTap={() => setShowInfo(true)}
+            onInfoClose={() => setShowInfo(false)}
             onRefresh={fetchSessions}
             onSessionTap={(s) => {
               setSelectedSession(s);
@@ -130,7 +149,7 @@ export default function App() {
 
       {/* Bottom tab bar — matches iOS: 2 icon tabs */}
       {!showSettings && (
-        <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 z-40 desk:hidden">
           <div className="bg-black/80 backdrop-blur-xl">
             <div className="max-w-lg mx-auto">
               <div className="h-px bg-white/15" />
