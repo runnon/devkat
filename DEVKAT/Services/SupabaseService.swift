@@ -229,7 +229,15 @@ actor SupabaseService {
     // MARK: Leaderboard
 
     func fetchLeaderboard(token: String) async throws -> [LeaderboardEntry] {
-        let url = base.appendingPathComponent("rest/v1/rpc/token_leaderboard")
+        try await fetchLeaderboard(token: token, rpcName: "token_leaderboard")
+    }
+
+    func fetchWeeklyLeaderboard(token: String) async throws -> [LeaderboardEntry] {
+        try await fetchLeaderboard(token: token, rpcName: "weekly_token_leaderboard")
+    }
+
+    private func fetchLeaderboard(token: String, rpcName: String) async throws -> [LeaderboardEntry] {
+        let url = base.appendingPathComponent("rest/v1/rpc/\(rpcName)")
         var req = URLRequest(url: url)
         req.httpMethod = "POST"
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")

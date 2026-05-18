@@ -6,6 +6,7 @@ import { SessionCard } from "./SessionCard";
 export function HomeView({
   sessions,
   leaderboard,
+  weeklyLeaderboard,
   loading,
   onRefresh,
   onSessionTap,
@@ -14,6 +15,7 @@ export function HomeView({
 }: {
   sessions: Session[];
   leaderboard: LeaderboardEntry[];
+  weeklyLeaderboard: LeaderboardEntry[];
   loading: boolean;
   onRefresh: () => void;
   onSessionTap: (s: Session) => void;
@@ -61,7 +63,10 @@ export function HomeView({
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
         {leaderboard.length > 0 && (
-          <LeaderboardStrip entries={leaderboard} />
+          <LeaderboardStrip label="ALL TIME TOKEN BURNERS" entries={leaderboard} />
+        )}
+        {weeklyLeaderboard.length > 0 && (
+          <WeeklyLeaderboardStrip entries={weeklyLeaderboard} />
         )}
         {loading && sessions.length === 0 ? (
           <div className="flex items-center justify-center py-20">
@@ -253,22 +258,21 @@ function SetupInfoSheet({ onClose }: { onClose: () => void }) {
   );
 }
 
-const LEADERBOARD_ICONS = ["🦁", "🐆", "🐈"];
+const LEADERBOARD_ICONS: Record<number, string> = { 0: "🦁", 1: "🐆", 2: "🐈" };
 
-function LeaderboardStrip({ entries }: { entries: LeaderboardEntry[] }) {
+function LeaderboardStrip({ label, entries }: { label: string; entries: LeaderboardEntry[] }) {
   return (
     <div className="py-[14px]">
       <div className="px-[16px] flex items-center gap-[8px] mb-[10px]">
         <span className="text-[10px] font-bold font-mono text-text-muted tracking-[0.15em]">
-          TOP TOKEN BURNERS
+          {label}
         </span>
         <div className="flex-1 h-px bg-border" />
       </div>
-      <div className="px-[16px] flex justify-between">
-        {entries.slice(0, 3).map((entry, i) => {
-          const align = i === 0 ? "items-start" : i === 1 ? "items-center" : "items-end";
-          return (
-            <div key={entry.email} className={`flex flex-col ${align} gap-[4px]`}>
+      <div className="overflow-x-auto">
+        <div className="flex items-start gap-[24px] px-[16px]" style={{ width: "max-content" }}>
+          {entries.slice(0, 5).map((entry, i) => (
+            <div key={entry.email} className="flex flex-col gap-[4px]">
               <div className="flex items-center gap-[6px]">
                 <span
                   className="text-[11px] font-bold font-mono"
@@ -279,15 +283,65 @@ function LeaderboardStrip({ entries }: { entries: LeaderboardEntry[] }) {
                 <span className="text-[11px] font-semibold font-mono text-text whitespace-nowrap">
                   {leaderboardDisplayName(entry.email)}
                 </span>
-                <span className="text-[12px]">{LEADERBOARD_ICONS[i]}</span>
+                {LEADERBOARD_ICONS[i] && (
+                  <span className="text-[12px]">{LEADERBOARD_ICONS[i]}</span>
+                )}
               </div>
               <span className="text-[10px] font-mono text-text-muted">
                 {leaderboardFormattedTokens(entry.total_tokens)}
               </span>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
+    </div>
+  );
+}
+
+function WeeklyLeaderboardStrip({ entries }: { entries: LeaderboardEntry[] }) {
+  const left = entries.slice(0, 5);
+  const right = entries.slice(5, 10);
+  return (
+    <div className="py-[14px]">
+      <div className="px-[16px] flex items-center gap-[8px] mb-[10px]">
+        <span className="text-[10px] font-bold font-mono text-text-muted tracking-[0.15em]">
+          WEEKLY TOKEN BURNERS
+        </span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+      <div className="px-[16px] flex gap-[24px]">
+        <div className="flex-1 flex flex-col gap-[8px]">
+          {left.map((entry, i) => (
+            <WeeklyLeaderboardRow key={entry.email} entry={entry} rank={i + 1} />
+          ))}
+        </div>
+        {right.length > 0 && (
+          <div className="flex-1 flex flex-col gap-[8px]">
+            {right.map((entry, i) => (
+              <WeeklyLeaderboardRow key={entry.email} entry={entry} rank={i + 6} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function WeeklyLeaderboardRow({ entry, rank }: { entry: LeaderboardEntry; rank: number }) {
+  return (
+    <div className="flex items-baseline gap-[6px]">
+      <span
+        className="text-[10px] font-bold font-mono w-[14px] shrink-0"
+        style={{ color: rank === 1 ? "var(--color-logo-green)" : "var(--color-text-dim)" }}
+      >
+        {rank}
+      </span>
+      <span className="text-[10px] font-semibold font-mono text-text truncate">
+        {leaderboardDisplayName(entry.email)}
+      </span>
+      <span className="text-[9px] font-mono text-text-muted shrink-0">
+        {leaderboardFormattedTokens(entry.total_tokens)}
+      </span>
     </div>
   );
 }

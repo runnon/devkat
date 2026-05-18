@@ -11,6 +11,7 @@ final class AppModel {
     var sessions: [Session] = []
     var installations: [Installation] = []
     var leaderboard: [LeaderboardEntry] = []
+    var weeklyLeaderboard: [LeaderboardEntry] = []
     var isLoggedIn: Bool = AuthTokens.stored != nil
     var isLoadingSessions = false
     /// True once the first authenticated session fetch has settled. Prevents
@@ -184,6 +185,8 @@ final class AppModel {
         isLoggedIn = false
         sessions = []
         installations = []
+        leaderboard = []
+        weeklyLeaderboard = []
         selectedSession = nil
     }
 
@@ -232,6 +235,8 @@ final class AppModel {
     private func loadAll(token: String) async throws {
         async let s = SupabaseService.shared.fetchSessions(token: token)
         async let i = SupabaseService.shared.fetchInstallations(token: token)
+        async let allTimeLeaderboard = SupabaseService.shared.fetchLeaderboard(token: token)
+        async let weeklyLeaderboardResult = SupabaseService.shared.fetchWeeklyLeaderboard(token: token)
         let (sList, iList) = try await (s, i)
         sessions = sList
         installations = iList
@@ -249,11 +254,19 @@ final class AppModel {
 
         // Leaderboard is optional — don't block sessions on it.
         do {
-            leaderboard = try await SupabaseService.shared.fetchLeaderboard(token: token)
+            leaderboard = try await allTimeLeaderboard
             Self.log.info("leaderboard_loaded count=\(self.leaderboard.count)")
         } catch {
             Self.log.error("leaderboard_unavailable error=\(error.localizedDescription, privacy: .public)")
             leaderboard = []
+        }
+
+        do {
+            weeklyLeaderboard = try await weeklyLeaderboardResult
+            Self.log.info("weekly_leaderboard_loaded count=\(self.weeklyLeaderboard.count)")
+        } catch {
+            Self.log.error("weekly_leaderboard_unavailable error=\(error.localizedDescription, privacy: .public)")
+            weeklyLeaderboard = []
         }
 
         // Check if CLI needs an update (non-blocking).

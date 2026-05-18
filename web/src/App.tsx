@@ -19,6 +19,7 @@ export default function App() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [weeklyLeaderboard, setWeeklyLeaderboard] = useState<LeaderboardEntry[]>([]);
 
   const fetchSessions = useCallback(async () => {
     setSessionsLoading(true);
@@ -32,9 +33,17 @@ export default function App() {
   }, []);
 
   const fetchLeaderboard = useCallback(async () => {
-    const { data, error } = await supabase.rpc("token_leaderboard");
-    if (!error && data) setLeaderboard(data as LeaderboardEntry[]);
+    const [allTimeResult, weeklyResult] = await Promise.all([
+      supabase.rpc("token_leaderboard"),
+      supabase.rpc("weekly_token_leaderboard"),
+    ]);
+    setLeaderboard(!allTimeResult.error && allTimeResult.data ? allTimeResult.data as LeaderboardEntry[] : []);
+    setWeeklyLeaderboard(!weeklyResult.error && weeklyResult.data ? weeklyResult.data as LeaderboardEntry[] : []);
   }, []);
+
+  const refreshHome = useCallback(async () => {
+    await Promise.all([fetchSessions(), fetchLeaderboard()]);
+  }, [fetchSessions, fetchLeaderboard]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -62,14 +71,14 @@ export default function App() {
   useEffect(() => {
     queueMicrotask(() => {
       if (session) {
-        void fetchSessions();
-        void fetchLeaderboard();
+        void refreshHome();
       } else {
         setSessions([]);
         setLeaderboard([]);
+        setWeeklyLeaderboard([]);
       }
     });
-  }, [session, fetchSessions, fetchLeaderboard]);
+  }, [session, refreshHome]);
 
   if (loading) {
     return (
@@ -91,8 +100,9 @@ export default function App() {
           <HomeView
             sessions={sessions}
             leaderboard={leaderboard}
+            weeklyLeaderboard={weeklyLeaderboard}
             loading={sessionsLoading}
-            onRefresh={fetchSessions}
+            onRefresh={refreshHome}
             onSessionTap={(s) => {
               setSelectedSession(s);
               setActiveTab("copy");

@@ -33,7 +33,7 @@ struct HomeView: View {
         VStack(spacing: 0) {
             titleBar
             Divider().background(Theme.border)
-            if !app.leaderboard.isEmpty {
+            if !app.leaderboard.isEmpty || !app.weeklyLeaderboard.isEmpty {
                 leaderboardStrip
             }
             if app.sessions.isEmpty {
@@ -380,12 +380,26 @@ struct HomeView: View {
     }
 
     private var leaderboardStrip: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            if !app.leaderboard.isEmpty {
+                leaderboardScrollSection(label: "ALL TIME TOKEN BURNERS", entries: app.leaderboard)
+            }
+            if !app.weeklyLeaderboard.isEmpty {
+                weeklyLeaderboardSection
+            }
+        }
+        .padding(.vertical, 14)
+    }
+
+    private func leaderboardScrollSection(label: String, entries: [LeaderboardEntry]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
-                Text("TOP TOKEN BURNERS")
+                Text(label)
                     .font(.system(size: 10, design: .monospaced).weight(.bold))
                     .foregroundStyle(Theme.textMuted)
                     .tracking(1.5)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
                 Rectangle()
                     .fill(Theme.border)
                     .frame(height: 1)
@@ -394,7 +408,7 @@ struct HomeView: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top, spacing: 24) {
-                    ForEach(Array(app.leaderboard.prefix(5).enumerated()), id: \.element.id) { index, entry in
+                    ForEach(Array(entries.prefix(5).enumerated()), id: \.element.id) { index, entry in
                         leaderboardEntry(index: index, entry: entry)
                     }
                 }
@@ -402,7 +416,60 @@ struct HomeView: View {
             }
             .frame(height: 32)
         }
-        .padding(.vertical, 14)
+    }
+
+    private var weeklyLeaderboardSection: some View {
+        let left = Array(app.weeklyLeaderboard.prefix(5))
+        let right = app.weeklyLeaderboard.count > 5 ? Array(app.weeklyLeaderboard[5..<min(10, app.weeklyLeaderboard.count)]) : []
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Text("WEEKLY TOKEN BURNERS")
+                    .font(.system(size: 10, design: .monospaced).weight(.bold))
+                    .foregroundStyle(Theme.textMuted)
+                    .tracking(1.5)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+                Rectangle()
+                    .fill(Theme.border)
+                    .frame(height: 1)
+            }
+            .padding(.horizontal, 16)
+
+            HStack(alignment: .top, spacing: 24) {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(Array(left.enumerated()), id: \.element.id) { index, entry in
+                        weeklyLeaderboardRow(rank: index + 1, entry: entry)
+                    }
+                }
+                if !right.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(Array(right.enumerated()), id: \.element.id) { index, entry in
+                            weeklyLeaderboardRow(rank: index + 6, entry: entry)
+                        }
+                    }
+                }
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private func weeklyLeaderboardRow(rank: Int, entry: LeaderboardEntry) -> some View {
+        HStack(spacing: 6) {
+            Text("\(rank)")
+                .font(.system(size: 10, design: .monospaced).weight(.bold))
+                .foregroundStyle(rank == 1 ? Theme.logoGreen : Theme.textDim)
+                .frame(width: 14, alignment: .leading)
+            Text(entry.displayName)
+                .font(.system(size: 10, design: .monospaced).weight(.semibold))
+                .foregroundStyle(Theme.text)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            Text(entry.formattedTokens)
+                .font(.system(size: 9, design: .monospaced))
+                .foregroundStyle(Theme.textMuted)
+                .lineLimit(1)
+        }
     }
 
     private func leaderboardEntry(index: Int, entry: LeaderboardEntry) -> some View {
