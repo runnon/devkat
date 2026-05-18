@@ -12,7 +12,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
     "html-to-image": "^1.11.13",
-    "posthog-js": "^1.372.10",
+    "posthog-js": "^1.374.2",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
@@ -22,7 +22,7 @@
     "@types/node": "^25.8.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^6.0.2",
     "eslint": "^10.4.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
